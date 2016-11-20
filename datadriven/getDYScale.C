@@ -121,8 +121,8 @@ int          bin_metmax;
 //    SF(mm,est/DY)  1.379 +- 0.061
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getDYScale(TString analysis = "Control",
-		TString level    = "03_Routin",
+void getDYScale(TString analysis = "DY",
+		TString level    = "01_Has2Leptons",
 		double  lumi_fb  = 12.9)
 {
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");

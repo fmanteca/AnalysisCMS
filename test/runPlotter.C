@@ -4,7 +4,7 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t datadriven = true;
-const Bool_t allplots   = false;
+const Bool_t allplots   = true;
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -189,6 +189,7 @@ void runPlotter(TString level,
       if (!analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("WW")   &&
+	  !analysis.EqualTo("DY")   &&
 	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -242,7 +243,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",    -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" +sll + "," + sm + ")",  5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                         5, 2, "rad",  scale);
-	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  5, 0, "GeV",  scale, true, 0,  200);
 	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                -1, 0, "NULL", scale, true, 0,   30);
 	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",               5, 0, "GeV",  scale, true, 0,  150);
 	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",              5, 0, "GeV",  scale, true, 0,  150);
@@ -277,6 +278,12 @@ void runPlotter(TString level,
 	  plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",        1000, "GeV", 0, 1000, "Punzi Eq.6");
 	  plotter.Roc(prefix + "drll"  + suffix, "#Delta R_{ll}",   50, "rad", 0,    5, "Punzi Eq.6");
 
+	  if(analysis.EqualTo("DY"))
+	    {
+	      plotter.Roc(prefix + "dphillmet"  + suffix, "#Delta#phi(ll,E_{T}^{miss})",    1000, "rad", 0, 1000);
+	      plotter.Roc(prefix + "mtw2"       + suffix, "m_{T}^{W2}",                     1000, "GeV", 0, 1000);  
+	      plotter.Roc(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}",100, "NULL", 0,2);
+	    }
 
 	  if (!allplots) continue;
 
@@ -318,7 +325,8 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "ptww"         + suffix, "p_{T}^{WW}",                        10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumjpt12"     + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumpt12"      + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);
-
+	  plotter.Draw(prefix + "metPuppi"     + suffix, "PUPPI E_{T}^{miss}",                10, 0, "GeV",  scale, true, 0,  400);
+	  plotter.Draw(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}", -1, 0, "NULL",  logY, true, 0,  2);
 
 	  // WW and MonoH histograms
 	  //--------------------------------------------------------------------

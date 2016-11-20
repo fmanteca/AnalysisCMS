@@ -55,9 +55,6 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
 
     Long64_t ientry = LoadTree(jentry);
    
-    met_Over_pt2l = MET.Et() / ptll;
-    pt2l_Over_met = ptll / MET.Et();
-    
     if (ientry < 0) break;
 
     fChain->GetEntry(jentry);
@@ -113,29 +110,27 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_2l &= (_nbjet20cmvav2l == 0);
     FillLevelHistograms(DY_03_BVetoLoose, pass_2l);
 
-    //Ptll cut                                                                                                                                                                                           
-    //---------------------------------------------------------------------------                                                                                                                         
+    //Ptll cut                                                                                                                                                                //---------------------------------------------------------------------------                                                                                                                         
     pass_2l &= (ptll>30.);
     pass_2l &= (_channel == em || ptll > 45.);
     FillLevelHistograms(DY_04_Ptll, pass_2l);
 
-    // Cortes adicionales en variables: dphillmet, MET/ptll                                                                                                                                              
-    //---------------------------------------------------------------------------                                                                                                                 
-                                                                                                                                                                                                         
+    // Cortes adicionales en variables: dphillmet, MET/ptll                                                            
+    //---------------------------------------------------------------------------                                                                                                                                               
     pass_2l &= (_dphillmet>=0);
     pass_2l &= (_channel == em || _dphillmet > 2.5);
     FillLevelHistograms(DY_05_dphillmet, pass_2l);
 
     // MET cut
     //---------------------------------------------------------------------------    
-    pass_2l &= (MET.Et() > 20.);
-    FillLevelHistograms(DY_06_PfMet, pass_2l);
+    pass_2l &= (mpmet > 20.);
+    FillLevelHistograms(DY_06_mpMet, pass_2l);
 
     // mpMET cut                                                                                                           
     //---------------------------------------------------------------------------                                                            
-    pass_2l &= (mpmet > 20.);
-    pass_2l &= (_channel == em || mpmet > 45.);
-    FillLevelHistograms(DY_07_mpMet, pass_2l);
+    pass_2l &= (MET.Et() > 20.);
+    pass_2l &= (_channel == em || MET.Et() > 45.);
+    FillLevelHistograms(DY_07_PfMet, pass_2l);
     
     //DY-Control region
     //---------------------------------------------------------------------------
@@ -156,8 +151,8 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_tcontrol &= (ptll > 30.);
     pass_tcontrol &= (_channel == em || ptll > 45.);
     pass_tcontrol &= (MET.Et() > 20.);
+    pass_tcontrol &= (_channel == em || MET.Et() > 45.);
     pass_tcontrol &= (mpmet > 20.);
-    pass_tcontrol &= (_channel == em || mpmet > 45.);
     pass_tcontrol &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
     pass_tcontrol &= (_njet==0 ? _nbjet20cmvav2l > 0 : _nbjet30cmvav2l > 0);
     FillLevelHistograms(DY_10_TopControl, pass_tcontrol);

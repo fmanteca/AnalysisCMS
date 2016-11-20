@@ -20,11 +20,11 @@ TString h_name[nhisto];
 TH1F* myhisto [nhisto];
 
 
-const TString  inputdir = "week-1";  // where the minitrees are stored
+const TString  inputdir = "nominal";  // where the minitrees are stored
 const TString outputdir = "histos"; 
 
 //const TCut mycut = "eventW*((channel==3||channel==4)&&metPfType1>0.)";   // sf
-const TCut mycut = "eventW*(channel==5&&metPfType1>0.)";                 
+const TCut mycut = "eventW";                 
 
 void CreateHistograms2( TString process );
 
@@ -132,7 +132,7 @@ void CreateHistograms(){
 
 void CreateHistograms2( TString process ){ 
 
-	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + process + ".root", "read" ); 
+	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/DY/" + process + ".root", "read" ); 
 	
 	TTree* mytree = (TTree*) myfile -> Get( "latino" );
 
