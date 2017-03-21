@@ -1,8 +1,8 @@
 #if !defined(MYLIB_CONSTANTS_H)
 #define MYLIB_CONSTANTS_H 1
 
-#include "CutsControl.h"
-//#include "CutsDY.h"
+//#include "CutsControl.h"
+#include "CutsDY.h"
 //#include "CutsFR.h"
 //#include "CutsMonoH.h"
 //#include "CutsPR.h"
@@ -156,6 +156,7 @@ enum {
   l, 
   ee,
   mm,
+  SF,
   em,
   ll,
   eee,
@@ -172,6 +173,7 @@ const TString schannel[nchannel] = {
   "l",
   "ee",
   "mm",
+  "SF",
   "em",
   "ll",
   "eee",
@@ -187,6 +189,7 @@ const TString lchannel[nchannel] = {
   "l",
   "ee",
   "#mu#mu",
+  "SF",
   "e#mu",
   "ll",
   "eee",
