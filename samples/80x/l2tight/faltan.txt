@@ -1,0 +1,1 @@
+root://eoscms.cern.ch//eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_Run2016B_RemAOD/l2looseCut__hadd__EpTCorr__TrigMakerData__l2tight/latino_SingleElectron_Run2016B-03Feb2017_ver2-v2__part1.root
