@@ -633,6 +633,9 @@ void AnalysisCMS::ApplyWeights()
       _event_weight_Fastsimdo = _event_weight * (sf_fastsim_do/sf_fastsim);
     }
 
+  _event_weight *= 1.09283+0.00960892*nvtx-0.00208199*nvtx*nvtx+3.90763e-05*nvtx*nvtx*nvtx;
+
+
   return;
 }
 
