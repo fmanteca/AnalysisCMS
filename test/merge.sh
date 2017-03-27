@@ -12,6 +12,7 @@ FOLDER="$1"
 
 pushd $FOLDER
 
+
 #hadd -f -k 00_Fakes.root     fakeW*.root
 hadd -f -k 01_Data.root      Dou*.root Sin*.root Muon*.root
 hadd -f -k 02_WZTo3LNu.root  WZTo3LNu.root
@@ -28,5 +29,6 @@ hadd -f -k 12_Zg.root        Zg*.root
 hadd -f -k 13_VVV.root       WWW.root WWZ.root WZZ.root ZZZ.root
 hadd -f -k 14_HZ.root        HZJ_HToWWTo2L2Nu*.root GluGluZH_HToWWTo2L2Nu*.root
 hadd -f -k 15_WgStar.root    WgStarLNuEE.root WgStarLNuMuMu.root
+
 
 popd
