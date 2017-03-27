@@ -500,7 +500,11 @@ void AnalysisCMS::ApplyWeights()
   _event_weight *= _gen_ptll_weight;
 
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
+  
 
+  // nvtx reweighting: met correction
+
+  _event_weight *= 0.819195708*(1.06191+0.00947395*nvtx-0.00202578*nvtx*nvtx+3.7965e-05*nvtx*nvtx*nvtx);
 
   // Include btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
@@ -615,7 +619,7 @@ void AnalysisCMS::ApplyWeights()
       _event_weight_Fastsimdo = _event_weight * (sf_fastsim_do/sf_fastsim);
     }
 
-  _event_weight *= 1.09283+0.00960892*nvtx-0.00208199*nvtx*nvtx+3.90763e-05*nvtx*nvtx*nvtx;
+ 
 
 
   return;

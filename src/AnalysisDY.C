@@ -192,6 +192,19 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_dycontrol &= (mpmet > 20.);
     pass_dycontrol &= (MET.Et() > 20.);
     FillLevelHistograms(DY_12_DYControl, pass_dycontrol);        
+
+
+    // IFCA-syncro region
+    //----------------------------------------------------------------------------
+
+    bool pass_ifca = (Lepton1.flavour * Lepton2.flavour < 0);
+    pass_ifca &= (Lepton1.v.Pt() > 25.);
+    pass_ifca &= (Lepton2.v.Pt() > 20.);
+    pass_ifca &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_ifca &= (mll > 20.);
+    pass_ifca &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    FillLevelHistograms(DY_13_IFCA_Control, pass_ifca);        
+    
   }
 
 
