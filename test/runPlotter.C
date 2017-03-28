@@ -418,8 +418,12 @@ void runPlotter(TString level,
   //
   //----------------------------------------------------------------------------
 
+<<<<<<< HEAD
   if (analysis.EqualTo("Control") && level.Contains("WW"))
 
+=======
+  if (analysis.EqualTo("Control") && level.Contains("WW") && 0)  // NOT YET AVAILABLE
+>>>>>>> 7465b19c17b208ee462eef7ec98ee95d5035a83c
     {
       printf("\n Cross section\n");
       printf("---------------\n\n");
