@@ -49,7 +49,7 @@ void runPlotter(TString level,
 
   if (analysis.EqualTo("NONE")) return;
 
-  float lumi = lumi_fb_Full2016*1.2207*1.2207;
+  float lumi = lumi_fb_Full2016;
 
   if (analysis.EqualTo("Shape")) lumi = lumi_fb_Run2016B;
   if (analysis.EqualTo("Stop"))  lumi = lumi_fb_2016_susy;
@@ -112,8 +112,8 @@ void runPlotter(TString level,
     }
   else
     {
-      //      plotter.AddProcess("14_HZ",        "HZ",       color_HZ);  // NOT YET AVAILABLE
-      //      plotter.AddProcess("10_HWW",       "HWW",      color_HWW);  // NOT YET AVAILABLE
+      plotter.AddProcess("14_HZ",        "HZ",       color_HZ);  // NOT YET AVAILABLE
+      plotter.AddProcess("10_HWW",       "HWW",      color_HWW);  // NOT YET AVAILABLE
       plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
       plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
