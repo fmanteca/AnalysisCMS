@@ -117,6 +117,7 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
 
 
     // WW
+    // https://github.com/latinos/PlotsConfigurations/blob/master/Configurations/ControlRegions/WW/Full2016/cuts.py
     //--------------------------------------------------------------------------
     pass =
       mll > 80                         &&
@@ -138,6 +139,8 @@ void AnalysisControl::Loop(TString analysis, TString filename, float luminosity)
       (std_vector_jet_pt->at(9) < 20 || std_vector_jet_cmvav2->at(9) < -0.5884);
 
     FillLevelHistograms(Control_03_WW, pass);
+
+    if (pass) EventDump();
 
 
     // Top
