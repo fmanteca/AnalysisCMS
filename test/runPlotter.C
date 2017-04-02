@@ -106,7 +106,7 @@ void runPlotter(TString level,
       else
 	{
 	  plotter.AddProcess("07_ZJets",     "Z+jets", color_ZJets);
-	  plotter.AddProcess("04_TTTo2L2Nu", "tt",     color_TTTo2L2Nu);
+	  plotter.AddProcess("04_Top", "top",     color_TTTo2L2Nu);
 	  plotter.AddProcess("05_ST",        "tW",     color_ST);
 	}
     }
@@ -117,12 +117,12 @@ void runPlotter(TString level,
       plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
       plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
-      plotter.AddProcess("11_Wg",        "W#gamma",  color_Wg);
+      plotter.AddProcess("11_Vg",        "V#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
       plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
       plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu);
-      plotter.AddProcess("05_ST",        "tW",       color_ST);
+      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu);
+      //      plotter.AddProcess("05_ST",        "tW",       color_ST);
       plotter.AddProcess("13_VVV",      "VVV",      color_VVV);
 
       if (datadriven)
@@ -418,12 +418,9 @@ void runPlotter(TString level,
   //
   //----------------------------------------------------------------------------
 
-<<<<<<< HEAD
-  if (analysis.EqualTo("Control") && level.Contains("WW"))
 
-=======
   if (analysis.EqualTo("Control") && level.Contains("WW") && 0)  // NOT YET AVAILABLE
->>>>>>> 7465b19c17b208ee462eef7ec98ee95d5035a83c
+
     {
       printf("\n Cross section\n");
       printf("---------------\n\n");

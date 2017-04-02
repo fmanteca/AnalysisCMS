@@ -73,7 +73,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-  //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
+  //if (_ismc) return true;  // Spring16 does not have correct MET filter information
 
   if (!std_vector_trigger_special) return true;
 
@@ -500,11 +500,11 @@ void AnalysisCMS::ApplyWeights()
   _event_weight *= _gen_ptll_weight;
 
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
-  
 
-  // nvtx reweighting: met correction
+  //nvtx reweighting to correct the MET agreement
 
-  _event_weight *= 1.2207*(1.06191+0.00947395*nvtx-0.00202578*nvtx*nvtx+3.7965e-05*nvtx*nvtx*nvtx);
+  //  _event_weight *= (1.09283+0.00960892*nvtx-0.00208199*nvtx*nvtx+3.90763e-05*nvtx*nvtx*nvtx)/0.819195708;
+
 
   // Include btag, trigger and idiso systematic uncertainties
   //----------------------------------------------------------------------------
@@ -618,9 +618,6 @@ void AnalysisCMS::ApplyWeights()
       _event_weight_Fastsimup = _event_weight * (sf_fastsim_up/sf_fastsim);
       _event_weight_Fastsimdo = _event_weight * (sf_fastsim_do/sf_fastsim);
     }
-
- 
-
 
   return;
 }
@@ -779,6 +776,9 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
   _nbjet30csvv2l  = 0;
   _nbjet30csvv2m  = 0;
   _nbjet30csvv2t  = 0;
+  _nbjet20csvv2l  = 0;
+  _nbjet20csvv2m  = 0;
+  _nbjet20csvv2t  = 0;
   _nbjet20cmvav2l = 0;
   _nbjet20cmvav2m = 0;
   _nbjet20cmvav2t = 0;
@@ -838,6 +838,10 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20cmvav2l++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20cmvav2m++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20cmvav2t++;
+
+    if (pt > 20. && goodjet.csvv2ivf > CSVv2L) _nbjet20csvv2l++; 
+    if (pt > 20. && goodjet.csvv2ivf > CSVv2M) _nbjet20csvv2m++;
+    if (pt > 20. && goodjet.csvv2ivf > CSVv2T) _nbjet20csvv2t++;
 
     if (pt < jet_pt_min) continue;
 
@@ -1227,13 +1231,13 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  if (!_analysis.EqualTo("Control")) GetTops();
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTops();
   
-  if (!_analysis.EqualTo("Control")) GetGenLeptonsAndNeutrinos();
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetGenLeptonsAndNeutrinos();
   
-  if (!_analysis.EqualTo("Control")) GetDark();
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetDark();
   
-  if (!_analysis.EqualTo("Control")) GetTopReco();
+  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTopReco();
 
   GetGenPtllWeight();
 
@@ -1671,7 +1675,6 @@ void AnalysisCMS::OpenMinitree()
   // Only available in MC
   if (std_vector_LHE_weight)
     minitree->Branch("LHEweight", &std_vector_LHE_weight);
-
 
   // Vectors
   minitree->Branch("bjet30csvv2m_eta", "std::vector<float>", &_bjet30csvv2m_eta);
