@@ -67,11 +67,11 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-<<<<<<< HEAD
+
   //if (_ismc) return true;  // Spring16 does not have correct MET filter information
-=======
+
   if (_ismc) return true;  // Spring16 does not have correct MET filter information
->>>>>>> 62ff01101f78ca17f2dbbfcf051b0fb0d9e4dcac
+
 
   if (!std_vector_trigger_special) return true;
 
@@ -440,7 +440,7 @@ void AnalysisCMS::Setup(TString analysis,
 
   root_output = new TFile(prefix + "rootfiles/" + _longname + ".root", "recreate");
 
-  if (_eventdump) txt_eventdump.open("txt/" + _longname + "_eventdump.txt");
+  if (_eventdump) txt_eventdump.open("txt/" + _longname + "_eventdump_em.txt");
 
   OpenMinitree();
 
@@ -970,7 +970,7 @@ void AnalysisCMS::EventDump(Bool_t leptonInfo)
 				std_vector_lepton_isTightLepton->at(index));
 	}
     }
-  else txt_eventdump << Form("%d:%d:%d\n", run, lumi, event);
+  else txt_eventdump << Form("%d:%d:%d:%f:%f:%f:%f:%f:%f\n", run, lumi, event, AnalysisLeptons[0].v.Pt(), AnalysisLeptons[1].v.Pt(), AnalysisLeptons[0].v.Eta(), AnalysisLeptons[1].v.Eta(), AnalysisLeptons[0].v.Phi(), AnalysisLeptons[1].v.Eta());
 }
 
 
@@ -1272,7 +1272,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-<<<<<<< HEAD
+
   if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTops();
   
   if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetGenLeptonsAndNeutrinos();
@@ -1280,7 +1280,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetDark();
   
   if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTopReco();
-=======
+
   if (_analysis.EqualTo("TTDM")) GetTops();
   
   if (_analysis.EqualTo("TTDM")) GetGenLeptonsAndNeutrinos();
@@ -1288,7 +1288,7 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   if (_analysis.EqualTo("TTDM")) GetDark();
   
   if (_analysis.EqualTo("TTDM")) GetTopReco();
->>>>>>> 62ff01101f78ca17f2dbbfcf051b0fb0d9e4dcac
+
 
   GetGenPtllWeight();
 
