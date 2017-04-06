@@ -118,11 +118,18 @@ void runPlotter(TString level,
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Vg",        "V#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
+<<<<<<< HEAD
       plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, 0.5);
       plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
       plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu, 0.1);
       //      plotter.AddProcess("05_ST",        "tW",       color_ST);
       plotter.AddProcess("13_VVV",      "VVV",      color_VVV);
+=======
+      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, roc_background, 0.955);
+      plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
+      plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu, roc_background, 0.923);
+      plotter.AddProcess("05_ST",        "tW",       color_ST);
+>>>>>>> bc89b8167b864b4ebb12b8d98fd728152849494c
 
       if (datadriven)
 	{
@@ -187,6 +194,7 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
+<<<<<<< HEAD
       if (!analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("WW")   &&
@@ -195,6 +203,11 @@ void runPlotter(TString level,
 =======
 	  !analysis.EqualTo("DY")   &&
 >>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
+=======
+      if (!analysis.EqualTo("Stop") &&
+	  !analysis.EqualTo("Top")  &&
+	  !analysis.EqualTo("WW")   &&
+>>>>>>> bc89b8167b864b4ebb12b8d98fd728152849494c
 	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -217,11 +230,17 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
+<<<<<<< HEAD
 
       if (!analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("WW")   &&
        	  !analysis.EqualTo("DY")   &&
+=======
+      if (!analysis.EqualTo("Stop") &&
+	  !analysis.EqualTo("Top")  &&
+	  !analysis.EqualTo("WW")   &&
+>>>>>>> bc89b8167b864b4ebb12b8d98fd728152849494c
 	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
