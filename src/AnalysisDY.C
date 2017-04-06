@@ -124,23 +124,39 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_2l &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
     FillLevelHistograms(DY_04_ZVeto, pass_2l);
 
+<<<<<<< HEAD
 
     //Ptll cut           
     //---------------------------------------------------------------------------                         
+=======
+    //Ptll cut                                                                                                                                                                //---------------------------------------------------------------------------                                                                                                                         
+>>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
     pass_2l &= (ptll>30.);
     pass_2l &= (_channel == em || ptll > 45.);
     FillLevelHistograms(DY_05_Ptll, pass_2l);
 
+<<<<<<< HEAD
+=======
+    // Cortes adicionales en variables: dphillmet, MET/ptll                                                            
+    //---------------------------------------------------------------------------                                                                                                                                               
+    pass_2l &= (_dphillmet>=0);
+    pass_2l &= (_channel == em || _dphillmet > 2.5);
+    FillLevelHistograms(DY_05_dphillmet, pass_2l);
+>>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
 
     // mpMET cut
     //---------------------------------------------------------------------------    
     pass_2l &= (mpmet > 20.);
     FillLevelHistograms(DY_06_mpMet, pass_2l);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
 
     // MET cut                                                                                                           
     //---------------------------------------------------------------------------                                                            
     pass_2l &= (MET.Et() > 20.);
+<<<<<<< HEAD
     pass_2l &= (_channel == em || MET.Et() > 55.);
     FillLevelHistograms(DY_07_PfMet, pass_2l);
     if (pass_2l && _channel==em && _njet==0) EventDump();
@@ -172,6 +188,10 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     // FillLevelHistograms(DY_0jet, pass_0j);
     // pass_gui &= (_njet==1);
     // FillLevelHistograms(DY_1jet, pass_gui);
+=======
+    pass_2l &= (_channel == em || MET.Et() > 45.);
+    FillLevelHistograms(DY_07_PfMet, pass_2l);
+>>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
     
 
     // Cortes adicionales en variables: dphillmet, MET/ptll                                                            

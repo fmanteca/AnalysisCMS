@@ -5,9 +5,17 @@ const TString outputdir = "histos/Zmm/";
 void CreateHistograms2( int process );
 
 
+<<<<<<< HEAD
 void CreateHistograms(){
 
 	Assign();
+=======
+const TString  inputdir = "nominal";  // where the minitrees are stored
+const TString outputdir = "histos"; 
+
+//const TCut mycut = "eventW*((channel==3||channel==4)&&metPfType1>0.)";   // sf
+const TCut mycut = "eventW";                 
+>>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
 
 	gSystem->mkdir( outputdir, kTRUE );
 
@@ -42,6 +50,7 @@ void CreateHistograms2( int process ){
 
 	cout << "\n \t process: " << processID[process] << endl; 
 
+<<<<<<< HEAD
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
 
 	TFile* myfile; 
@@ -59,6 +68,9 @@ void CreateHistograms2( int process ){
 
 		myfile = new TFile( "../minitrees/" + inputdir + "/MET/" + processID[process] + ".root", "read" );
 		//myfile = new TFile( "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/" + processID[process] + ".root", "read" );
+=======
+	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/DY/" + process + ".root", "read" ); 
+>>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
 	
 	}*/
  

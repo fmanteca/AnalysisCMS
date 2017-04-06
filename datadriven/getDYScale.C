@@ -116,9 +116,14 @@ TString      xtitle;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 void getDYScale(TString analysis = "DY",
+<<<<<<< HEAD
 		TString level    = "12_DYControl",
 		TString variable = "metPfType1",
 		double  lumi_fb  = 35.867)
+=======
+		TString level    = "01_Has2Leptons",
+		double  lumi_fb  = 12.9)
+>>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
 {
   xtitle = "";
 
