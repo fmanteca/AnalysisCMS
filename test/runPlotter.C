@@ -4,13 +4,9 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t allplots   = false;
-const Bool_t datadriven = true;
-<<<<<<< HEAD
-const Bool_t allplots   = false;
-=======
+const Bool_t datadriven = false;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
->>>>>>> 62ff01101f78ca17f2dbbfcf051b0fb0d9e4dcac
 
 const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
@@ -117,9 +113,9 @@ void runPlotter(TString level,
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Vg",        "V#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
-      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets);
+      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, 0.5);
       plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
-      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu);
+      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu, 0.1);
       //      plotter.AddProcess("05_ST",        "tW",       color_ST);
       plotter.AddProcess("13_VVV",      "VVV",      color_VVV);
 
@@ -186,17 +182,10 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-<<<<<<< HEAD
       if (!analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("WW")   &&
-	  !analysis.EqualTo("DY")   &&
-=======
-      if (!analysis.EqualTo("Control") &&
-	  !analysis.EqualTo("Stop")    &&
-	  !analysis.EqualTo("Top")     &&
-	  !analysis.EqualTo("WW")      &&
->>>>>>> 62ff01101f78ca17f2dbbfcf051b0fb0d9e4dcac
+      	  !analysis.EqualTo("DY")   &&
 	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -219,17 +208,11 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-<<<<<<< HEAD
+
       if (!analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("WW")   &&
-	  !analysis.EqualTo("DY")   &&
-=======
-      if (!analysis.EqualTo("Control") &&
-	  !analysis.EqualTo("Stop")    &&
-	  !analysis.EqualTo("Top")     &&
-	  !analysis.EqualTo("WW")      &&
->>>>>>> 62ff01101f78ca17f2dbbfcf051b0fb0d9e4dcac
+       	  !analysis.EqualTo("DY")   &&
 	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -246,7 +229,7 @@ void runPlotter(TString level,
 
 	  plotter.SetTitle(title);
 
-	  
+	  /*  
 	  //Cuidadoooooooo
 	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  logY, true, 0,  200);
 	  // plotter.Draw(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}", 20, 0, "NULL",  scale, true, 0,  2);
@@ -285,7 +268,8 @@ void runPlotter(TString level,
 
 	  plotter.Draw(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}", 20, 0, "NULL",  scale, true, 0,  2);
 	  plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                             20, 0, "GeV",  scale, true, 0, 600);
-	  
+	  */
+
 	  // ROC
 	  //
 	  // S / #sqrt{B}
@@ -293,7 +277,6 @@ void runPlotter(TString level,
 	  // S / B
 	  // Punzi Eq.6 (https://arxiv.org/pdf/physics/0308063v2.pdf)
 	  // Punzi Eq.7 (https://arxiv.org/pdf/physics/0308063v2.pdf)
-<<<<<<< HEAD
 	  //plotter.Roc(prefix + "ht"    + suffix, "H_{T}",         1000, "GeV", 0, 1000, "Punzi Eq.6");
 	  //plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
 	  //plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",    1000, "GeV", 0, 1000, "Punzi Eq.6");
@@ -306,28 +289,13 @@ void runPlotter(TString level,
 	  
 	  if(analysis.EqualTo("DY"))
 	    {
-	      //  plotter.Roc(prefix + "dphillmet"  + suffix, "#Delta#phi(ll,E_{T}^{miss})",    1000, "rad", 0, 3, "S / #sqrt{B}");
-	      //plotter.Roc(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}",1000, "NULL", 0,2, "S / #sqrt{B}");
-	      // plotter.Roc(prefix + "ht" + suffix, "H_{T}",1000, "GeV", 100,700, "S / #sqrt{B}");
+	      //plotter.Roc(prefix + "dphillmet"  + suffix, "#Delta#phi(ll,E_{T}^{miss})",    1000, "rad", 0, 3, "S / #sqrt{S+B}");
+	      //plotter.Roc(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}",1000, "NULL", 0,2, "S / #sqrt{S+B}");
+	      //plotter.Roc(prefix + "ht" + suffix, "H_{T}",1000, "GeV", 100,700, "S / #sqrt{S+B}");
 	      //plotter.Roc(prefix + "htnojets" + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET",1000, "GeV", 100,500, "S / #sqrt{S+B}");
 	      //plotter.Roc(prefix + "meff" + suffix, "m_{eff}",1000, "GeV", 150,600, "S / #sqrt{S+B}");
 	      // plotter.Roc(prefix + "metPfType1" + suffix, sm,1000, "GeV", 0,200, "S / #sqrt{S+B}");
 	    }
-=======
-	  //--------------------------------------------------------------------
-	  if (drawroc)
-	    {
-	      plotter.Roc(prefix + "ht"    + suffix, "H_{T}",        1000, "GeV", 0, 1000, "Punzi Eq.6");
-	      plotter.Roc(prefix + "pt2l"  + suffix, "p_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	      plotter.Roc(prefix + "mth"   + suffix, "m_{T}^{ll}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	      plotter.Roc(prefix + "mtw1"  + suffix, "m_{T}^{W1}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	      plotter.Roc(prefix + "mtw2"  + suffix, "m_{T}^{W2}",   1000, "GeV", 0, 1000, "Punzi Eq.6");
-	      plotter.Roc(prefix + "mt2ll" + suffix, "m_{T2}^{ll}",  1000, "GeV", 0, 1000, "Punzi Eq.6");
-	      plotter.Roc(prefix + "m2l"   + suffix, "m_{ll}",       1000, "GeV", 0, 1000, "Punzi Eq.6");
-	      plotter.Roc(prefix + "drll"  + suffix, "#DeltaR_{ll}",   50, "rad", 0,    5, "Punzi Eq.6");
-	    }
-
->>>>>>> 62ff01101f78ca17f2dbbfcf051b0fb0d9e4dcac
 
 	  
 	  if (!allplots) continue;
@@ -444,14 +412,8 @@ void runPlotter(TString level,
   //   https://arxiv.org/pdf/1105.0020v1.pdf
   //
   //----------------------------------------------------------------------------
-<<<<<<< HEAD
 
-
-  if (analysis.EqualTo("Control") && level.Contains("WW") && 0)  // NOT YET AVAILABLE
-
-=======
   if (xsection && level.Contains("WW"))
->>>>>>> 62ff01101f78ca17f2dbbfcf051b0fb0d9e4dcac
     {
       printf("\n Cross section\n");
       printf("---------------\n\n");

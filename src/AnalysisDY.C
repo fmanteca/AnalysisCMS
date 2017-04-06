@@ -109,7 +109,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     
     // B Veto                                                                                                                                
     //---------------------------------------------------------------------------    
-    pass_2l &= (_nbjet20csvv2l == 0);
+    pass_2l &= (_nbjet15csvv2l == 0);
     FillLevelHistograms(DY_02_BVetoLoose, pass_2l);
 
     
@@ -143,7 +143,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_2l &= (MET.Et() > 20.);
     pass_2l &= (_channel == em || MET.Et() > 55.);
     FillLevelHistograms(DY_07_PfMet, pass_2l);
-
+    if (pass_2l && _channel==em && _njet==0) EventDump();
 
     //Gui_syncro
     // bool pass_gui = (Lepton1.flavour * Lepton2.flavour < 0);
@@ -232,7 +232,6 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_ifca &= (_nlepton == 2);
     pass_ifca &= (mll > 20.);
     pass_ifca &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    if (pass_ifca) _event_weight = 100;
     FillLevelHistograms(DY_13_IFCA_Control, pass_ifca);        
     
   }

@@ -25,10 +25,10 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 6;
+const int     nmetcut = 5;
 
-const float   metcut [nmetcut] = {-1, 10, 20, 30, 40,  -1};  // [GeV]
-const float   metdraw[nmetcut] = { 0, 10, 20, 30, 40, 100};  // [GeV]
+const float   metcut [nmetcut] = {20, 30, 40, 60, -1};  // [GeV]
+const float   metdraw[nmetcut] = {20, 30, 40, 60, 100};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
@@ -115,10 +115,10 @@ TString      xtitle;
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void getDYScale(TString analysis = "Control",
-		TString level    = "02_Routin/2jet",
+void getDYScale(TString analysis = "DY",
+		TString level    = "12_DYControl",
 		TString variable = "metPfType1",
-		double  lumi_fb  = 12.9)
+		double  lumi_fb  = 35.867)
 {
   xtitle = "";
 

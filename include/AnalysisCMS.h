@@ -316,6 +316,9 @@ class AnalysisCMS : public AnalysisBase
   float                  _trailingPtCSVv2L;
   float                  _trailingPtCSVv2M;
   float                  _trailingPtCSVv2T;
+  float                  _nbjet15csvv2l;
+  float                  _nbjet15csvv2m;
+  float                  _nbjet15csvv2t;
   float                  _nbjet20csvv2l;
   float                  _nbjet20csvv2m;
   float                  _nbjet20csvv2t;

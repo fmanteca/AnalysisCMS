@@ -17,7 +17,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _ismc         = true;
   _saveminitree = false;
-  _eventdump    = false;
+  _eventdump    = true;
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
@@ -872,9 +872,9 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20cmvav2m++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20cmvav2t++;
 
-    if (pt > 20. && goodjet.csvv2ivf > CSVv2L) _nbjet20csvv2l++; 
-    if (pt > 20. && goodjet.csvv2ivf > CSVv2M) _nbjet20csvv2m++;
-    if (pt > 20. && goodjet.csvv2ivf > CSVv2T) _nbjet20csvv2t++;
+    if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet15csvv2l++; 
+    if (pt > 15. && goodjet.csvv2ivf > CSVv2M) _nbjet15csvv2m++;
+    if (pt > 15. && goodjet.csvv2ivf > CSVv2T) _nbjet15csvv2t++;
 
     if (pt < jet_pt_min) continue;
 
@@ -959,7 +959,7 @@ void AnalysisCMS::EventDump(Bool_t leptonInfo)
 	{
 	  int index = AnalysisLeptons[i].index;
 	
-	  txt_eventdump << Form("%d:%d:%d:%d:%f:%f:%f:%.0f\n",
+	  txt_eventdump << Form("%d:%d:%d:%d:%f:%f:%f:%f\n",
 				run,
 				lumi,
 				event,
@@ -970,7 +970,7 @@ void AnalysisCMS::EventDump(Bool_t leptonInfo)
 				std_vector_lepton_isTightLepton->at(index));
 	}
     }
-  else txt_eventdump << Form("%d:%d:%d:%f:%f:%f:%f:%f:%f\n", run, lumi, event, AnalysisLeptons[0].v.Pt(), AnalysisLeptons[1].v.Pt(), AnalysisLeptons[0].v.Eta(), AnalysisLeptons[1].v.Eta(), AnalysisLeptons[0].v.Phi(), AnalysisLeptons[1].v.Eta());
+  else txt_eventdump << Form("%d %d %d %f %f %f %f %f %f\n", run, lumi, event, AnalysisLeptons[0].v.Pt(), AnalysisLeptons[0].v.Eta(), AnalysisLeptons[0].v.Phi(), AnalysisLeptons[1].v.Pt(), AnalysisLeptons[1].v.Eta(), AnalysisLeptons[1].v.Phi());
 }
 
 
