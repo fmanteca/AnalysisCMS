@@ -4,11 +4,11 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t allplots   = false;
-const Bool_t datadriven = true;
+const Bool_t datadriven = false;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
 
-const TString inputdir  = "../rootfiles/nominal/";
+const TString inputdir  = "../rootfiles_1/nominal/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
@@ -113,18 +113,11 @@ void runPlotter(TString level,
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Vg",        "V#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
-<<<<<<< HEAD
-      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, 0.5);
+      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, .1);
       plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
-      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu, 0.1);
+      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu, 5.);
       //      plotter.AddProcess("05_ST",        "tW",       color_ST);
       plotter.AddProcess("13_VVV",      "VVV",      color_VVV);
-=======
-      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, roc_background, 1.0);
-      plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
-      plotter.AddProcess("04_TTTo2L2Nu", "tt",       color_TTTo2L2Nu, roc_background, 1.0);
-      plotter.AddProcess("05_ST",        "tW",       color_ST);
->>>>>>> b70587fb995f2e8accf834c1a3c5f9d29198374d
 
       if (datadriven)
 	{
@@ -192,7 +185,7 @@ void runPlotter(TString level,
       if (!analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("WW")   &&
-      	  !analysis.EqualTo("DY")   &&
+	  //      	  !analysis.EqualTo("DY")   &&
 	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -219,7 +212,7 @@ void runPlotter(TString level,
       if (!analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("WW")   &&
-       	  !analysis.EqualTo("DY")   &&
+	  //    	  !analysis.EqualTo("DY")   &&
 	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -236,7 +229,7 @@ void runPlotter(TString level,
 
 	  plotter.SetTitle(title);
 
-	  /*  
+	  /*
 	  //Cuidadoooooooo
 	  plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                  10, 0, "GeV",  logY, true, 0,  200);
 	  // plotter.Draw(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}", 20, 0, "NULL",  scale, true, 0,  2);
@@ -275,7 +268,7 @@ void runPlotter(TString level,
 
 	  plotter.Draw(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}", 20, 0, "NULL",  scale, true, 0,  2);
 	  plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                             20, 0, "GeV",  scale, true, 0, 600);
-	  */
+	  
 
 	  // ROC
 	  //
@@ -304,7 +297,7 @@ void runPlotter(TString level,
 	      // plotter.Roc(prefix + "metPfType1" + suffix, sm,1000, "GeV", 0,200, "S / #sqrt{S+B}");
 	    }
 
-	  
+	  */
 	  if (!allplots) continue;
 
 
