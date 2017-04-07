@@ -6,7 +6,6 @@
 
 enum {
   DY_00_noCuts,
-<<<<<<< HEAD
   DY_01_Has2Leptons,
   DY_02_BVetoLoose,
   DY_03_ZWindow,
@@ -30,25 +29,11 @@ enum {
   DY_11_TopControl,
   DY_12_DYControl,
   DY_13_IFCA_Control,
-=======
-  DY_01_Has2Leptons,  
-  DY_02_DYControl,
-  DY_03_BVetoLoose,
-  DY_04_Ptll,
-  DY_05_dphillmet,
-  DY_06_mpMet,
-  DY_07_PfMet,
-  DY_08_Zwindow,
-  DY_09_ZVeto,
-  DY_10_TopControl,
-  
->>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
   ncut  // This line should be always last
 };
 
 const TString scut[ncut] = {
   "DY/00_noCuts",
-<<<<<<< HEAD
   "DY/01_Has2Leptons",
   "DY/02_BVetoLoose",
   "DY/03_ZWindow",
@@ -72,19 +57,6 @@ const TString scut[ncut] = {
   "DY/11_TopControl" ,
   "DY/12_DYControl",
   "DY/13_IFCA_Control",
-=======
-  "DY/01_Has2Leptons",  
-  "DY/02_DYControl",
-  "DY/03_BVetoLoose",
-  "DY/04_Ptll" ,
-  "DY/05_dphillmet" ,
-  "DY/06_mpMet",
-  "DY/07_PfMet",
-  "DY/08_Zwindow",
-  "DY/09_ZVeto" ,
-  "DY/10_TopControl" ,
-  
->>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
 
 };
 
