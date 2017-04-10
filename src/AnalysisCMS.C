@@ -17,7 +17,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _ismc         = true;
   _saveminitree = false;
-  _eventdump    = true;
+  _eventdump    = false;
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
@@ -67,11 +67,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
   if (_filename.Contains("T2tt")) return true;
 
-
-  //if (_ismc) return true;  // Spring16 does not have correct MET filter information
-
   if (_ismc) return true;  // Spring16 does not have correct MET filter information
-
 
   if (!std_vector_trigger_special) return true;
 
@@ -440,7 +436,7 @@ void AnalysisCMS::Setup(TString analysis,
 
   root_output = new TFile(prefix + "rootfiles/" + _longname + ".root", "recreate");
 
-  if (_eventdump) txt_eventdump.open("txt/" + _longname + "_eventdump_em.txt");
+  if (_eventdump) txt_eventdump.open("txt/" + _longname + "_eventdump.txt");
 
   OpenMinitree();
 
@@ -502,10 +498,6 @@ void AnalysisCMS::ApplyWeights()
   if (!_analysis.EqualTo("Stop")) _event_weight *= _gen_ptll_weight;  // To be updated with 35.9 fb-1
   
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
-
-  //nvtx reweighting to correct the MET agreement
-
-  //  _event_weight *= (1.09283+0.00960892*nvtx-0.00208199*nvtx*nvtx+3.90763e-05*nvtx*nvtx*nvtx)/0.819195708;
 
 
   // btag scale factors
@@ -809,9 +801,6 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
   _nbjet30csvv2l  = 0;
   _nbjet30csvv2m  = 0;
   _nbjet30csvv2t  = 0;
-  _nbjet20csvv2l  = 0;
-  _nbjet20csvv2m  = 0;
-  _nbjet20csvv2t  = 0;
   _nbjet20cmvav2l = 0;
   _nbjet20cmvav2m = 0;
   _nbjet20cmvav2t = 0;
@@ -872,16 +861,16 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20cmvav2m++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20cmvav2t++;
 
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet15csvv2l++; 
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2M) _nbjet15csvv2m++;
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2T) _nbjet15csvv2t++;
-
     if (pt < jet_pt_min) continue;
 
     // I would give these variables a more generic way (now they depends on jet_pt_min)
     if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++; 
     if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
     if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
+
+    if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet15csvv2l++; 
+    if (pt > 15. && goodjet.csvv2ivf > CSVv2M) _nbjet15csvv2m++;
+    if (pt > 15. && goodjet.csvv2ivf > CSVv2T) _nbjet15csvv2t++;
 
     if (goodjet.cmvav2 > cMVAv2L) _nbjet30cmvav2l++;
     if (goodjet.cmvav2 > cMVAv2M) _nbjet30cmvav2m++;
@@ -959,7 +948,7 @@ void AnalysisCMS::EventDump(Bool_t leptonInfo)
 	{
 	  int index = AnalysisLeptons[i].index;
 	
-	  txt_eventdump << Form("%d:%d:%d:%d:%f:%f:%f:%f\n",
+	  txt_eventdump << Form("%d:%d:%d:%d:%f:%f:%f:%.0f\n",
 				run,
 				lumi,
 				event,
@@ -970,7 +959,7 @@ void AnalysisCMS::EventDump(Bool_t leptonInfo)
 				std_vector_lepton_isTightLepton->at(index));
 	}
     }
-  else txt_eventdump << Form("%d %d %d %f %f %f %f %f %f\n", run, lumi, event, AnalysisLeptons[0].v.Pt(), AnalysisLeptons[0].v.Eta(), AnalysisLeptons[0].v.Phi(), AnalysisLeptons[1].v.Pt(), AnalysisLeptons[1].v.Eta(), AnalysisLeptons[1].v.Phi());
+  else txt_eventdump << Form("%d:%d:%d\n", run, lumi, event);
 }
 
 
@@ -1272,15 +1261,6 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-
-  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTops();
-  
-  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetGenLeptonsAndNeutrinos();
-  
-  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetDark();
-  
-  if (!_analysis.EqualTo("Control") && !_analysis.EqualTo("Stop")) GetTopReco();
-
   if (_analysis.EqualTo("TTDM")) GetTops();
   
   if (_analysis.EqualTo("TTDM")) GetGenLeptonsAndNeutrinos();
@@ -1288,7 +1268,6 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   if (_analysis.EqualTo("TTDM")) GetDark();
   
   if (_analysis.EqualTo("TTDM")) GetTopReco();
-
 
   GetGenPtllWeight();
 

@@ -8,7 +8,7 @@ const Bool_t datadriven = false;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
 
-const TString inputdir  = "../rootfiles_1/nominal/";
+const TString inputdir  = "../rootfiles/nominal/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
@@ -113,9 +113,9 @@ void runPlotter(TString level,
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Vg",        "W#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
-      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, roc_background, 0.955);
+      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, roc_background); //0.955
       plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
-      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu, roc_background, 0.923);
+      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu, roc_background); //0.923
       //      plotter.AddProcess("05_ST",        "tW",       color_ST);
 
       if (datadriven)
