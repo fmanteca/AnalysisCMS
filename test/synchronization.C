@@ -71,7 +71,7 @@ void synchronization(TString sample = "GluGluWWTo2L2Nu_MCFM")
 
   TCanvas* c1 = new TCanvas("c1", "c1");
 
-  l2loose_tree->Draw("mll>>l2loose_ee_cuts",    pt && ee && eleEta && eleIdHLT && tripleChargeAgreement && expectedMissingInnerHits && eleIP);
+  l2loose_tree->Draw("mll>>l2loose_ee_cuts",    pt && ee && eleEta && eleIdTight && eleIdHLT && tripleChargeAgreement && expectedMissingInnerHits && eleIP);
   l2loose_tree->Draw("mll>>l2loose_ee_l2tight", pt && ee && l2tight);
   l2tight_tree->Draw("mll>>l2tight_ee",         pt && ee);
 
