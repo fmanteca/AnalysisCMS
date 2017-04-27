@@ -877,6 +877,8 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20cmvav2m++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20cmvav2t++;
 
+    if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet15csvv2l++; 
+
     if (pt < jet_pt_min) continue;
 
     // I would give these variables a more generic way (now they depends on jet_pt_min)
