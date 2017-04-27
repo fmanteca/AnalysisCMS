@@ -65,9 +65,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::ApplyMETFilters]\n");
 
   // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Filters_to_be_applied
-  if (_filename.Contains("T2tt")) return true;
-
-  //  if (_ismc) return true;  // Spring16 does not have correct MET filter information
+  if (_isfastsim) return true;
 
   if (!std_vector_trigger_special) return true;
 
@@ -102,7 +100,7 @@ bool AnalysisCMS::ApplyMETFilters(bool ApplyGiovanniFilters,
     G1 = -1; G2 = -1, I1 = 6, I2 = 7;
   }
 
-  if (ApplyGiovanniFilters) {
+  if (!_ismc && ApplyGiovanniFilters) {
 
     if (std_vector_trigger_special->at(G1) != 0) return false;
     if (std_vector_trigger_special->at(G2) != 0) return false;
@@ -418,6 +416,12 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("SingleMuon"))     _ismc = false;
   if (_sample.Contains("Data"))           _ismc = false;
 
+  _isfastsim = false;
+
+  if (_sample.Contains("T2tt")) _isfastsim = true;
+  if (_sample.Contains("T2bW")) _isfastsim = true;
+  if (_sample.Contains("T2tb")) _isfastsim = true;
+
   printf("\n");
   printf("   analysis: %s\n",        _analysis.Data());
   printf("   filename: %s\n",        _filename.Data());
@@ -425,6 +429,7 @@ void AnalysisCMS::Setup(TString analysis,
   printf(" luminosity: %.3f fb-1\n", _luminosity);
   printf("   nentries: %lld\n",      _nentries);
   printf("       ismc: %d\n",        _ismc);
+  printf("  isfastsim: %d\n",        _isfastsim);
   printf(" isminitree: %d\n",        _isminitree);
   
   _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix + _dataperiod;
@@ -474,9 +479,9 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight = PassTrigger();
 
-  if (!_analysis.EqualTo("Control")) _event_weight *= ApplyMETFilters();  // Not applied in "Control" while synchronizing with Xavier
+  _event_weight *= ApplyMETFilters();
 
-  if (!_ismc) _event_weight *= veto_EMTFBug;
+  _event_weight *= veto_EMTFBug;
 
   if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
   
@@ -484,7 +489,9 @@ void AnalysisCMS::ApplyWeights()
 
   if (!_ismc) return;
 
-  _event_weight *= _luminosity * baseW * puW;
+  _event_weight *= _luminosity * baseW;
+
+  if (!_isfastsim) _event_weight *= puW;  // https://twiki.cern.ch/twiki/bin/viewauth/CMS/SUSRecommendationsMoriond17#Pileup_lumi
 
   if (_sample.EqualTo("WWTo2L2Nu"))        _event_weight *= nllW;
   if (_sample.EqualTo("WgStarLNuEE"))      _event_weight *= 1.4;
@@ -492,7 +499,7 @@ void AnalysisCMS::ApplyWeights()
   if (_sample.EqualTo("DYJetsToTT_MuEle")) _event_weight *= 1.26645;
   if (_sample.EqualTo("Wg_MADGRAPHMLM"))   _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
 
-  _event_weight *= (std_vector_lepton_genmatched->at(0)*std_vector_lepton_genmatched->at(1));
+  if (!_analysis.EqualTo("Stop")) _event_weight *= (std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1));
 
   if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
 
@@ -531,6 +538,7 @@ void AnalysisCMS::ApplyWeights()
   float sf_trigger_do = effTrigW_Down;
 
 
+
   // idiso scale factors
   //----------------------------------------------------------------------------
   float sf_idiso    = 1.0;
@@ -542,6 +550,7 @@ void AnalysisCMS::ApplyWeights()
       sf_idiso    = std_vector_lepton_idisoWcut_WP_Tight80X->at(0)      * std_vector_lepton_idisoWcut_WP_Tight80X->at(1);
       sf_idiso_up = std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(0)   * std_vector_lepton_idisoWcut_WP_Tight80X_Up->at(1);
       sf_idiso_do = std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(0) * std_vector_lepton_idisoWcut_WP_Tight80X_Down->at(1);
+
 
       if (_analysis.EqualTo("WZ"))
 	{
@@ -579,7 +588,7 @@ void AnalysisCMS::ApplyWeights()
   float sf_fastsim_up = 1.0;
   float sf_fastsim_do = 1.0;
 
-  if (_analysis.EqualTo("Stop") && _filename.Contains("T2tt"))
+  if (_analysis.EqualTo("Stop") && _isfastsim)
     {
       sf_fastsim    = std_vector_lepton_fastsimW->at(0)      * std_vector_lepton_fastsimW->at(1); 
       sf_fastsim_up = std_vector_lepton_fastsimW_Up->at(0)   * std_vector_lepton_fastsimW_Up->at(1); 
@@ -809,6 +818,8 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
   _nbjet30cmvav2m = 0;
   _nbjet30cmvav2t = 0;
 
+  _nisrjet = 0;
+
   int vector_jet_size = std_vector_jet_pt->size();
 
   for (int i=0; i<vector_jet_size; i++) {
@@ -816,6 +827,10 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     float pt  = std_vector_jet_pt ->at(i);
     float eta = std_vector_jet_eta->at(i);
     float phi = std_vector_jet_phi->at(i);
+
+    if (pt < 0.) continue;
+
+    if (IsISRJet(pt, eta, phi)) _nisrjet++;
 
     if (jet_eta_max > 0 && fabs(eta) > jet_eta_max) continue;
 
@@ -858,15 +873,9 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
       } 
     }
 
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2L) _nbjet15csvv2l++; 
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2M) _nbjet15csvv2m++;
-    if (pt > 15. && goodjet.csvv2ivf > CSVv2T) _nbjet15csvv2t++;
-
     if (pt > 20. && goodjet.cmvav2 > cMVAv2L) _nbjet20cmvav2l++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2M) _nbjet20cmvav2m++;
     if (pt > 20. && goodjet.cmvav2 > cMVAv2T) _nbjet20cmvav2t++;
-
-
 
     if (pt < jet_pt_min) continue;
 
@@ -874,8 +883,6 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
     if (goodjet.csvv2ivf > CSVv2L) _nbjet30csvv2l++; 
     if (goodjet.csvv2ivf > CSVv2M) _nbjet30csvv2m++;
     if (goodjet.csvv2ivf > CSVv2T) _nbjet30csvv2t++;
-
-
 
     if (goodjet.cmvav2 > cMVAv2L) _nbjet30cmvav2l++;
     if (goodjet.cmvav2 > cMVAv2M) _nbjet30cmvav2m++;
@@ -984,7 +991,6 @@ void AnalysisCMS::GetTrkMET(float module, float phi)
 {
   trkMET.SetPtEtaPhiM(module, 0.0, phi, 0.0);
 }
-
 
 
 //------------------------------------------------------------------------------
@@ -1518,8 +1524,6 @@ void AnalysisCMS::OpenMinitree()
   //----------------------------------------------------------------------------
   minitree = new TTree("latino", "minitree");
 
-  // A
-  minitree->Branch("alignment",        &_alignment,        "alignment/F");
   // B
   minitree->Branch("bjet1csvv2ivf",    &_bjet1csvv2ivf,    "bjet1csvv2ivf/F");
   minitree->Branch("bjet1eta",         &_bjet1eta,         "bjet1eta/F");
@@ -1657,7 +1661,9 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nbjet30csvv2l",    &_nbjet30csvv2l,    "nbjet30csvv2l/F");
   minitree->Branch("nbjet30csvv2m",    &_nbjet30csvv2m,    "nbjet30csvv2m/F");
   minitree->Branch("nbjet30csvv2t",    &_nbjet30csvv2t,    "nbjet30csvv2t/F");
+  minitree->Branch("nisrjet",          &_nisrjet,          "nisrjet/F");
   minitree->Branch("njet",             &_njet,             "njet/F");
+  minitree->Branch("nlepton",          &_nlepton,          "nlepton/I");
   minitree->Branch("nu1ptGEN",         &_nu1pt_gen,        "nu1ptGEN/F");
   minitree->Branch("nu1tauGEN",        &_nu1tau_gen,       "nu1tauGEN/F");
   minitree->Branch("nu2ptGEN",         &_nu2pt_gen,        "nu2ptGEN/F");
@@ -1665,12 +1671,10 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("nvtx",             &nvtx,              "nvtx/F");
   minitree->Branch("ntrueint",         &nGoodVtx,          "nGoodVtx/F");
   // P
-  minitree->Branch("planarity",        &_planarity,        "planarity/F");
   minitree->Branch("ptbll",            &_ptbll,            "ptbll/F");
   // R
   minitree->Branch("run",              &run,               "run/I");
   // S
-  minitree->Branch("sphericity",       &_sphericity,       "sphericity/F");
   minitree->Branch("susyMLSP",         &susyMLSP,          "susyMLSP/F");
   minitree->Branch("susyMstop",        &susyMstop,         "susyMstop/F");
   minitree->Branch("scale",            &_scale,            "scale"); 
@@ -2658,126 +2662,6 @@ void AnalysisCMS::GetTopReco()
 
 
 //------------------------------------------------------------------------------
-// GetMomentumTensor
-//------------------------------------------------------------------------------
-TMatrixDSym AnalysisCMS::GetMomentumTensor()
-{
-  // TMatrixDSym has a funcion implemented to calculate the eigenvalues                                              
-  TMatrixDSym smatrix(3);
-
-
-  // Leptons
-  //----------------------------------------------------------------------------
-  smatrix[0][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Px();
-  smatrix[0][1] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
-  smatrix[0][2] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
-
-  smatrix[1][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Py();
-  smatrix[1][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Py();
-  smatrix[1][2] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
-
-  smatrix[2][0] = AnalysisLeptons[0].v.Px() * AnalysisLeptons[0].v.Pz();
-  smatrix[2][1] = AnalysisLeptons[0].v.Py() * AnalysisLeptons[0].v.Pz();
-  smatrix[2][2] = AnalysisLeptons[0].v.Pz() * AnalysisLeptons[0].v.Pz();
-
-  smatrix[0][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Px();
-  smatrix[0][1] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
-  smatrix[0][2] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
-
-  smatrix[1][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Py();
-  smatrix[1][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Py();
-  smatrix[1][2] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
-
-  smatrix[2][0] += AnalysisLeptons[1].v.Px() * AnalysisLeptons[1].v.Pz();
-  smatrix[2][1] += AnalysisLeptons[1].v.Py() * AnalysisLeptons[1].v.Pz();
-  smatrix[2][2] += AnalysisLeptons[1].v.Pz() * AnalysisLeptons[1].v.Pz();
-
-
-  // Jets
-  //----------------------------------------------------------------------------
-  for (unsigned int i=0; i<AnalysisJets.size(); i++) {
-
-    smatrix[0][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Px();
-    smatrix[0][1] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
-    smatrix[0][2] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
-
-    smatrix[1][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Py();
-    smatrix[1][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Py();
-    smatrix[1][2] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
-
-    smatrix[2][0] += AnalysisJets[i].v.Px() * AnalysisJets[i].v.Pz();
-    smatrix[2][1] += AnalysisJets[i].v.Py() * AnalysisJets[i].v.Pz();
-    smatrix[2][2] += AnalysisJets[i].v.Pz() * AnalysisJets[i].v.Pz();
-  }
-
-
-  return smatrix;
-}
-
-
-//------------------------------------------------------------------------------
-// GetEigenvalues
-//------------------------------------------------------------------------------
-TVectorD AnalysisCMS::GetEigenvalues(TMatrixDSym smatrix)
-{
-  TMatrixDSymEigen eigen(smatrix);
-
-  TVectorD eigenvalues = eigen.GetEigenValues();
-
-  return eigenvalues;
-}
-
-
-//------------------------------------------------------------------------------
-// GetSphericity
-//------------------------------------------------------------------------------
-float AnalysisCMS::GetSphericity(TMatrixDSym smatrix)
-{
-  TVectorD eigenvalues = GetEigenvalues(smatrix);
-
-  float eigenvalue1 = eigenvalues[0];
-  float eigenvalue2 = eigenvalues[1];
-  float eigenvalue3 = eigenvalues[2];
-
-  _sphericity = 1.5 * (eigenvalue2 + eigenvalue3) / (eigenvalue1 + eigenvalue2 + eigenvalue3);
-
-  return _sphericity;
-}
-
-
-//------------------------------------------------------------------------------
-// GetAlignment
-//------------------------------------------------------------------------------
-float AnalysisCMS::GetAlignment(TMatrixDSym smatrix)
-{
-  TVectorD eigenvalues = GetEigenvalues(smatrix);
-
-  float eigenvalue1 = eigenvalues[0];
-  float eigenvalue2 = eigenvalues[1];
-
-  _alignment = eigenvalue2 / eigenvalue1;
-
-  return _alignment;
-}
-
-
-//------------------------------------------------------------------------------
-// GetPlanarity
-//------------------------------------------------------------------------------
-float AnalysisCMS::GetPlanarity(TMatrixDSym smatrix)
-{
-  TVectorD eigenvalues = GetEigenvalues(smatrix);
-
-  float eigenvalue2 = eigenvalues[1];
-  float eigenvalue3 = eigenvalues[2];
-
-  _planarity = eigenvalue3 / eigenvalue2;
-
-  return _planarity;
-}
-
-
-//------------------------------------------------------------------------------
 // GetGenWeightsLHE
 // https://github.com/latinos/LatinoTrees/blob/master/AnalysisStep/src/WeightDumper.cc#L157
 //------------------------------------------------------------------------------
@@ -2824,3 +2708,61 @@ void AnalysisCMS::GetScaleAndResolution()
 }
 
 
+//------------------------------------------------------------------------------
+// IsISRJet
+//------------------------------------------------------------------------------
+bool AnalysisCMS::IsISRJet(float pt, float eta, float phi)
+{
+  // https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L1268-L1295
+  // https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/plugins/bmaker_full.cc#L373-L395
+  // https://github.com/manuelfs/babymaker/blob/0136340602ee28caab14e3f6b064d1db81544a0a/bmaker/interface/jet_met_tools.hh#L34-L36
+  if (pt <= 30. || fabs(eta) > 2.4) return false;
+
+  TLorentzVector ThisJet; ThisJet.SetPtEtaPhiM(pt, eta, phi, 0.);
+
+  for (int i=0; i<std_vector_partonGen_pt->size(); i++) {
+
+    if (fabs(std_vector_partonGen_pid->at(i)) != 5) continue;
+    if (std_vector_partonGen_isHardProcess->at(i) != 1) continue;
+    
+    TLorentzVector bQuark; bQuark.SetPtEtaPhiM(std_vector_partonGen_pt ->at(i),
+					       std_vector_partonGen_eta->at(i),
+					       std_vector_partonGen_phi->at(i),
+					       4.18);
+    
+    for (int wb=std_vector_VBoson_pt->size()-1; wb>=0; wb--) {
+      
+      if (std_vector_VBoson_pt->at(wb) <= 0.) continue;
+      
+      int Wid = std_vector_VBoson_pid->at(wb);  // Wid = -24 for W- and +24 for W+
+      
+      if ((Wid == +24 && std_vector_partonGen_pid->at(i) == +5) ||
+	  (Wid == -24 && std_vector_partonGen_pid->at(i) == -5)) {
+	    
+	TLorentzVector WBoson; WBoson.SetPtEtaPhiM(std_vector_VBoson_pt ->at(wb),
+						   std_vector_VBoson_eta->at(wb),
+						   std_vector_VBoson_phi->at(wb),
+						   80.385);
+	    
+	TLorentzVector tCandidate = bQuark + WBoson;
+	    
+	for (int j=0; j<std_vector_partonGen_pt->size(); j++) {
+	      
+	  if (fabs(std_vector_partonGen_pid->at(j)) != 6) continue;
+	  if (std_vector_partonGen_isHardProcess->at(j) != 1) continue;
+	  if (std_vector_partonGen_pid->at(i)*std_vector_partonGen_pid->at(j) < 0) continue;
+	      
+	  TLorentzVector tQuark; tQuark.SetPtEtaPhiM(std_vector_partonGen_pt ->at(j),
+						     std_vector_partonGen_eta->at(j),
+						     std_vector_partonGen_phi->at(j),
+						     172.44);
+  
+	  if (tQuark.DeltaR(tCandidate) < 0.1) 
+	    if (ThisJet.DeltaR(bQuark) < 0.3) return false;
+	}
+      }
+    }
+  }	  
+  
+  return true;
+}
