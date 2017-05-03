@@ -830,7 +830,8 @@ void AnalysisCMS::GetJets(float jet_eta_max, float jet_pt_min)
 
     if (pt < 0.) continue;
 
-    if (pt>30. && fabs(eta)<2.4 && std_vector_jet_isFromISR->at(i)==1) _nisrjet++;
+    if (std_vector_jet_isFromISR)
+      if (pt > 30. && fabs(eta) < 2.4 && std_vector_jet_isFromISR->at(i) == 1) _nisrjet++;
 
     if (jet_eta_max > 0 && fabs(eta) > jet_eta_max) continue;
 
@@ -2708,4 +2709,3 @@ void AnalysisCMS::GetScaleAndResolution()
 
   _uPerp = (uT.Px() * qT.Py() - uT.Py() * qT.Px()) / qT.Mod();
 }
-
