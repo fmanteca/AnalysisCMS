@@ -109,7 +109,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     
     // // B Veto                                                                                                                                
     // //---------------------------------------------------------------------------    
-    pass_2l &= (_nbjet15csvv2l == 0);
+    pass_2l &= (_nbjet20cmvav2l == 0);
     FillLevelHistograms(DY_02_BVetoLoose, pass_2l);
 
     
