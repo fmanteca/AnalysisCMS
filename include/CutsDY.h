@@ -29,7 +29,7 @@ enum {
   DY_11_TopControl,
   DY_12_DYControl,
   DY_13_IFCA_Control,
-  DY_14_latino,
+  /* DY_14_latino, */
   ncut  // This line should be always last
 };
 
@@ -58,7 +58,7 @@ const TString scut[ncut] = {
   "DY/11_TopControl" ,
   "DY/12_DYControl",
   "DY/13_IFCA_Control",
-  "DY/14_latino",
+  /* "DY/14_latino", */
 
 };
 

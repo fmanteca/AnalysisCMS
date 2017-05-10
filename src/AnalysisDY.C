@@ -84,11 +84,11 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;
     _pt2l = ptll;
         
-    bool pass_2l = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
-    pass_2l &= (std_vector_lepton_pt->at(0) > 25.);
-    pass_2l &= (std_vector_lepton_pt->at(1) > 25.);
-    pass_2l &= (std_vector_lepton_pt->at(2) < 10.);
-    pass_2l &= (mll>20.);
+     bool pass_2l = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+     pass_2l &= (std_vector_lepton_pt->at(0) > 25.);
+     pass_2l &= (std_vector_lepton_pt->at(1) > 20.);
+     pass_2l &= (std_vector_lepton_pt->at(2) < 10.);
+     pass_2l &= (mll>20.);
 
     
 
@@ -97,7 +97,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     
     // //No cuts
     // //---------------------------------------------------------------------------
-    FillLevelHistograms(DY_00_noCuts, true);    
+        FillLevelHistograms(DY_00_noCuts, true);    
 
     
     //Has 2 Leptons                                                                                                                           
@@ -109,14 +109,23 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     
     // // B Veto                                                                                                                                
     // //---------------------------------------------------------------------------    
-    pass_2l &= (_nbjet20cmvav2l == 0);
+    pass_2l &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_2l &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_2l &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_2l &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_2l &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_2l &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_2l &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_2l &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_2l &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_2l &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
     FillLevelHistograms(DY_02_BVetoLoose, pass_2l);
 
     
     // // Z Window region
     // //---------------------------------------------------------------------------  
-    bool pass_Zwindow = fabs(_m2l - Z_MASS) < 15.;
-     FillLevelHistograms(DY_03_ZWindow, pass_2l && pass_Zwindow);
+    bool pass_Zwindow = fabs(mll - Z_MASS) < 15.;
+    FillLevelHistograms(DY_03_ZWindow, pass_2l && pass_Zwindow);
 
 
     // // Z peak Veto
@@ -141,37 +150,47 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
 
     // // MET cut                                                                                                           
     // //---------------------------------------------------------------------------                                                            
-     pass_2l &= (MET.Et() > 20.);
-     pass_2l &= (_channel == em || MET.Et() > 55.);
-     FillLevelHistograms(DY_07_PfMet, pass_2l);
-     if (pass_2l && _channel==em && _njet==0) EventDump();
+    pass_2l &= (MET.Et() > 20.);
+    pass_2l &= (_channel == em || MET.Et() > 55.);
+    FillLevelHistograms(DY_07_PfMet, pass_2l);
+    //if (pass_2l && _channel==em && _njet==0) EventDump();
 
-    // //Gui_syncro
-    // bool pass_gui = (Lepton1.flavour * Lepton2.flavour < 0);
-    // pass_gui &= (Lepton1.v.Pt() > 25.);
-    // pass_gui &= (Lepton2.v.Pt() > 20.);
+    //Gui_syncro
+    // bool pass_gui = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    // pass_gui &= (std_vector_lepton_pt->at(0) > 25.);
+    // pass_gui &= (std_vector_lepton_pt->at(1) > 20.);
 
     // FillLevelHistograms(DY_25_20, pass_gui);
     // pass_gui &= (std_vector_lepton_pt->at(2) < 10.);
     // FillLevelHistograms(DY_third_lepton_veto, pass_gui);
     // pass_gui &= (mll>12.);
     // FillLevelHistograms(DY_mll, pass_gui);
-    // pass_gui &= (MET.Et() > 20.);
+    // pass_gui &= (metPfType1 > 20.);
     // FillLevelHistograms(DY_met, pass_gui);
-    // pass_gui &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    // pass_gui &= (_channel == em || fabs(mll - Z_MASS) > 15.);
     // FillLevelHistograms(DY_zveto, pass_gui);
     // pass_gui &= (mpmet > 20.);
     // FillLevelHistograms(DY_mpmet, pass_gui);
     // pass_gui &= (ptll>30.); 
     // FillLevelHistograms(DY_ptll, pass_gui);
-    // pass_gui &= (_nbjet20csvv2l == 0);
-    // FillLevelHistograms(DY_bveto, pass_gui); 
-    // //    if (pass_gui && _channel==em) EventDump();
+    //  pass_gui &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    //  pass_gui &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    //  pass_gui &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    //  pass_gui &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    //  pass_gui &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    //  pass_gui &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    //  pass_gui &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    //  pass_gui &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    //  pass_gui &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    //  pass_gui &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+
+    //  FillLevelHistograms(DY_bveto, pass_gui); 
+    //  if (pass_gui && _channel== mm) EventDump();
     // bool pass_0j = pass_gui;
-    // pass_0j &= (_njet==0);
+    // pass_0j &= (njet==0);
 
     // FillLevelHistograms(DY_0jet, pass_0j);
-    // pass_gui &= (_njet==1);
+    // pass_gui &= (njet==1);
     // FillLevelHistograms(DY_1jet, pass_gui);
     
 
@@ -235,28 +254,28 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_ifca &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
     FillLevelHistograms(DY_13_IFCA_Control, pass_ifca);        
     
-    //plotsConfiguration synchro
+    // //plotsConfiguration synchro
     
-    bool pass_latino = (std_vector_lepton_pt->at(0) > 25.);
-    pass_latino &= (std_vector_lepton_pt->at(1)>25.);
-    pass_latino &= (std_vector_lepton_pt->at(2)<10.); 
-    pass_latino &= (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) == -13*11);
-    pass_latino &= (mll > 20.);                                                                                                                      
-    pass_latino &= (metPfType1 > 20.);                                                                                                              
-    pass_latino &= (mpmet > 20.);                                                                                                                    
-    pass_latino &= (ptll > 30.);	 
-    pass_latino &= (std_vector_jet_pt->at(0) < 30.);                                                                                              
-    pass_latino &= ( std_vector_jet_pt->at(0) < 15. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );                                       
-    pass_latino &= ( std_vector_jet_pt->at(1) < 15. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );                                                          
-    pass_latino &= ( std_vector_jet_pt->at(2) < 15. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );                                                          
-    pass_latino &= ( std_vector_jet_pt->at(3) < 15. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );                                                          
-    pass_latino &= ( std_vector_jet_pt->at(4) < 15. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );                                                          
-    pass_latino &= ( std_vector_jet_pt->at(5) < 15. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );                                                          
-    pass_latino &= ( std_vector_jet_pt->at(6) < 15. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );                                                          
-    pass_latino &= ( std_vector_jet_pt->at(7) < 15. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );                                                 
-    pass_latino &= ( std_vector_jet_pt->at(8) < 15. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );                                                       
-    pass_latino &= ( std_vector_jet_pt->at(9) < 15. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
-    FillLevelHistograms(DY_14_latino, pass_latino);
+    // bool pass_latino = (std_vector_lepton_pt->at(0) > 25.);
+    // pass_latino &= (std_vector_lepton_pt->at(1)>25.);
+    // pass_latino &= (std_vector_lepton_pt->at(2)<10.); 
+    // pass_latino &= (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) == -13*11);
+    // pass_latino &= (mll > 20.);                                                                                                                      
+    // pass_latino &= (metPfType1 > 20.);                                                                                                              
+    // pass_latino &= (mpmet > 20.);                                                                                                                    
+    // pass_latino &= (ptll > 30.);	 
+    // pass_latino &= (std_vector_jet_pt->at(0) < 30.);                                                                                              
+    // pass_latino &= ( std_vector_jet_pt->at(0) < 15. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );                                       
+    // pass_latino &= ( std_vector_jet_pt->at(1) < 15. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );                                                          
+    // pass_latino &= ( std_vector_jet_pt->at(2) < 15. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );                                                          
+    // pass_latino &= ( std_vector_jet_pt->at(3) < 15. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );                                                          
+    // pass_latino &= ( std_vector_jet_pt->at(4) < 15. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );                                                          
+    // pass_latino &= ( std_vector_jet_pt->at(5) < 15. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );                                                          
+    // pass_latino &= ( std_vector_jet_pt->at(6) < 15. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );                                                          
+    // pass_latino &= ( std_vector_jet_pt->at(7) < 15. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );                                                 
+    // pass_latino &= ( std_vector_jet_pt->at(8) < 15. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );                                                       
+    // pass_latino &= ( std_vector_jet_pt->at(9) < 15. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    // FillLevelHistograms(DY_14_latino, pass_latino);
   }
 
 
