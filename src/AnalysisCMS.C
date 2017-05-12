@@ -17,7 +17,7 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _ismc         = true;
   _saveminitree = false;
-  _eventdump    = false;
+  _eventdump    = true;
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
@@ -974,7 +974,7 @@ void AnalysisCMS::EventDump(Bool_t leptonInfo)
 				std_vector_lepton_isTightLepton->at(index));
 	}
     }
-  else txt_eventdump << Form("%d:%d:%d\n", run, lumi, event);
+  else txt_eventdump << Form("%d:%d:%d:%f:%f:%f:%f:%f\n", run, lumi, event, MET.Et(),trkMET.Et(),min(fabs(Lepton1.v.DeltaPhi(MET)),fabs(Lepton2.v.DeltaPhi(MET))),min(fabs(Lepton1.v.DeltaPhi(trkMET)),fabs(Lepton2.v.DeltaPhi(trkMET))),mpmet);
 }
 
 
