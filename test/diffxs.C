@@ -1,6 +1,14 @@
+//-----------------------------------------------------------------------------------------------------
+// Usage: root -l -b -q diffxs.C
+// Change the difxs histogram information in "Introduce the values: Bin values and its errors"  
+//-----------------------------------------------------------------------------------------------------
+
 #include <iostream>
 using namespace std;
 #include "TLatex.h"
+
+
+//Declaration of some style functions from HistogramReader.C
 
 void     DrawLatex          (Font_t         tfont,
 			     Float_t        x,
@@ -21,15 +29,6 @@ void     SetAxis            (TH1*           hist,
 
 
 
-
-
-
-
-
-
-
-
-
 void diffxs()
 {
   
@@ -37,15 +36,15 @@ void diffxs()
 
   // Introduce the values: Bin values and its errors
 
-   const Int_t NBINS_mll = 5;
-   Int_t edges_mll[NBINS_mll+1]={0,1,2,3,4,5};
-   Double_t values_xs_mll[NBINS_mll]={100., 150., 300., 600., 1000.};
-   Double_t values_xs_mll_err[NBINS_mll]={10., 15., 30., 60., 100.};
+   const Int_t NBINS_mll = 7;
+   Int_t edges_mll[NBINS_mll+1]={20,40,60,80,100,120, 140, 160};
+   Double_t values_xs_mll[NBINS_mll]={90., 120., 100., 80., 50., 25., 10.};
+   Double_t values_xs_mll_err[NBINS_mll]={3., 5., 10., 10., 5., 3., 2.};
 
-   const Int_t NBINS_ptll = 5;
-   Int_t edges_ptll[NBINS_ptll+1]={0,1,2,3,4,5};
-   Double_t values_xs_ptll[NBINS_ptll]={1000., 500., 800., 1500., 300.};
-   Double_t values_xs_ptll_err[NBINS_ptll]={120., 400., 100., 50., 50.};
+   const Int_t NBINS_ptll = 9;
+   Int_t edges_ptll[NBINS_ptll+1]={20,40,60,80,100,120,140,160,180,200};
+   Double_t values_xs_ptll[NBINS_ptll]={140., 120., 100., 90., 70., 60., 40., 30., 20.};
+   Double_t values_xs_ptll_err[NBINS_ptll]={10., 10., 10., 9., 8., 6., 5., 2., 2.,};
 
    
   // Fill the histograms
@@ -70,7 +69,7 @@ void diffxs()
 
   TCanvas* mll_xs = new TCanvas("mll_xs", "WW diff Cross Section (mll)");
   mll->Draw("E1");
-  SetAxis(mll, "m_{ll} [GeV]", "events", 1.5, 2.5);
+  SetAxis(mll, "m_{ll} [GeV]", "XSec / pb", 1.5, 2.5);
 
   //Titles
   DrawLatex(61, 0.190, 0.945, 0.050, 11, "CMS");
@@ -85,7 +84,7 @@ void diffxs()
 
   TCanvas* ptll_xs = new TCanvas("ptll_xs", "WW diff Cross Section (ptll)");
   ptll->Draw("E1");
-  SetAxis(ptll, "p_{T}^{ll} [GeV]", "events", 1.5, 2.5);
+  SetAxis(ptll, "p_{T}^{ll} [GeV]", "XSec / pb", 1.5, 2.5);
 
   //Titles
   DrawLatex(61, 0.190, 0.945, 0.050, 11, "CMS");
@@ -99,7 +98,9 @@ void diffxs()
   ptll->SetMarkerSize (      0);
 
   
-
+  //Save the plots
+  mll_xs->SaveAs("mll_xs.png");
+  ptll_xs->SaveAs("ptll_xs.png");
              
 }
 
