@@ -21,20 +21,18 @@ const TCut mycut = "eventW";
 
 	//-----
 
-	for( int i = 0; i < nprocess; i++ ){
+	//for( int i = 0; i < nprocess; i++ ){
 
-	  //CreateHistograms2( processID[i] ); 
-	  CreateHistograms2( i ); 
+	//  CreateHistograms2( i ); 
 
-
-	}
+	//}
 
 
-	  //CreateHistograms2( ttDM );
+	CreateHistograms2( ttDM );
 
+	//-----
 
-
-	//for( int i = 0; i < nscalar; i++ ){
+	//for( int i = 0; i < nscalar; i++ ){  // -> change 'processID[]' by 'scalarID[]' in 'myfile = new TFile ...'
 
 	//	CreateHistograms2( i ); 
 
@@ -53,35 +51,42 @@ void CreateHistograms2( int process ){
 
 <<<<<<< HEAD
 	TCanvas* c1 = new TCanvas("canvas", "the canvas");
-
+	
+	//if( process == TT ) continue; //processID[process] = processID[WW];   // to speed-up checks: not including the TT
 
 	TFile* myfile; 
 
 	//myfile = new TFile( "/afs/cern.ch/work/j/jgarciaf/public/ttdm-april/" + processID[process] + ".root", "read" );
-	myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
-
-
+	//myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
+	myfile = new TFile( "/eos/user/j/jgarciaf/minitrees/" + minitreeDir[process] + "/TTDM/" + processID[process] + ".root", "read" );
 
 	/*if ( process == data ){
 
-		myfile = new TFile( "../minitrees/Zee/MET/" + processID[process] + ".root", "read" );
-		myfile = new TFile( "../minitrees/" + inputdir + "/TTDM/" + processID[process] + ".root", "read" );
+		myfile = new TFile( "xxxxxxx" + processID[process] + ".root", "read" );
+		myfile = new TFile( "yyyyyyy" + processID[process] + ".root", "read" );
 
 	}
 
 	else{
 
+<<<<<<< HEAD
 		myfile = new TFile( "../minitrees/" + inputdir + "/MET/" + processID[process] + ".root", "read" );
 		//myfile = new TFile( "/afs/cern.ch/user/c/cprieels/work/public/TTDM36fbMinitrees/" + processID[process] + ".root", "read" );
 =======
 	TFile* myfile = new TFile( "../minitrees/" + inputdir + "/DY/" + process + ".root", "read" ); 
 >>>>>>> 586cff9abf463293bb040eac2c51f7d57756e392
+=======
+		myfile = new TFile( "xxxxxxx" + processID[process] + ".root", "read" );
+		myfile = new TFile( "yyyyyyy" + processID[process] + ".root", "read" );
+>>>>>>> 655d66bf5537572a340cb5f2bbcac43aac6f2219
 	
 	}*/
  
 	for( int k = 0; k < nsystematic; k++ ){
 
-		if( k > nominal ) continue; //toppTrw ) continue;
+		if(  process == data  &&  k > nominal  ) continue; 
+
+		if( k > MuESdo ) continue; //toppTrw ) continue;
 
 		cout << "\t\t systematic: " << systematicID[k] << endl;
 
@@ -94,9 +99,12 @@ void CreateHistograms2( int process ){
 
 		TCut thecut = mycut[k]; 
 
+		if ( process != data               ) thecut = Form("new_puW"             )*thecut; 
+                if ( process != data               ) thecut = Form("         %4.2f", PUrw)*thecut; 
 		if ( process == TT && k != toppTrw ) thecut = Form("         %4.2f", ttSF)*thecut; 
 		if ( process == TT && k == toppTrw ) thecut = Form("toppTRwW*%4.2f", ttSF)*thecut; 
 		if ( process == DY                 ) thecut = Form("         %4.2f", DYSF)*thecut; 
+                if ( process == ttDM               ) thecut = Form("         %4.2f", xs2l)*thecut; 
 
 		/*if( (k >= QCDup && k <= PDFdo) && (process != data && process != ttDM && process != fakes && process != ST && process != HZ) ){
 

@@ -115,10 +115,17 @@ TString      xtitle;
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<<<<<<< HEAD
 void getDYScale(TString analysis = "DY",
 		TString level    = "12_DYControl",
 		TString variable = "metPfType1",
 		double  lumi_fb  = 35.867)
+=======
+void getDYScale(TString analysis = "Control",
+		TString level    = "02_Routin",
+		TString variable = "mt2ll",
+		double  lumi_fb  = 35.9)
+>>>>>>> 655d66bf5537572a340cb5f2bbcac43aac6f2219
 {
   xtitle = "";
 
