@@ -507,6 +507,11 @@ void AnalysisCMS::ApplyWeights()
   
   if (GEN_weight_SM) _event_weight *= GEN_weight_SM / abs(GEN_weight_SM);
 
+  //nvtx reweighting to correct the MET agreement                                                                                                                                                  
+
+   _event_weight *= (1.20362+0.0117524*nvtx-0.00232374*nvtx*nvtx+4.31378e-05*nvtx*nvtx*nvtx)*1.074758092;         
+
+
 
   // btag scale factors
   //----------------------------------------------------------------------------

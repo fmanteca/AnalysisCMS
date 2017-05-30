@@ -144,7 +144,7 @@ double         eff          [ll];
 // Functions                                                                                                                                                                           
 //------------------------------------------------------------------------------                                                                                                       
 
-void getWWxs  (TString analysis = "DY", TString Top_control_level = "11_TopControl/1jet", TString WW_signal_level = "10_ZVeto/1jet", double lumi_fb = 12.9, double lumi_fb_err=0.1, TString DY_control_level = "02_DYControl/1jet", double signal1_xs=12.1780, double signal2_xs=0.5905, double signal1_ngen=1967180, double signal2_ngen=481600, double baseW=0.3189026, double BR=0.1086, double BR_err=0.0009) {
+void getWWxs  (TString analysis = "DY", TString Top_control_level = "11_TopControl/0jet", TString WW_signal_level = "07_PfMet/0jet", double lumi_fb = 35.867, double lumi_fb_err=0.1, TString DY_control_level = "12_DYControl/0jet", double signal1_xs=12.1780, double signal2_xs=0.5905, double signal1_ngen=1967180, double signal2_ngen=481600, double baseW=0.3189026, double BR=0.1086, double BR_err=0.0009) {
 
 
   //Cuidado: los MC estan estalados a lumi_fb, pero los fakes y los datos no                                                                                                          

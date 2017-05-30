@@ -659,7 +659,7 @@ void HistogramReader::CrossSection(TString level,
     if (_luminosity_fb > 0 && _mcscale[i] > -999) counterDummy *= _luminosity_fb;
 
     if (_mcscale[i] > 0) counterDummy *= _mcscale[i];
-
+    
     counterBackground += counterDummy;
   }
 
