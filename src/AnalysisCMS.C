@@ -489,6 +489,9 @@ void AnalysisCMS::ApplyWeights()
 
   _event_weight_genmatched = std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1);
 
+  _event_weight_truegenmatched = ((std_vector_leptonGen_isPrompt->at(0) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(0)) &&
+				  (std_vector_leptonGen_isPrompt->at(1) || std_vector_leptonGen_isDirectPromptTauDecayProduct->at(1)));
+
   if (!_analysis.EqualTo("TTDM") && !_analysis.EqualTo("Stop")) _event_weight *= _event_weight_genmatched;
 
   if (_analysis.EqualTo("WZ")) _event_weight *= std_vector_lepton_genmatched->at(2);
@@ -621,8 +624,6 @@ void AnalysisCMS::GetLeptons()
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::GetLeptons]\n");
 
-  bool found_third_tight_lepton = false;
-
   AnalysisLeptons.clear();
 
   _ntightlepton = 0;
@@ -631,40 +632,21 @@ void AnalysisCMS::GetLeptons()
 
   for (int i=0; i<vector_lepton_size; i++) {
 
-    float eta       = std_vector_lepton_eta->at(i);
-    float flavour   = std_vector_lepton_flavour->at(i);
-    float phi       = std_vector_lepton_phi->at(i);
-    float pt        = std_vector_lepton_pt->at(i);
-    float type      = std_vector_lepton_isTightLepton->at(i);
-    float idisoW    = (std_vector_lepton_idisoW) ? std_vector_lepton_idisoW->at(i) : 1.;
-    float motherPID = (_ismc) ? std_vector_leptonGen_MotherPID->at(i) : -999999;
+    float eta     = std_vector_lepton_eta->at(i);
+    float flavour = std_vector_lepton_flavour->at(i);
+    float phi     = std_vector_lepton_phi->at(i);
+    float pt      = std_vector_lepton_pt->at(i);
+    float type    = std_vector_lepton_isTightLepton->at(i);
 
     if (std_vector_lepton_isLooseLepton->at(i) != 1) continue;
 
     if (pt < 0.) continue;
 
-    bool reject_lepton = false;
-    
-    if (i > 1 && !_filename.Contains("fakeW") && _analysis.EqualTo("WZ"))
-      {
-	if (!found_third_tight_lepton)
-	  {
-	    if (type != Tight)
-	      reject_lepton = true;
-	    else
-	      found_third_tight_lepton = true;
-	  }
-      }
-
-    if (reject_lepton) continue;
-
     Lepton lep;
       
-    lep.index     = i;
-    lep.type      = type;
-    lep.flavour   = flavour;
-    lep.idisoW    = idisoW;
-    lep.motherPID = motherPID; 
+    lep.index   = i;
+    lep.type    = type;
+    lep.flavour = flavour;
       
     float mass = -999;
 
@@ -697,6 +679,7 @@ void AnalysisCMS::GetLeptons()
 
 
   // SUSY check of the nonprompt background shape
+  //----------------------------------------------------------------------------
   if (_systematic.Contains("fake") && _nlepton > 2 && _ntightlepton == 2) {
 
     if (AnalysisLeptons[2].type != 1) {
@@ -724,20 +707,20 @@ void AnalysisCMS::GetLeptons()
     }
   }
 
-  
+
   _lep1eta  = Lepton1.v.Eta();
   _lep1phi  = Lepton1.v.Phi();
   _lep1pt   = Lepton1.v.Pt();
   _lep1mass = Lepton1.v.M(); 
   _lep1id   = Lepton1.flavour; 
-  _lep1mid  = Lepton1.motherPID;
+  _lep1mid  = GetMotherPID(0);
 
   _lep2eta  = Lepton2.v.Eta();
   _lep2phi  = Lepton2.v.Phi();
   _lep2pt   = Lepton2.v.Pt();
   _lep2mass = Lepton2.v.M(); 
-  _lep2id   = Lepton2.flavour; 
-  _lep2mid  = Lepton2.motherPID;
+  _lep2id   = Lepton2.flavour;
+  _lep2mid  = GetMotherPID(1);
 
   _detall = fabs(_lep1eta - _lep2eta);
 
@@ -1524,22 +1507,23 @@ void AnalysisCMS::OpenMinitree()
   minitree->Branch("drll",              &drll,              "drll/F");
   minitree->Branch("dyll",              &_dyll,             "dyll/F");
   // E
-  minitree->Branch("event",             &event,                    "event/I");
-  minitree->Branch("eventW",            &_event_weight,            "eventW/F");
-  minitree->Branch("eventW_Btagup",     &_event_weight_Btagup,     "eventW_Btagup/F");
-  minitree->Branch("eventW_Btagdo",     &_event_weight_Btagdo,     "eventW_Btagdo/F");
-  minitree->Branch("eventW_BtagFSup",   &_event_weight_BtagFSup,   "eventW_BtagFSup/F");
-  minitree->Branch("eventW_BtagFSdo",   &_event_weight_BtagFSdo,   "eventW_BtagFSdo/F");
-  minitree->Branch("eventW_Idisoup",    &_event_weight_Idisoup,    "eventW_Idisoup/F");
-  minitree->Branch("eventW_Idisodo",    &_event_weight_Idisodo,    "eventW_Idisodo/F");
-  minitree->Branch("eventW_Triggerup",  &_event_weight_Triggerup,  "eventW_Triggerup/F");
-  minitree->Branch("eventW_Triggerdo",  &_event_weight_Triggerdo,  "eventW_Triggerdo/F");
-  minitree->Branch("eventW_Recoup",     &_event_weight_Recoup,     "eventW_Recoup/F");
-  minitree->Branch("eventW_Recodo",     &_event_weight_Recodo,     "eventW_Recodo/F");
-  minitree->Branch("eventW_Fastsimup",  &_event_weight_Fastsimup,  "eventW_Fastsimup/F");
-  minitree->Branch("eventW_Fastsimdo",  &_event_weight_Fastsimdo,  "eventW_Fastsimdo/F");
-  minitree->Branch("eventW_Toppt",      &_event_weight_Toppt,      "eventW_Toppt/F");
-  minitree->Branch("eventW_genmatched", &_event_weight_genmatched, "eventW_genmatched/F");
+  minitree->Branch("event",                 &event,                        "event/I");
+  minitree->Branch("eventW",                &_event_weight,                "eventW/F");
+  minitree->Branch("eventW_Btagup",         &_event_weight_Btagup,         "eventW_Btagup/F");
+  minitree->Branch("eventW_Btagdo",         &_event_weight_Btagdo,         "eventW_Btagdo/F");
+  minitree->Branch("eventW_BtagFSup",       &_event_weight_BtagFSup,       "eventW_BtagFSup/F");
+  minitree->Branch("eventW_BtagFSdo",       &_event_weight_BtagFSdo,       "eventW_BtagFSdo/F");
+  minitree->Branch("eventW_Idisoup",        &_event_weight_Idisoup,        "eventW_Idisoup/F");
+  minitree->Branch("eventW_Idisodo",        &_event_weight_Idisodo,        "eventW_Idisodo/F");
+  minitree->Branch("eventW_Triggerup",      &_event_weight_Triggerup,      "eventW_Triggerup/F");
+  minitree->Branch("eventW_Triggerdo",      &_event_weight_Triggerdo,      "eventW_Triggerdo/F");
+  minitree->Branch("eventW_Recoup",         &_event_weight_Recoup,         "eventW_Recoup/F");
+  minitree->Branch("eventW_Recodo",         &_event_weight_Recodo,         "eventW_Recodo/F");
+  minitree->Branch("eventW_Fastsimup",      &_event_weight_Fastsimup,      "eventW_Fastsimup/F");
+  minitree->Branch("eventW_Fastsimdo",      &_event_weight_Fastsimdo,      "eventW_Fastsimdo/F");
+  minitree->Branch("eventW_Toppt",          &_event_weight_Toppt,          "eventW_Toppt/F");
+  minitree->Branch("eventW_genmatched",     &_event_weight_genmatched,     "eventW_genmatched/F");
+  minitree->Branch("eventW_truegenmatched", &_event_weight_truegenmatched, "eventW_truegenmatched/F");
   // H
   minitree->Branch("ht",                &_ht,               "ht/F");
   minitree->Branch("htvisible",         &_htvisible,        "htvisible/F");
@@ -2719,4 +2703,54 @@ void AnalysisCMS::GetSampleWeight()
       _event_weight_Toppt = save_this_weight;
     }
   }
+}
+
+
+//------------------------------------------------------------------------------
+// GetMotherPID
+//------------------------------------------------------------------------------
+int AnalysisCMS::GetMotherPID(int index)
+{
+  int motherPID = -9999;
+
+  if (!_ismc || index > 1) return motherPID;
+
+  TLorentzVector lepton_tlorentz = (index == 0) ? Lepton1.v : Lepton2.v;
+
+
+  // Loop over GEN leptons
+  //----------------------------------------------------------------------------
+  float deltaRMin = 0.3;
+
+  for (UInt_t j=0; j<std_vector_leptonGen_pt->size(); j++) {
+
+    if (std_vector_leptonGen_pt->at(j) < 0) continue;
+
+    if (std_vector_leptonGen_status->at(j) != 1) continue;
+
+    if (abs(std_vector_leptonGen_pid->at(j)) != 11 && abs(std_vector_leptonGen_pid->at(j)) != 13) continue;
+
+    if (std_vector_leptonGen_isPrompt->at(j) != 1 && std_vector_leptonGen_isDirectPromptTauDecayProduct->at(j) != 1) continue;
+
+    float std_vector_leptonGen_mass = (abs(std_vector_leptonGen_pid->at(j)) == 11) ? ELECTRON_MASS : MUON_MASS;
+
+    TLorentzVector leptonGen_tlorentz;
+
+    leptonGen_tlorentz.SetPtEtaPhiM(std_vector_leptonGen_pt->at(j),
+				    std_vector_leptonGen_eta->at(j),
+				    std_vector_leptonGen_phi->at(j),
+				    std_vector_leptonGen_mass);
+
+
+    // Get the GEN lepton index
+    //--------------------------------------------------------------------------
+    if (lepton_tlorentz.DeltaR(leptonGen_tlorentz) < deltaRMin) {
+
+      motherPID = std_vector_leptonGen_MotherPID->at(j);
+
+      deltaRMin = lepton_tlorentz.DeltaR(leptonGen_tlorentz);
+    }
+  }
+
+  return motherPID;
 }
