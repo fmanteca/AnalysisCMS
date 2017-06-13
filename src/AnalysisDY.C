@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------
 AnalysisDY::AnalysisDY(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
-  SetSaveMinitree(false);
+  SetSaveMinitree(true);
 }
 
 
@@ -84,11 +84,11 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     _m2l  = mll;
     _pt2l = ptll;
         
-     // bool pass_2l = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
-     // pass_2l &= (std_vector_lepton_pt->at(0) > 25.);
-     // pass_2l &= (std_vector_lepton_pt->at(1) > 20.);
-     // pass_2l &= (std_vector_lepton_pt->at(2) < 10.);
-     // pass_2l &= (mll>20.);
+     bool pass_2l = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+     pass_2l &= (std_vector_lepton_pt->at(0) > 25.);
+     pass_2l &= (std_vector_lepton_pt->at(1) > 20.);
+     pass_2l &= (std_vector_lepton_pt->at(2) < 10.);
+     pass_2l &= (mll>20.);
 
     
 
@@ -100,11 +100,10 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     //        FillLevelHistograms(DY_00_noCuts, true);    
 
     
-    //Has 2 Leptons                                                                                                                           
+    //  //    Has 2 Leptons                                                                                                                           
     // //---------------------------------------------------------------------------     
-    //FillLevelHistograms(DY_01_Has2Leptons, pass_2l);
-
-    // //if (_saveminitree && pass_2l) minitree->Fill();
+    // FillLevelHistograms(DY_01_Has2Leptons, pass_2l);
+    // if (_saveminitree && pass_2l) minitree->Fill();
 
     
     // // B Veto                                                                                                                                
@@ -131,31 +130,31 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     // // Z peak Veto
     // //---------------------------------------------------------------------------    
     //  pass_2l &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    //FillLevelHistograms(DY_04_ZVeto, pass_2l);
+    // FillLevelHistograms(DY_04_ZVeto, pass_2l);
 
 
 
     // //Ptll cut           
     // //---------------------------------------------------------------------------                         
-    //pass_2l &= (ptll>30.);
-    //pass_2l &= (_channel == em || ptll > 45.);
-    //FillLevelHistograms(DY_05_Ptll, pass_2l);
+    // pass_2l &= (ptll>30.);
+    // pass_2l &= (_channel == em || ptll > 45.);
+    // FillLevelHistograms(DY_05_Ptll, pass_2l);
 
 
     // // mpMET cut
     // //---------------------------------------------------------------------------    
-    //pass_2l &= (mpmet > 20.);
-    //FillLevelHistograms(DY_06_mpMet, pass_2l);
+    // pass_2l &= (mpmet > 20.);
+    // FillLevelHistograms(DY_06_mpMet, pass_2l);
 
 
     // // MET cut                                                                                                           
     // //---------------------------------------------------------------------------                                                            
-    //pass_2l &= (MET.Et() > 20.);
-    //pass_2l &= (_channel == em || MET.Et() > 55.);
-    //FillLevelHistograms(DY_07_PfMet, pass_2l);
+    // pass_2l &= (MET.Et() > 20.);
+    // pass_2l &= (_channel == em || MET.Et() > 55.);
+    // FillLevelHistograms(DY_07_PfMet, pass_2l);
     //if (pass_2l && _channel==em && _njet==0) EventDump();
 
-    //Gui_syncro
+    // Gui_syncro
     // bool pass_gui = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
     // pass_gui &= (std_vector_lepton_pt->at(0) > 25.);
     // pass_gui &= (std_vector_lepton_pt->at(1) > 20.);
@@ -196,13 +195,13 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
 
     // // Cortes adicionales en variables: dphillmet, MET/ptll                                                            
     // //---------------------------------------------------------------------------                             
-       // pass_2l &= (_dphillmet>2.14);
-       // pass_2l &= (_channel == em || _dphillmet > 2.37);
-       // FillLevelHistograms(DY_08_dphillmet, pass_2l);
+    //    pass_2l &= (_dphillmet>2.14);
+    //    pass_2l &= (_channel == em || _dphillmet > 2.37);
+    //    FillLevelHistograms(DY_08_dphillmet, pass_2l);
 
-       // pass_2l &= (MET.Et()/_pt2l < 1.8);
-       // pass_2l &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
-       // FillLevelHistograms(DY_09_metopt2l, pass_2l);
+    //    pass_2l &= (MET.Et()/_pt2l < 1.8);
+    //    pass_2l &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    //    FillLevelHistograms(DY_09_metopt2l, pass_2l);
 
 
     // // // // Corte en Ht para el canal em                                                           
@@ -254,7 +253,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     // pass_ifca &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
     // FillLevelHistograms(DY_13_IFCA_Control, pass_ifca);        
     
-    // //plotsConfiguration synchro
+    //plotsConfiguration synchro
     
     // bool pass_latino = (std_vector_lepton_pt->at(0) > 25.);
     // pass_latino &= (std_vector_lepton_pt->at(1)>25.);
@@ -285,7 +284,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
 
 
 
-    //Diff XS:
+    // //Diff XS:
     
     bool pass_mll1 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
     pass_mll1 &= (std_vector_lepton_pt->at(0) > 25.);
@@ -441,7 +440,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_mll5 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
     pass_mll5 &= (_ht<195.);
     pass_mll5 &= (_channel == em ||  _ht < 184.);
-    pass_mll5 &= (mll>100. && mll<140.);
+    pass_mll5 &= (mll>100. && mll<125.);
     FillLevelHistograms(DY_mll5, pass_mll5);        
 
 
@@ -475,13 +474,83 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_mll6 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
     pass_mll6 &= (_ht<195.);
     pass_mll6 &= (_channel == em ||  _ht < 184.);
-    pass_mll6 &= (mll>140. && mll<180.);
+    pass_mll6 &= (mll>125. && mll<150.);
     FillLevelHistograms(DY_mll6, pass_mll6);        
+
+
+
+
+
+
+
+    bool pass_mll7 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_mll7 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_mll7 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_mll7 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_mll7 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_mll7 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_mll7 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_mll7 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_mll7 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_mll7 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_mll7 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_mll7 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_mll7 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_mll7 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_mll7 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_mll7 &= (ptll>30.);
+    pass_mll7 &= (_channel == em || ptll > 45.);
+    pass_mll7 &= (mpmet > 20.);
+    pass_mll7 &= (MET.Et() > 20.);
+    pass_mll7 &= (_channel == em || MET.Et() > 55.);
+    pass_mll7 &= (_dphillmet>2.14);
+    pass_mll7 &= (_channel == em || _dphillmet > 2.37);
+    pass_mll7 &= (MET.Et()/_pt2l < 1.8);
+    pass_mll7 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_mll7 &= (_ht<195.);
+    pass_mll7 &= (_channel == em ||  _ht < 184.);
+    pass_mll7 &= (mll>150. && mll<175.);
+    FillLevelHistograms(DY_mll7, pass_mll7);        
+
+
+
+
+
+
+
+    bool pass_mll8 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_mll8 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_mll8 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_mll8 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_mll8 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_mll8 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_mll8 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_mll8 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_mll8 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_mll8 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_mll8 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_mll8 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_mll8 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_mll8 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_mll8 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_mll8 &= (ptll>30.);
+    pass_mll8 &= (_channel == em || ptll > 45.);
+    pass_mll8 &= (mpmet > 20.);
+    pass_mll8 &= (MET.Et() > 20.);
+    pass_mll8 &= (_channel == em || MET.Et() > 55.);
+    pass_mll8 &= (_dphillmet>2.14);
+    pass_mll8 &= (_channel == em || _dphillmet > 2.37);
+    pass_mll8 &= (MET.Et()/_pt2l < 1.8);
+    pass_mll8 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_mll8 &= (_ht<195.);
+    pass_mll8 &= (_channel == em ||  _ht < 184.);
+    pass_mll8 &= (mll>175. && mll<200.);
+    FillLevelHistograms(DY_mll8, pass_mll8);        
     
 
 
 
-
+ 
 
     bool pass_ptll1 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
     pass_ptll1 &= (std_vector_lepton_pt->at(0) > 25.);
@@ -643,7 +712,7 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_ptll5 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
     pass_ptll5 &= (_ht<195.);
     pass_ptll5 &= (_channel == em ||  _ht < 184.);
-    pass_ptll5 &= (ptll>70. && ptll<90.);
+    pass_ptll5 &= (ptll>70. && ptll<85.);
     FillLevelHistograms(DY_ptll5, pass_ptll5);        
 
 
@@ -677,9 +746,41 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     pass_ptll6 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
     pass_ptll6 &= (_ht<195.);
     pass_ptll6 &= (_channel == em ||  _ht < 184.);
-    pass_ptll6 &= (ptll>90. && ptll<120.);
+    pass_ptll6 &= (ptll>85. && ptll<120.);
     FillLevelHistograms(DY_ptll6, pass_ptll6);        
     
+
+
+
+
+    bool pass_ptll7 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_ptll7 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_ptll7 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_ptll7 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_ptll7 &= (mll > 20.);
+    pass_ptll7 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_ptll7 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_ptll7 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_ptll7 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_ptll7 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_ptll7 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_ptll7 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_ptll7 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_ptll7 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_ptll7 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_ptll7 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_ptll7 &= (mpmet > 20.);
+    pass_ptll7 &= (MET.Et() > 20.);
+    pass_ptll7 &= (_channel == em || MET.Et() > 55.);
+    pass_ptll7 &= (_dphillmet>2.14);
+    pass_ptll7 &= (_channel == em || _dphillmet > 2.37);
+    pass_ptll7 &= (MET.Et()/_pt2l < 1.8);
+    pass_ptll7 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_ptll7 &= (_ht<195.);
+    pass_ptll7 &= (_channel == em ||  _ht < 184.);
+    pass_ptll7 &= (ptll>120. && ptll<150.);
+    FillLevelHistograms(DY_ptll7, pass_ptll7);        
+    
     
 
 
@@ -688,139 +789,100 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
 
 
 
-    bool pass_dphill1 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
-    pass_dphill1 &= (std_vector_lepton_pt->at(0) > 25.);
-    pass_dphill1 &= (std_vector_lepton_pt->at(1) > 20.);
-    pass_dphill1 &= (std_vector_lepton_pt->at(2) < 10.);
-    pass_dphill1 &= (mll>20.);
-    pass_dphill1 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
-    pass_dphill1 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
-    pass_dphill1 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
-    pass_dphill1 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
-    pass_dphill1 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
-    pass_dphill1 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
-    pass_dphill1 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
-    pass_dphill1 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
-    pass_dphill1 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
-    pass_dphill1 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
-    pass_dphill1 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass_dphill1 &= (ptll>30.);
-    pass_dphill1 &= (_channel == em || ptll > 45.);
-    pass_dphill1 &= (mpmet > 20.);
-    pass_dphill1 &= (MET.Et() > 20.);
-    pass_dphill1 &= (_channel == em || MET.Et() > 55.);
-    pass_dphill1 &= (_dphillmet>2.14);
-    pass_dphill1 &= (_channel == em || _dphillmet > 2.37);
-    pass_dphill1 &= (MET.Et()/_pt2l < 1.8);
-    pass_dphill1 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
-    pass_dphill1 &= (_ht<195.);
-    pass_dphill1 &= (_channel == em ||  _ht < 184.);
-    pass_dphill1 &= (dphill > 0. && dphill < 0.5);
-    FillLevelHistograms(DY_dphill1, pass_dphill1);        
+    bool pass_ptl11 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_ptl11 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_ptl11 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_ptl11 &= (mll>20.);
+    pass_ptl11 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_ptl11 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_ptl11 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_ptl11 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_ptl11 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_ptl11 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_ptl11 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_ptl11 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_ptl11 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_ptl11 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_ptl11 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_ptl11 &= (ptll>30.);
+    pass_ptl11 &= (_channel == em || ptll > 45.);
+    pass_ptl11 &= (mpmet > 20.);
+    pass_ptl11 &= (MET.Et() > 20.);
+    pass_ptl11 &= (_channel == em || MET.Et() > 55.);
+    pass_ptl11 &= (_dphillmet>2.14);
+    pass_ptl11 &= (_channel == em || _dphillmet > 2.37);
+    pass_ptl11 &= (MET.Et()/_pt2l < 1.8);
+    pass_ptl11 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_ptl11 &= (_ht<195.);
+    pass_ptl11 &= (_channel == em ||  _ht < 184.);
+    pass_ptl11 &= (std_vector_lepton_pt->at(0) > 20. && std_vector_lepton_pt->at(0) < 40.);
+    FillLevelHistograms(DY_ptl11, pass_ptl11);        
 
 
 
 
 
-    bool pass_dphill2 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
-    pass_dphill2 &= (std_vector_lepton_pt->at(0) > 25.);
-    pass_dphill2 &= (std_vector_lepton_pt->at(1) > 20.);
-    pass_dphill2 &= (std_vector_lepton_pt->at(2) < 10.);
-    pass_dphill2 &= (mll>20.);
-    pass_dphill2 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
-    pass_dphill2 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
-    pass_dphill2 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
-    pass_dphill2 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
-    pass_dphill2 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
-    pass_dphill2 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
-    pass_dphill2 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
-    pass_dphill2 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
-    pass_dphill2 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
-    pass_dphill2 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
-    pass_dphill2 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass_dphill2 &= (ptll>30.);
-    pass_dphill2 &= (_channel == em || ptll > 45.);
-    pass_dphill2 &= (mpmet > 20.);
-    pass_dphill2 &= (MET.Et() > 20.);
-    pass_dphill2 &= (_channel == em || MET.Et() > 55.);
-    pass_dphill2 &= (_dphillmet>2.14);
-    pass_dphill2 &= (_channel == em || _dphillmet > 2.37);
-    pass_dphill2 &= (MET.Et()/_pt2l < 1.8);
-    pass_dphill2 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
-    pass_dphill2 &= (_ht<195.);
-    pass_dphill2 &= (_channel == em ||  _ht < 184.);
-    pass_dphill2 &= (dphill > 0.5 && dphill < 1.0);
-    FillLevelHistograms(DY_dphill2, pass_dphill2);        
+    bool pass_ptl12 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_ptl12 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_ptl12 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_ptl12 &= (mll>20.);
+    pass_ptl12 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_ptl12 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_ptl12 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_ptl12 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_ptl12 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_ptl12 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_ptl12 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_ptl12 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_ptl12 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_ptl12 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_ptl12 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_ptl12 &= (ptll>30.);
+    pass_ptl12 &= (_channel == em || ptll > 45.);
+    pass_ptl12 &= (mpmet > 20.);
+    pass_ptl12 &= (MET.Et() > 20.);
+    pass_ptl12 &= (_channel == em || MET.Et() > 55.);
+    pass_ptl12 &= (_dphillmet>2.14);
+    pass_ptl12 &= (_channel == em || _dphillmet > 2.37);
+    pass_ptl12 &= (MET.Et()/_pt2l < 1.8);
+    pass_ptl12 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_ptl12 &= (_ht<195.);
+    pass_ptl12 &= (_channel == em ||  _ht < 184.);
+    pass_ptl12 &= (std_vector_lepton_pt->at(0) > 40. && std_vector_lepton_pt->at(0) < 60.);
+    FillLevelHistograms(DY_ptl12, pass_ptl12);        
 
 
 
 
 
-    bool pass_dphill3 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
-    pass_dphill3 &= (std_vector_lepton_pt->at(0) > 25.);
-    pass_dphill3 &= (std_vector_lepton_pt->at(1) > 20.);
-    pass_dphill3 &= (std_vector_lepton_pt->at(2) < 10.);
-    pass_dphill3 &= (mll>20.);
-    pass_dphill3 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
-    pass_dphill3 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
-    pass_dphill3 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
-    pass_dphill3 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
-    pass_dphill3 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
-    pass_dphill3 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
-    pass_dphill3 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
-    pass_dphill3 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
-    pass_dphill3 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
-    pass_dphill3 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
-    pass_dphill3 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass_dphill3 &= (ptll>30.);
-    pass_dphill3 &= (_channel == em || ptll > 45.);
-    pass_dphill3 &= (mpmet > 20.);
-    pass_dphill3 &= (MET.Et() > 20.);
-    pass_dphill3 &= (_channel == em || MET.Et() > 55.);
-    pass_dphill3 &= (_dphillmet>2.14);
-    pass_dphill3 &= (_channel == em || _dphillmet > 2.37);
-    pass_dphill3 &= (MET.Et()/_pt2l < 1.8);
-    pass_dphill3 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
-    pass_dphill3 &= (_ht<195.);
-    pass_dphill3 &= (_channel == em ||  _ht < 184.);
-    pass_dphill3 &= (dphill > 1. && dphill < 1.5);
-    FillLevelHistograms(DY_dphill3, pass_dphill3);
-
-
-
-
-
-
-
-    bool pass_dphill4 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
-    pass_dphill4 &= (std_vector_lepton_pt->at(0) > 25.);
-    pass_dphill4 &= (std_vector_lepton_pt->at(1) > 20.);
-    pass_dphill4 &= (std_vector_lepton_pt->at(2) < 10.);
-    pass_dphill4 &= (mll>20.);
-    pass_dphill4 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
-    pass_dphill4 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
-    pass_dphill4 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
-    pass_dphill4 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
-    pass_dphill4 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
-    pass_dphill4 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
-    pass_dphill4 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
-    pass_dphill4 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
-    pass_dphill4 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
-    pass_dphill4 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
-    pass_dphill4 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass_dphill4 &= (ptll>30.);
-    pass_dphill4 &= (_channel == em || ptll > 45.);
-    pass_dphill4 &= (mpmet > 20.);
-    pass_dphill4 &= (MET.Et() > 20.);
-    pass_dphill4 &= (_channel == em || MET.Et() > 55.);
-    pass_dphill4 &= (_dphillmet>2.14);
-    pass_dphill4 &= (_channel == em || _dphillmet > 2.37);
-    pass_dphill4 &= (MET.Et()/_pt2l < 1.8);
-    pass_dphill4 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
-    pass_dphill4 &= (_ht<195.);
-    pass_dphill4 &= (_channel == em ||  _ht < 184.);
-    pass_dphill4 &= (dphill > 1.5 && dphill < 2.0);
-    FillLevelHistograms(DY_dphill4, pass_dphill4);        
+    bool pass_ptl13 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_ptl13 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_ptl13 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_ptl13 &= (mll>20.);
+    pass_ptl13 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_ptl13 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_ptl13 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_ptl13 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_ptl13 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_ptl13 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_ptl13 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_ptl13 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_ptl13 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_ptl13 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_ptl13 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_ptl13 &= (ptll>30.);
+    pass_ptl13 &= (_channel == em || ptll > 45.);
+    pass_ptl13 &= (mpmet > 20.);
+    pass_ptl13 &= (MET.Et() > 20.);
+    pass_ptl13 &= (_channel == em || MET.Et() > 55.);
+    pass_ptl13 &= (_dphillmet>2.14);
+    pass_ptl13 &= (_channel == em || _dphillmet > 2.37);
+    pass_ptl13 &= (MET.Et()/_pt2l < 1.8);
+    pass_ptl13 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_ptl13 &= (_ht<195.);
+    pass_ptl13 &= (_channel == em ||  _ht < 184.);
+    pass_ptl13 &= (std_vector_lepton_pt->at(0) > 60. && std_vector_lepton_pt->at(0) < 80.);
+    FillLevelHistograms(DY_ptl13, pass_ptl13);
 
 
 
@@ -828,71 +890,641 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
 
 
 
-    bool pass_dphill5 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
-    pass_dphill5 &= (std_vector_lepton_pt->at(0) > 25.);
-    pass_dphill5 &= (std_vector_lepton_pt->at(1) > 20.);
-    pass_dphill5 &= (std_vector_lepton_pt->at(2) < 10.);
-    pass_dphill5 &= (mll>20.);
-    pass_dphill5 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
-    pass_dphill5 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
-    pass_dphill5 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
-    pass_dphill5 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
-    pass_dphill5 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
-    pass_dphill5 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
-    pass_dphill5 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
-    pass_dphill5 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
-    pass_dphill5 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
-    pass_dphill5 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
-    pass_dphill5 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass_dphill5 &= (ptll>30.);
-    pass_dphill5 &= (_channel == em || ptll > 45.);
-    pass_dphill5 &= (mpmet > 20.);
-    pass_dphill5 &= (MET.Et() > 20.);
-    pass_dphill5 &= (_channel == em || MET.Et() > 55.);
-    pass_dphill5 &= (_dphillmet>2.14);
-    pass_dphill5 &= (_channel == em || _dphillmet > 2.37);
-    pass_dphill5 &= (MET.Et()/_pt2l < 1.8);
-    pass_dphill5 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
-    pass_dphill5 &= (_ht<195.);
-    pass_dphill5 &= (_channel == em ||  _ht < 184.);
-    pass_dphill5 &= (dphill > 2.0 && dphill < 2.5);
-    FillLevelHistograms(DY_dphill5, pass_dphill5);       
+    bool pass_ptl14 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_ptl14 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_ptl14 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_ptl14 &= (mll>20.);
+    pass_ptl14 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_ptl14 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_ptl14 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_ptl14 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_ptl14 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_ptl14 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_ptl14 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_ptl14 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_ptl14 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_ptl14 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_ptl14 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_ptl14 &= (ptll>30.);
+    pass_ptl14 &= (_channel == em || ptll > 45.);
+    pass_ptl14 &= (mpmet > 20.);
+    pass_ptl14 &= (MET.Et() > 20.);
+    pass_ptl14 &= (_channel == em || MET.Et() > 55.);
+    pass_ptl14 &= (_dphillmet>2.14);
+    pass_ptl14 &= (_channel == em || _dphillmet > 2.37);
+    pass_ptl14 &= (MET.Et()/_pt2l < 1.8);
+    pass_ptl14 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_ptl14 &= (_ht<195.);
+    pass_ptl14 &= (_channel == em ||  _ht < 184.);
+    pass_ptl14 &= (std_vector_lepton_pt->at(0) > 80. && std_vector_lepton_pt->at(0) < 100.);
+    FillLevelHistograms(DY_ptl14, pass_ptl14);        
 
 
 
 
 
 
-    bool pass_dphill6 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
-    pass_dphill6 &= (std_vector_lepton_pt->at(0) > 25.);
-    pass_dphill6 &= (std_vector_lepton_pt->at(1) > 20.);
-    pass_dphill6 &= (std_vector_lepton_pt->at(2) < 10.);
-    pass_dphill6 &= (mll>20.);
-    pass_dphill6 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
-    pass_dphill6 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
-    pass_dphill6 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
-    pass_dphill6 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
-    pass_dphill6 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
-    pass_dphill6 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
-    pass_dphill6 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
-    pass_dphill6 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
-    pass_dphill6 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
-    pass_dphill6 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
-    pass_dphill6 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
-    pass_dphill6 &= (ptll>30.);
-    pass_dphill6 &= (_channel == em || ptll > 45.);
-    pass_dphill6 &= (mpmet > 20.);
-    pass_dphill6 &= (MET.Et() > 20.);
-    pass_dphill6 &= (_channel == em || MET.Et() > 55.);
-    pass_dphill6 &= (_dphillmet>2.14);
-    pass_dphill6 &= (_channel == em || _dphillmet > 2.37);
-    pass_dphill6 &= (MET.Et()/_pt2l < 1.8);
-    pass_dphill6 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
-    pass_dphill6 &= (_ht<195.);
-    pass_dphill6 &= (_channel == em ||  _ht < 184.);
-    pass_dphill6 &= (dphill > 2.5 && dphill < 3.0);
-    FillLevelHistograms(DY_dphill6, pass_dphill6);        
+
+    bool pass_ptl15 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_ptl15 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_ptl15 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_ptl15 &= (mll>20.);
+    pass_ptl15 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_ptl15 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_ptl15 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_ptl15 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_ptl15 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_ptl15 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_ptl15 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_ptl15 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_ptl15 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_ptl15 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_ptl15 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_ptl15 &= (ptll>30.);
+    pass_ptl15 &= (_channel == em || ptll > 45.);
+    pass_ptl15 &= (mpmet > 20.);
+    pass_ptl15 &= (MET.Et() > 20.);
+    pass_ptl15 &= (_channel == em || MET.Et() > 55.);
+    pass_ptl15 &= (_dphillmet>2.14);
+    pass_ptl15 &= (_channel == em || _dphillmet > 2.37);
+    pass_ptl15 &= (MET.Et()/_pt2l < 1.8);
+    pass_ptl15 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_ptl15 &= (_ht<195.);
+    pass_ptl15 &= (_channel == em ||  _ht < 184.);
+    pass_ptl15 &= (std_vector_lepton_pt->at(0) > 100. && std_vector_lepton_pt->at(0) < 125.);
+    FillLevelHistograms(DY_ptl15, pass_ptl15);       
+
+
+
+
+
+
+    bool pass_ptl16 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_ptl16 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_ptl16 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_ptl16 &= (mll>20.);
+    pass_ptl16 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_ptl16 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_ptl16 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_ptl16 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_ptl16 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_ptl16 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_ptl16 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_ptl16 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_ptl16 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_ptl16 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_ptl16 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_ptl16 &= (ptll>30.);
+    pass_ptl16 &= (_channel == em || ptll > 45.);
+    pass_ptl16 &= (mpmet > 20.);
+    pass_ptl16 &= (MET.Et() > 20.);
+    pass_ptl16 &= (_channel == em || MET.Et() > 55.);
+    pass_ptl16 &= (_dphillmet>2.14);
+    pass_ptl16 &= (_channel == em || _dphillmet > 2.37);
+    pass_ptl16 &= (MET.Et()/_pt2l < 1.8);
+    pass_ptl16 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_ptl16 &= (_ht<195.);
+    pass_ptl16 &= (_channel == em ||  _ht < 184.);
+    pass_ptl16 &= (std_vector_lepton_pt->at(0) > 125. && std_vector_lepton_pt->at(0) < 150.);
+    FillLevelHistograms(DY_ptl16, pass_ptl16);        
+
+
+
+    bool pass_ptl17 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_ptl17 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_ptl17 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_ptl17 &= (mll>20.);
+    pass_ptl17 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_ptl17 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_ptl17 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_ptl17 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_ptl17 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_ptl17 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_ptl17 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_ptl17 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_ptl17 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_ptl17 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_ptl17 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_ptl17 &= (ptll>30.);
+    pass_ptl17 &= (_channel == em || ptll > 45.);
+    pass_ptl17 &= (mpmet > 20.);
+    pass_ptl17 &= (MET.Et() > 20.);
+    pass_ptl17 &= (_channel == em || MET.Et() > 55.);
+    pass_ptl17 &= (_dphillmet>2.14);
+    pass_ptl17 &= (_channel == em || _dphillmet > 2.37);
+    pass_ptl17 &= (MET.Et()/_pt2l < 1.8);
+    pass_ptl17 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_ptl17 &= (_ht<195.);
+    pass_ptl17 &= (_channel == em ||  _ht < 184.);
+    pass_ptl17 &= (std_vector_lepton_pt->at(0) > 150. && std_vector_lepton_pt->at(0) < 200.);
+    FillLevelHistograms(DY_ptl17, pass_ptl17);        
     
+
+
+
+    bool pass_eta11 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_eta11 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_eta11 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_eta11 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_eta11 &= (mll>20.);
+    pass_eta11 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_eta11 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_eta11 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_eta11 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_eta11 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_eta11 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_eta11 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_eta11 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_eta11 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_eta11 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_eta11 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_eta11 &= (ptll>30.);
+    pass_eta11 &= (_channel == em || ptll > 45.);
+    pass_eta11 &= (mpmet > 20.);
+    pass_eta11 &= (MET.Et() > 20.);
+    pass_eta11 &= (_channel == em || MET.Et() > 55.);
+    pass_eta11 &= (_dphillmet>2.14);
+    pass_eta11 &= (_channel == em || _dphillmet > 2.37);
+    pass_eta11 &= (MET.Et()/_pt2l < 1.8);
+    pass_eta11 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_eta11 &= (_ht<195.);
+    pass_eta11 &= (_channel == em ||  _ht < 184.);
+    pass_eta11 &= (std_vector_lepton_eta->at(0)>-2.4 && std_vector_lepton_eta->at(0)<-1.8);
+    FillLevelHistograms(DY_eta11, pass_eta11);        
+
+
+
+    bool pass_eta12 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_eta12 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_eta12 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_eta12 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_eta12 &= (mll>20.);
+    pass_eta12 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_eta12 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_eta12 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_eta12 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_eta12 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_eta12 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_eta12 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_eta12 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_eta12 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_eta12 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_eta12 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_eta12 &= (ptll>30.);
+    pass_eta12 &= (_channel == em || ptll > 45.);
+    pass_eta12 &= (mpmet > 20.);
+    pass_eta12 &= (MET.Et() > 20.);
+    pass_eta12 &= (_channel == em || MET.Et() > 55.);
+    pass_eta12 &= (_dphillmet>2.14);
+    pass_eta12 &= (_channel == em || _dphillmet > 2.37);
+    pass_eta12 &= (MET.Et()/_pt2l < 1.8);
+    pass_eta12 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_eta12 &= (_ht<195.);
+    pass_eta12 &= (_channel == em ||  _ht < 184.);
+    pass_eta12 &= (std_vector_lepton_eta->at(0)>-1.8 && std_vector_lepton_eta->at(0)<-1.2);
+    FillLevelHistograms(DY_eta12, pass_eta12);        
+
+
+
+    bool pass_eta13 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_eta13 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_eta13 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_eta13 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_eta13 &= (mll>20.);
+    pass_eta13 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_eta13 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_eta13 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_eta13 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_eta13 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_eta13 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_eta13 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_eta13 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_eta13 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_eta13 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_eta13 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_eta13 &= (ptll>30.);
+    pass_eta13 &= (_channel == em || ptll > 45.);
+    pass_eta13 &= (mpmet > 20.);
+    pass_eta13 &= (MET.Et() > 20.);
+    pass_eta13 &= (_channel == em || MET.Et() > 55.);
+    pass_eta13 &= (_dphillmet>2.14);
+    pass_eta13 &= (_channel == em || _dphillmet > 2.37);
+    pass_eta13 &= (MET.Et()/_pt2l < 1.8);
+    pass_eta13 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_eta13 &= (_ht<195.);
+    pass_eta13 &= (_channel == em ||  _ht < 184.);
+    pass_eta13 &= (std_vector_lepton_eta->at(0)>-1.2 && std_vector_lepton_eta->at(0)<-0.6);
+    FillLevelHistograms(DY_eta13, pass_eta13);        
+
+
+
+    bool pass_eta14 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_eta14 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_eta14 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_eta14 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_eta14 &= (mll>20.);
+    pass_eta14 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_eta14 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_eta14 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_eta14 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_eta14 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_eta14 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_eta14 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_eta14 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_eta14 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_eta14 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_eta14 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_eta14 &= (ptll>30.);
+    pass_eta14 &= (_channel == em || ptll > 45.);
+    pass_eta14 &= (mpmet > 20.);
+    pass_eta14 &= (MET.Et() > 20.);
+    pass_eta14 &= (_channel == em || MET.Et() > 55.);
+    pass_eta14 &= (_dphillmet>2.14);
+    pass_eta14 &= (_channel == em || _dphillmet > 2.37);
+    pass_eta14 &= (MET.Et()/_pt2l < 1.8);
+    pass_eta14 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_eta14 &= (_ht<195.);
+    pass_eta14 &= (_channel == em ||  _ht < 184.);
+    pass_eta14 &= (std_vector_lepton_eta->at(0)>-0.6 && std_vector_lepton_eta->at(0)<0.);
+    FillLevelHistograms(DY_eta14, pass_eta14);        
+
+
+
+
+
+    bool pass_eta15 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_eta15 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_eta15 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_eta15 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_eta15 &= (mll>20.);
+    pass_eta15 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_eta15 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_eta15 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_eta15 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_eta15 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_eta15 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_eta15 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_eta15 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_eta15 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_eta15 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_eta15 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_eta15 &= (ptll>30.);
+    pass_eta15 &= (_channel == em || ptll > 45.);
+    pass_eta15 &= (mpmet > 20.);
+    pass_eta15 &= (MET.Et() > 20.);
+    pass_eta15 &= (_channel == em || MET.Et() > 55.);
+    pass_eta15 &= (_dphillmet>2.14);
+    pass_eta15 &= (_channel == em || _dphillmet > 2.37);
+    pass_eta15 &= (MET.Et()/_pt2l < 1.8);
+    pass_eta15 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_eta15 &= (_ht<195.);
+    pass_eta15 &= (_channel == em ||  _ht < 184.);
+    pass_eta15 &= (std_vector_lepton_eta->at(0)>0. && std_vector_lepton_eta->at(0)<0.6);
+    FillLevelHistograms(DY_eta15, pass_eta15);        
+
+
+
+
+    bool pass_eta16 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_eta16 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_eta16 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_eta16 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_eta16 &= (mll>20.);
+    pass_eta16 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_eta16 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_eta16 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_eta16 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_eta16 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_eta16 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_eta16 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_eta16 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_eta16 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_eta16 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_eta16 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_eta16 &= (ptll>30.);
+    pass_eta16 &= (_channel == em || ptll > 45.);
+    pass_eta16 &= (mpmet > 20.);
+    pass_eta16 &= (MET.Et() > 20.);
+    pass_eta16 &= (_channel == em || MET.Et() > 55.);
+    pass_eta16 &= (_dphillmet>2.14);
+    pass_eta16 &= (_channel == em || _dphillmet > 2.37);
+    pass_eta16 &= (MET.Et()/_pt2l < 1.8);
+    pass_eta16 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_eta16 &= (_ht<195.);
+    pass_eta16 &= (_channel == em ||  _ht < 184.);
+    pass_eta16 &= (std_vector_lepton_eta->at(0)>0.6 && std_vector_lepton_eta->at(0)<1.2);
+    FillLevelHistograms(DY_eta16, pass_eta16);        
+
+
+
+    bool pass_eta17 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_eta17 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_eta17 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_eta17 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_eta17 &= (mll>20.);
+    pass_eta17 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_eta17 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_eta17 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_eta17 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_eta17 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_eta17 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_eta17 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_eta17 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_eta17 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_eta17 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_eta17 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_eta17 &= (ptll>30.);
+    pass_eta17 &= (_channel == em || ptll > 45.);
+    pass_eta17 &= (mpmet > 20.);
+    pass_eta17 &= (MET.Et() > 20.);
+    pass_eta17 &= (_channel == em || MET.Et() > 55.);
+    pass_eta17 &= (_dphillmet>2.14);
+    pass_eta17 &= (_channel == em || _dphillmet > 2.37);
+    pass_eta17 &= (MET.Et()/_pt2l < 1.8);
+    pass_eta17 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_eta17 &= (_ht<195.);
+    pass_eta17 &= (_channel == em ||  _ht < 184.);
+    pass_eta17 &= (std_vector_lepton_eta->at(0)>1.2 && std_vector_lepton_eta->at(0)<1.8);
+    FillLevelHistograms(DY_eta17, pass_eta17);        
+
+
+
+
+
+    bool pass_eta18 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_eta18 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_eta18 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_eta18 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_eta18 &= (mll>20.);
+    pass_eta18 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_eta18 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_eta18 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_eta18 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_eta18 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_eta18 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_eta18 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_eta18 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_eta18 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_eta18 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_eta18 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_eta18 &= (ptll>30.);
+    pass_eta18 &= (_channel == em || ptll > 45.);
+    pass_eta18 &= (mpmet > 20.);
+    pass_eta18 &= (MET.Et() > 20.);
+    pass_eta18 &= (_channel == em || MET.Et() > 55.);
+    pass_eta18 &= (_dphillmet>2.14);
+    pass_eta18 &= (_channel == em || _dphillmet > 2.37);
+    pass_eta18 &= (MET.Et()/_pt2l < 1.8);
+    pass_eta18 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_eta18 &= (_ht<195.);
+    pass_eta18 &= (_channel == em ||  _ht < 184.);
+    pass_eta18 &= (std_vector_lepton_eta->at(0)>1.8 && std_vector_lepton_eta->at(0)<2.4);
+    FillLevelHistograms(DY_eta18, pass_eta18);        
+
+
+
+
+
+    bool pass_jetpt1 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_jetpt1 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_jetpt1 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_jetpt1 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_jetpt1 &= (mll>20.);
+    pass_jetpt1 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_jetpt1 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_jetpt1 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_jetpt1 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_jetpt1 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_jetpt1 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_jetpt1 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_jetpt1 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_jetpt1 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_jetpt1 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_jetpt1 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_jetpt1 &= (ptll>30.);
+    pass_jetpt1 &= (_channel == em || ptll > 45.);
+    pass_jetpt1 &= (mpmet > 20.);
+    pass_jetpt1 &= (MET.Et() > 20.);
+    pass_jetpt1 &= (_channel == em || MET.Et() > 55.);
+    pass_jetpt1 &= (_dphillmet>2.14);
+    pass_jetpt1 &= (_channel == em || _dphillmet > 2.37);
+    pass_jetpt1 &= (MET.Et()/_pt2l < 1.8);
+    pass_jetpt1 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_jetpt1 &= (_ht<195.);
+    pass_jetpt1 &= (_channel == em ||  _ht < 184.);
+    pass_jetpt1 &= (std_vector_jet_pt->at(0)>20 && std_vector_jet_pt->at(0)<30);
+    FillLevelHistograms(DY_jetpt1, pass_jetpt1);        
+
+
+
+
+
+
+
+    bool pass_jetpt2 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_jetpt2 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_jetpt2 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_jetpt2 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_jetpt2 &= (mll>20.);
+    pass_jetpt2 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_jetpt2 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_jetpt2 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_jetpt2 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_jetpt2 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_jetpt2 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_jetpt2 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_jetpt2 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_jetpt2 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_jetpt2 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_jetpt2 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_jetpt2 &= (ptll>30.);
+    pass_jetpt2 &= (_channel == em || ptll > 45.);
+    pass_jetpt2 &= (mpmet > 20.);
+    pass_jetpt2 &= (MET.Et() > 20.);
+    pass_jetpt2 &= (_channel == em || MET.Et() > 55.);
+    pass_jetpt2 &= (_dphillmet>2.14);
+    pass_jetpt2 &= (_channel == em || _dphillmet > 2.37);
+    pass_jetpt2 &= (MET.Et()/_pt2l < 1.8);
+    pass_jetpt2 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_jetpt2 &= (_ht<195.);
+    pass_jetpt2 &= (_channel == em ||  _ht < 184.);
+    pass_jetpt2 &= (std_vector_jet_pt->at(0)>30 && std_vector_jet_pt->at(0)<40);
+    FillLevelHistograms(DY_jetpt2, pass_jetpt2);        
+
+
+
+
+
+    bool pass_jetpt3 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_jetpt3 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_jetpt3 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_jetpt3 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_jetpt3 &= (mll>20.);
+    pass_jetpt3 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_jetpt3 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_jetpt3 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_jetpt3 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_jetpt3 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_jetpt3 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_jetpt3 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_jetpt3 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_jetpt3 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_jetpt3 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_jetpt3 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_jetpt3 &= (ptll>30.);
+    pass_jetpt3 &= (_channel == em || ptll > 45.);
+    pass_jetpt3 &= (mpmet > 20.);
+    pass_jetpt3 &= (MET.Et() > 20.);
+    pass_jetpt3 &= (_channel == em || MET.Et() > 55.);
+    pass_jetpt3 &= (_dphillmet>2.14);
+    pass_jetpt3 &= (_channel == em || _dphillmet > 2.37);
+    pass_jetpt3 &= (MET.Et()/_pt2l < 1.8);
+    pass_jetpt3 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_jetpt3 &= (_ht<195.);
+    pass_jetpt3 &= (_channel == em ||  _ht < 184.);
+    pass_jetpt3 &= (std_vector_jet_pt->at(0)>40 && std_vector_jet_pt->at(0)<50);
+    FillLevelHistograms(DY_jetpt3, pass_jetpt3);        
+
+
+
+
+
+
+    bool pass_jetpt4 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_jetpt4 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_jetpt4 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_jetpt4 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_jetpt4 &= (mll>20.);
+    pass_jetpt4 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_jetpt4 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_jetpt4 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_jetpt4 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_jetpt4 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_jetpt4 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_jetpt4 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_jetpt4 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_jetpt4 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_jetpt4 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_jetpt4 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_jetpt4 &= (ptll>30.);
+    pass_jetpt4 &= (_channel == em || ptll > 45.);
+    pass_jetpt4 &= (mpmet > 20.);
+    pass_jetpt4 &= (MET.Et() > 20.);
+    pass_jetpt4 &= (_channel == em || MET.Et() > 55.);
+    pass_jetpt4 &= (_dphillmet>2.14);
+    pass_jetpt4 &= (_channel == em || _dphillmet > 2.37);
+    pass_jetpt4 &= (MET.Et()/_pt2l < 1.8);
+    pass_jetpt4 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_jetpt4 &= (_ht<195.);
+    pass_jetpt4 &= (_channel == em ||  _ht < 184.);
+    pass_jetpt4 &= (std_vector_jet_pt->at(0)>50 && std_vector_jet_pt->at(0)<60);
+    FillLevelHistograms(DY_jetpt4, pass_jetpt4);        
+
+
+
+
+
+
+    bool pass_jetpt5 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_jetpt5 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_jetpt5 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_jetpt5 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_jetpt5 &= (mll>20.);
+    pass_jetpt5 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_jetpt5 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_jetpt5 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_jetpt5 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_jetpt5 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_jetpt5 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_jetpt5 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_jetpt5 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_jetpt5 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_jetpt5 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_jetpt5 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_jetpt5 &= (ptll>30.);
+    pass_jetpt5 &= (_channel == em || ptll > 45.);
+    pass_jetpt5 &= (mpmet > 20.);
+    pass_jetpt5 &= (MET.Et() > 20.);
+    pass_jetpt5 &= (_channel == em || MET.Et() > 55.);
+    pass_jetpt5 &= (_dphillmet>2.14);
+    pass_jetpt5 &= (_channel == em || _dphillmet > 2.37);
+    pass_jetpt5 &= (MET.Et()/_pt2l < 1.8);
+    pass_jetpt5 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_jetpt5 &= (_ht<195.);
+    pass_jetpt5 &= (_channel == em ||  _ht < 184.);
+    pass_jetpt5 &= (std_vector_jet_pt->at(0)>60 && std_vector_jet_pt->at(0)<70);
+    FillLevelHistograms(DY_jetpt5, pass_jetpt5);        
+
+
+
+
+
+
+    bool pass_jetpt6 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_jetpt6 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_jetpt6 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_jetpt6 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_jetpt6 &= (mll>20.);
+    pass_jetpt6 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_jetpt6 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_jetpt6 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_jetpt6 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_jetpt6 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_jetpt6 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_jetpt6 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_jetpt6 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_jetpt6 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_jetpt6 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_jetpt6 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_jetpt6 &= (ptll>30.);
+    pass_jetpt6 &= (_channel == em || ptll > 45.);
+    pass_jetpt6 &= (mpmet > 20.);
+    pass_jetpt6 &= (MET.Et() > 20.);
+    pass_jetpt6 &= (_channel == em || MET.Et() > 55.);
+    pass_jetpt6 &= (_dphillmet>2.14);
+    pass_jetpt6 &= (_channel == em || _dphillmet > 2.37);
+    pass_jetpt6 &= (MET.Et()/_pt2l < 1.8);
+    pass_jetpt6 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_jetpt6 &= (_ht<195.);
+    pass_jetpt6 &= (_channel == em ||  _ht < 184.);
+    pass_jetpt6 &= (std_vector_jet_pt->at(0)>70 && std_vector_jet_pt->at(0)<85);
+    FillLevelHistograms(DY_jetpt6, pass_jetpt6);        
+
+
+
+
+
+    bool pass_jetpt7 = (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) < 0);
+    pass_jetpt7 &= (std_vector_lepton_pt->at(0) > 25.);
+    pass_jetpt7 &= (std_vector_lepton_pt->at(1) > 20.);
+    pass_jetpt7 &= (std_vector_lepton_pt->at(2) < 10.);
+    pass_jetpt7 &= (mll>20.);
+    pass_jetpt7 &= ( std_vector_jet_pt->at(0) < 20. || std_vector_jet_csvv2ivf->at(0) < 0.5426 );
+    pass_jetpt7 &= ( std_vector_jet_pt->at(1) < 20. || std_vector_jet_csvv2ivf->at(1) < 0.5426 );
+    pass_jetpt7 &= ( std_vector_jet_pt->at(2) < 20. || std_vector_jet_csvv2ivf->at(2) < 0.5426 );
+    pass_jetpt7 &= ( std_vector_jet_pt->at(3) < 20. || std_vector_jet_csvv2ivf->at(3) < 0.5426 );
+    pass_jetpt7 &= ( std_vector_jet_pt->at(4) < 20. || std_vector_jet_csvv2ivf->at(4) < 0.5426 );
+    pass_jetpt7 &= ( std_vector_jet_pt->at(5) < 20. || std_vector_jet_csvv2ivf->at(5) < 0.5426 );
+    pass_jetpt7 &= ( std_vector_jet_pt->at(6) < 20. || std_vector_jet_csvv2ivf->at(6) < 0.5426 );
+    pass_jetpt7 &= ( std_vector_jet_pt->at(7) < 20. || std_vector_jet_csvv2ivf->at(7) < 0.5426 );
+    pass_jetpt7 &= ( std_vector_jet_pt->at(8) < 20. || std_vector_jet_csvv2ivf->at(8) < 0.5426 );
+    pass_jetpt7 &= ( std_vector_jet_pt->at(9) < 20. || std_vector_jet_csvv2ivf->at(9) < 0.5426 );
+    pass_jetpt7 &= (_channel == em || fabs(_m2l - Z_MASS) > 15.);
+    pass_jetpt7 &= (ptll>30.);
+    pass_jetpt7 &= (_channel == em || ptll > 45.);
+    pass_jetpt7 &= (mpmet > 20.);
+    pass_jetpt7 &= (MET.Et() > 20.);
+    pass_jetpt7 &= (_channel == em || MET.Et() > 55.);
+    pass_jetpt7 &= (_dphillmet>2.14);
+    pass_jetpt7 &= (_channel == em || _dphillmet > 2.37);
+    pass_jetpt7 &= (MET.Et()/_pt2l < 1.8);
+    pass_jetpt7 &= (_channel == em || (MET.Et()/_pt2l > 0.76 && MET.Et()/_pt2l<1.6));
+    pass_jetpt7 &= (_ht<195.);
+    pass_jetpt7 &= (_channel == em ||  _ht < 184.);
+    pass_jetpt7 &= (std_vector_jet_pt->at(0)>85 && std_vector_jet_pt->at(0)<100);
+    FillLevelHistograms(DY_jetpt7, pass_jetpt7);        
+
+
     
   }
 

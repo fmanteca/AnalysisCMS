@@ -9,7 +9,7 @@ const Bool_t drawroc    = false;
 const Bool_t xsection   = true;
 const Bool_t plots      = false;
 
-const TString inputdir  = "../rootfiles/nominal/";
+const TString inputdir  = "../rootfiles/diffxs/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
@@ -163,17 +163,10 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-<<<<<<< HEAD
       if (!analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("WW")   &&
 	  !analysis.EqualTo("DY")   &&
-=======
-      if (!analysis.EqualTo("Control") &&
-	  !analysis.EqualTo("Stop")    &&
-	  !analysis.EqualTo("Top")     &&
-	  !analysis.EqualTo("WW")      &&
->>>>>>> 83f57a487dfc088e0e06248d13eeffe556a45ece
 	  j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -196,17 +189,10 @@ void runPlotter(TString level,
   
   for (int j=0; j<=njetbin; j++)
     {
-<<<<<<< HEAD
       if (!analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("WW")   &&
 	  !analysis.EqualTo("DY")   &&
-=======
-      if (!analysis.EqualTo("Control") &&
-	  !analysis.EqualTo("Stop")    &&
-	  !analysis.EqualTo("Top")     &&
-	  !analysis.EqualTo("WW")      &&
->>>>>>> 83f57a487dfc088e0e06248d13eeffe556a45ece
 	  j != njetbin) continue;   
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
@@ -413,8 +399,8 @@ void runPlotter(TString level,
 				 schannel[i],
 				 "WW",
 				 WW2lnu,
-				 "WWTo2L2Nu",            12.1780, 1967180,
-				 "GluGluWWTo2L2Nu_MCFM",  0.5905,  481600);
+				 "WWTo2L2Nu",            12.1780, 104806,
+				 "GluGluWWTo2L2Nu_MCFM",  0.5905,  50873);
 	    }
 
 	}
