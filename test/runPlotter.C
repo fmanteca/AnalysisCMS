@@ -4,7 +4,7 @@
 // Constants
 //------------------------------------------------------------------------------
 const Bool_t allplots   = false;
-const Bool_t datadriven = true;
+const Bool_t datadriven = false;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = true;
 const Bool_t plots      = false;
@@ -83,8 +83,22 @@ void runPlotter(TString level,
 
   // Add processes
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("WZ"))
+  plotter.AddProcess("14_HZ",        "HZ",                   color_HZ);
+  plotter.AddProcess("10_HWW",       "HWW",                  color_HWW);
+  plotter.AddProcess("06_WW",        "WW",                   color_WW, roc_signal);
+  plotter.AddProcess("02_WZTo3LNu",  "WZ",                   color_WZTo3LNu);
+  plotter.AddProcess("03_VZ",        "VZ",                   color_VZ);
+  plotter.AddProcess("11_Wg",        "W#gamma",              color_Wg);
+  plotter.AddProcess("15_WgStar",    "W#gamma*",             color_WgStar);
+  plotter.AddProcess("07_ZJets",     "Z+jets",               color_ZJets, roc_background, 1.0);
+//plotter.AddProcess("16_ZJetsToTT", "Z#rightarrow#tau#tau", color_ZJetsToTT);
+  plotter.AddProcess("09_TTV",       "ttV",                  color_TTV);
+  plotter.AddProcess("04_TTTo2L2Nu", "tt",                   color_TTTo2L2Nu, roc_background, 1.0);
+  plotter.AddProcess("05_ST",        "tW",                   color_ST);
+
+  if (datadriven)
     {
+<<<<<<< HEAD
       plotter.AddProcess("02_WZTo3LNu", "WZ",       color_WZTo3LNu);
       plotter.AddProcess("06_WW",       "WW",       color_WW);
       plotter.AddProcess("11_Vg",       "W#gamma",  color_Wg);
@@ -127,6 +141,13 @@ void runPlotter(TString level,
 	{
 	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
 	}
+=======
+      plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // Don't lumi scale
+    }
+  else
+    {
+      plotter.AddProcess("08_WJets", "W+jets", color_WJets);
+>>>>>>> c1da178b25f417303f7f23bce16543ad0e2b639e
     }
 
 
@@ -183,10 +204,6 @@ void runPlotter(TString level,
   //----------------------------------------------------------------------------
   if (!option.Contains("nostack")) plotter.SetDrawYield(true);
 
-  float m2l_xmin   = (level.Contains("WZ")) ?  60 :   0;  // [GeV]
-  float m2l_xmax   = (level.Contains("WZ")) ? 120 : 300;  // [GeV]
-  int   m2l_ngroup = (level.Contains("WZ")) ?   2 :   5;
-  
   for (int j=0; j<=njetbin; j++)
     {
       if (!analysis.EqualTo("Stop") &&
@@ -212,8 +229,8 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", logY, true, m2l_xmin, m2l_xmax);
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", m2l_ngroup, 0, "GeV", linY, true, m2l_xmin, m2l_xmax);
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300);
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
 
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "nbjet20cmvav2l" + suffix, "number of 20 GeV cmvav2l b-jets",   -1, 0, "NULL", scale);
