@@ -685,13 +685,15 @@ void HistogramReader::CrossSection(TString level,
 
   // Cross-section calculation
   //----------------------------------------------------------------------------  
-  float xs = (counterData - counterBackground) / (1e3 * _luminosity_fb * efficiency * branchingratio);
+  //  float xs = (counterData - counterBackground) / (1e3 * _luminosity_fb * efficiency * branchingratio);
+  float xs = (counterSignal) / (1e3 * _luminosity_fb * efficiency * branchingratio);
   float mu = (counterData - counterBackground) / (counterSignal);
 
 
   // Statistical error
   //----------------------------------------------------------------------------  
-  float xsErrorStat = sqrt(counterData) / (1e3 * _luminosity_fb * efficiency * branchingratio);
+  //  float xsErrorStat = sqrt(counterData) / (1e3 * _luminosity_fb * efficiency * branchingratio);
+  float xsErrorStat = sqrt(counterSignal) / (1e3 * _luminosity_fb * efficiency * branchingratio);
   float muErrorStat = sqrt(counterData) / (counterSignal); 
 
  

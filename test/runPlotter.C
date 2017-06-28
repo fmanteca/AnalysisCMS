@@ -399,8 +399,8 @@ void runPlotter(TString level,
 				 schannel[i],
 				 "WW",
 				 WW2lnu,
-				 "WWTo2L2Nu",            12.1780, 104806,
-				 "GluGluWWTo2L2Nu_MCFM",  0.5905,  50873);
+				 "WWTo2L2Nu",            12.1780, 101970,
+				 "GluGluWWTo2L2Nu_MCFM",  0.5905,  33317);
 	    }
 
 	}
