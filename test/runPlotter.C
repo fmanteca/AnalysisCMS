@@ -7,7 +7,11 @@ const Bool_t allplots   = false;
 const Bool_t datadriven = false;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
+<<<<<<< HEAD
 const Bool_t plots      = true;
+=======
+const Bool_t basictest  = false;
+>>>>>>> cbc582a27072b42b3a98147587483c9c4fa5149c
 
 const TString inputdir  = "../rootfiles/Full2016_Apr17/";
 const TString outputdir = "figures/";
@@ -116,15 +120,24 @@ void runPlotter(TString level,
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x55203", color_Signal+2, roc_background, 55203.);
     }
 
+<<<<<<< HEAD
   if (plots){
+=======
+
+  // Make an output directory for each level
+  //----------------------------------------------------------------------------
+  gSystem->mkdir(outputdir + level, kTRUE);
+
+
+>>>>>>> cbc582a27072b42b3a98147587483c9c4fa5149c
   // Draw events by cut
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(false);
 
-  gSystem->mkdir(outputdir + level, kTRUE);
-
   for (int i=firstchannel; i<=lastchannel; i++)
     {
+      if (basictest && i != lastchannel) continue;
+
       plotter.LoopEventsByCut(analysis, "h_counterLum_" + schannel[i]);
 
       TString title = (i < lastchannel) ? lchannel[i] : "inclusive";
@@ -146,6 +159,8 @@ void runPlotter(TString level,
 	  !analysis.EqualTo("WW")   &&
 	  !analysis.EqualTo("DY")   &&
 	  j != njetbin) continue;
+
+      if (basictest && j != njetbin) continue;
       
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -163,11 +178,21 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
+<<<<<<< HEAD
       if (!analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("WW")   &&
 	  !analysis.EqualTo("DY")   &&
 	  j != njetbin) continue;   
+=======
+      if (!analysis.EqualTo("Control") &&
+	  !analysis.EqualTo("Stop")    &&
+	  !analysis.EqualTo("Top")     &&
+	  !analysis.EqualTo("WW")      &&
+	  j != njetbin) continue;
+
+      if (basictest && j != njetbin) continue;
+>>>>>>> cbc582a27072b42b3a98147587483c9c4fa5149c
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
@@ -177,6 +202,8 @@ void runPlotter(TString level,
 
       for (int i=firstchannel; i<=lastchannel; i++)
 	{
+	  if (basictest && i != lastchannel) continue;
+
 	  TString suffix = "_" + schannel[i];
 	  
 	  TString title = (i < lastchannel) ? lchannel[i] : "inclusive";
@@ -186,7 +213,7 @@ void runPlotter(TString level,
 
 	  // Common histograms
 	  //--------------------------------------------------------------------
-	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300);
+	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300); if (basictest) continue;
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
 
 	  plotter.Draw(prefix + "njet"           + suffix, "number of 30 GeV jets",             -1, 0, "NULL", scale);
