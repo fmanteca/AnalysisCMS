@@ -124,6 +124,12 @@ void runPlotter(TString level,
   if (plots){
 =======
 
+  // Add systematics
+  //----------------------------------------------------------------------------
+  //  plotter.AddSystematic("../rootfiles/METup/"     + analysis);
+  //  plotter.AddSystematic("../rootfiles/Triggerup/" + analysis);
+
+
   // Make an output directory for each level
   //----------------------------------------------------------------------------
   gSystem->mkdir(outputdir + level, kTRUE);
