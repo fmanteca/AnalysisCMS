@@ -7,11 +7,9 @@ const Bool_t allplots   = false;
 const Bool_t datadriven = false;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
-<<<<<<< HEAD
 const Bool_t plots      = true;
-=======
 const Bool_t basictest  = false;
->>>>>>> cbc582a27072b42b3a98147587483c9c4fa5149c
+
 
 const TString inputdir  = "../rootfiles/Full2016_Apr17/";
 const TString outputdir = "figures/";
@@ -120,9 +118,9 @@ void runPlotter(TString level,
       plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x55203", color_Signal+2, roc_background, 55203.);
     }
 
-<<<<<<< HEAD
+
   if (plots){
-=======
+
 
   // Add systematics
   //----------------------------------------------------------------------------
@@ -135,7 +133,7 @@ void runPlotter(TString level,
   gSystem->mkdir(outputdir + level, kTRUE);
 
 
->>>>>>> cbc582a27072b42b3a98147587483c9c4fa5149c
+
   // Draw events by cut
   //----------------------------------------------------------------------------
   plotter.SetDrawYield(false);
@@ -184,21 +182,12 @@ void runPlotter(TString level,
 
   for (int j=0; j<=njetbin; j++)
     {
-<<<<<<< HEAD
+
       if (!analysis.EqualTo("Stop") &&
 	  !analysis.EqualTo("Top")  &&
 	  !analysis.EqualTo("WW")   &&
 	  !analysis.EqualTo("DY")   &&
 	  j != njetbin) continue;   
-=======
-      if (!analysis.EqualTo("Control") &&
-	  !analysis.EqualTo("Stop")    &&
-	  !analysis.EqualTo("Top")     &&
-	  !analysis.EqualTo("WW")      &&
-	  j != njetbin) continue;
-
-      if (basictest && j != njetbin) continue;
->>>>>>> cbc582a27072b42b3a98147587483c9c4fa5149c
          
       TString jetbin = (j < njetbin) ? Form("/%djet", j) : "";
 
