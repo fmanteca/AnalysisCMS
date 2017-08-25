@@ -15,11 +15,17 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _verbosity = 0;  // Set it to 1 for debugging
 
+<<<<<<< HEAD
 
   _ismc                  = true;
   _saveminitree          = false;
   _eventdump             = false;
   _applytopptreweighting = false;
+=======
+  _ismc         = true;
+  _saveminitree = false;
+  _eventdump    = false;
+>>>>>>> 5343dae183d84ed3fdbf6ef63f348ad8c9c14962
 
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
@@ -32,7 +38,6 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
   _systematic_reco_up    = (systematic.Contains("Recoup"))    ? true : false;
   _systematic_fastsim_do = (systematic.Contains("Fastsimdo")) ? true : false;
   _systematic_fastsim_up = (systematic.Contains("Fastsimup")) ? true : false;
-  _systematic_toppt      = (systematic.Contains("Toppt"))     ? true : false;
 
   _systematic = systematic;
 
@@ -321,13 +326,18 @@ void AnalysisCMS::Setup(TString analysis,
 
   asymm_mt2_lester_bisect::disableCopyrightMessage();
 
-  _analysis     = analysis;
-  _filename     = filename;
-  _luminosity   = luminosity;
-  _suffix       = suffix;
-  _nentries     = fChain->GetEntries();
-  _isminitree   = (_filename.Contains("minitrees")) ? true : false;
-  _isdatadriven = (_filename.Contains("fakeW")) ? "fakeW_" : "";
+  _analysis   = analysis;
+  _filename   = filename;
+  _luminosity = luminosity;
+  _suffix     = suffix;
+  _nentries   = fChain->GetEntries();
+  _isminitree = (_filename.Contains("minitrees")) ? true : false;
+
+  _isdatadriven = "";
+
+  if (_filename.Contains("fake") ||
+      _filename.Contains("Fake") ||
+      _filename.Contains("FAKE")) _isdatadriven = "fakeW_";
 
   TString tok;
 
@@ -357,15 +367,16 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("T2tb")) _isfastsim = true;
 
   printf("\n");
-  printf("   analysis: %s\n",        _analysis.Data());
-  printf("   filename: %s\n",        _filename.Data());
-  printf("     sample: %s\n",        _sample.Data());
-  printf(" luminosity: %.3f fb-1\n", _luminosity);
-  printf("   nentries: %lld\n",      _nentries);
-  printf("       ismc: %d\n",        _ismc);
-  printf("  isfastsim: %d\n",        _isfastsim);
-  printf(" isminitree: %d\n",        _isminitree);
-  
+  printf("     analysis: %s\n",        _analysis.Data());
+  printf("     filename: %s\n",        _filename.Data());
+  printf("       sample: %s\n",        _sample.Data());
+  printf("   luminosity: %.3f fb-1\n", _luminosity);
+  printf("     nentries: %lld\n",      _nentries);
+  printf("         ismc: %s\n",        (_ismc)                           ? "yes" : "no");
+  printf("    isfastsim: %s\n",        (_isfastsim)                      ? "yes" : "no");
+  printf("   isminitree: %s\n",        (_isminitree)                     ? "yes" : "no");
+  printf(" isdatadriven: %s\n",        (_isdatadriven.Contains("fakeW")) ? "yes" : "no");
+
   _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix;
   
   TString prefix = (_isminitree) ? "minitrees/" : "";
@@ -408,20 +419,19 @@ void AnalysisCMS::ApplyWeights()
   _event_weight_Recodo     = 1.0;
   _event_weight_Fastsimup  = 1.0;
   _event_weight_Fastsimdo  = 1.0;
+  _event_weight_Toppt      = 1.0;
   _event_weight_genmatched = 1.0;
 
   if (_analysis.EqualTo("FR")) return;
 
   _event_weight = PassTrigger();
 
-  _event_weight *= LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;  // Full2016_Apr17
-
-  _event_weight *= (_ismc) ? METFilter_MC : METFilter_DATA;  // Full2016_Apr17
-
   _event_weight *= veto_EMTFBug;
 
-  if (!_ismc && _filename.Contains("fakeW")) _event_weight *= _fake_weight;
-  
+  _event_weight *= (_ismc) ? METFilter_MC : METFilter_DATA;
+
+  _event_weight *= (_isdatadriven.Contains("fakeW")) ? _fake_weight : LepCut2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+
   if (!_ismc) return;
 
   _event_weight *= _luminosity * baseW;
@@ -431,8 +441,7 @@ void AnalysisCMS::ApplyWeights()
   GetSampleWeight();
 
   // https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/genMatchVar.py
-  //  _event_weight_genmatched = std_vector_lepton_promptgenmatched->at(0) * std_vector_lepton_promptgenmatched->at(1);  // TO BE ADDED BY XAVIER
-  _event_weight_genmatched = std_vector_lepton_genmatched->at(0) * std_vector_lepton_genmatched->at(1);                  // DEPRECATED
+  _event_weight_genmatched = std_vector_lepton_promptgenmatched->at(0) * std_vector_lepton_promptgenmatched->at(1);
 
   if (!_analysis.EqualTo("TTDM") && !_analysis.EqualTo("Stop")) _event_weight *= _event_weight_genmatched;
 
@@ -479,12 +488,23 @@ void AnalysisCMS::ApplyWeights()
   float sf_idiso_up = 1.0;
   float sf_idiso_do = 1.0;
 
-  // Full2016_Apr17
+  // The following scale factors (LepSF2l) have been implemented at
+  // https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/data/formulasToAdd_MC.py
   if (!_analysis.EqualTo("Stop"))
     {
-      sf_idiso    = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
-      sf_idiso_up = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
-      sf_idiso_do = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+      sf_idiso = LepSF2l__ele_cut_WP_Tight80X__mu_cut_Tight80x;
+      
+      sf_idiso_up  = ((abs(std_vector_lepton_flavour->at(0)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Up->at(0) + (abs(std_vector_lepton_flavour->at(0)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Up->at(0));
+      sf_idiso_up *= ((abs(std_vector_lepton_flavour->at(1)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Up->at(1) + (abs(std_vector_lepton_flavour->at(1)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Up->at(1));
+
+      sf_idiso_do  = ((abs(std_vector_lepton_flavour->at(0)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Down->at(0) + (abs(std_vector_lepton_flavour->at(0)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Down->at(0));
+      sf_idiso_do *= ((abs(std_vector_lepton_flavour->at(1)) == 11) * std_vector_electron_idisoW_cut_WP_Tight80X_Down->at(1) + (abs(std_vector_lepton_flavour->at(1)) == 13) * std_vector_muon_idisoW_cut_Tight80x_Down->at(1));
+
+      // Xavier has split the idiso nuisance into one for electrons and one for muons
+      //      sf_idiso_up = LepSF2l__ele_cut_WP_Tight80X__Up;  // idiso SF Up for electrons only, used by Xavier in nuisances.py
+      //      sf_idiso_do = LepSF2l__ele_cut_WP_Tight80X__Do;  // idiso SF Do for electrons only, used by Xavier in nuisances.py
+      //      sf_idiso_up = LepSF2l__mu_cut_Tight80X__Up;      // idiso SF Up for muons     only, used by Xavier in nuisances.py
+      //      sf_idiso_up = LepSF2l__mu_cut_Tight80X__Do;      // idiso SF Do for muons     only, used by Xavier in nuisances.py
     }
 
   if (_analysis.EqualTo("Stop") && std_vector_lepton_idisoW)
@@ -1107,15 +1127,15 @@ void AnalysisCMS::GetSoftMuon()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetFakeWeights()
 {
-  _fake_weight            = (fakeW2l0j          *(_njet == 0) + fakeW2l1j          *(_njet == 1) + fakeW2l2j          *(_njet >= 2));
-  _fake_weight_elUp       = (fakeW2l0jElUp      *(_njet == 0) + fakeW2l1jElUp      *(_njet == 1) + fakeW2l2jElUp      *(_njet >= 2));
-  _fake_weight_elDown     = (fakeW2l0jElDown    *(_njet == 0) + fakeW2l1jElDown    *(_njet == 1) + fakeW2l2jElDown    *(_njet >= 2));
-  _fake_weight_elStatUp   = (fakeW2l0jstatElUp  *(_njet == 0) + fakeW2l1jstatElUp  *(_njet == 1) + fakeW2l2jstatElUp  *(_njet >= 2));
-  _fake_weight_elStatDown = (fakeW2l0jstatElDown*(_njet == 0) + fakeW2l1jstatElDown*(_njet == 1) + fakeW2l2jstatElDown*(_njet >= 2));
-  _fake_weight_muUp       = (fakeW2l0jMuUp      *(_njet == 0) + fakeW2l1jMuUp      *(_njet == 1) + fakeW2l2jMuUp      *(_njet >= 2));
-  _fake_weight_muDown     = (fakeW2l0jMuDown    *(_njet == 0) + fakeW2l1jMuDown    *(_njet == 1) + fakeW2l2jMuDown    *(_njet >= 2));
-  _fake_weight_muStatUp   = (fakeW2l0jstatMuUp  *(_njet == 0) + fakeW2l1jstatMuUp  *(_njet == 1) + fakeW2l2jstatMuUp  *(_njet >= 2));
-  _fake_weight_muStatDown = (fakeW2l0jstatMuDown*(_njet == 0) + fakeW2l1jstatMuDown*(_njet == 1) + fakeW2l2jstatMuDown*(_njet >= 2));
+  _fake_weight            = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x;
+  _fake_weight_elUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleUp;
+  _fake_weight_elDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_EleDown;
+  _fake_weight_elStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleUp;
+  _fake_weight_elStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statEleDown;
+  _fake_weight_muUp       = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuUp;
+  _fake_weight_muDown     = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_MuDown;
+  _fake_weight_muStatUp   = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuUp;
+  _fake_weight_muStatDown = fakeW2l_ele_cut_WP_Tight80X_mu_cut_Tight80x_statMuDown;
 }
 
 
@@ -1136,13 +1156,19 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetJets(jet_eta_max, jet_pt_min);
 
-  if (_analysis.EqualTo("TTDM")) GetTops();
-  
-  if (_analysis.EqualTo("TTDM")) GetGenLeptonsAndNeutrinos();
-  
-  if (_analysis.EqualTo("TTDM")) GetDark();
-  
-  if (_analysis.EqualTo("TTDM")) GetTopReco();
+
+  // Additional TTDM variables
+  //----------------------------------------------------------------------------
+  if (_analysis.EqualTo("TTDM"))
+    {
+      GetTops();
+      
+      GetGenLeptonsAndNeutrinos();
+
+      GetDark();
+
+      GetTopReco();
+    }
 
 
   // Additional analysis variables
@@ -1172,6 +1198,9 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
   GetStopVar();
 
   GetRazor();
+
+  _m2l  = mll;
+  _pt2l = ptll;
 }
 
 
@@ -2600,24 +2629,9 @@ void AnalysisCMS::GetSampleWeight()
 
 
   // Top pt reweight for POWHEG
-  // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting
+  // https://twiki.cern.ch/twiki/bin/view/CMS/TopPtReweighting2017
   //----------------------------------------------------------------------------
-  _event_weight_Toppt = _event_weight;
-
-  if (_sample.Contains("TTTo2L2Nu")) {
-
-    _event_weight_Toppt *= sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
-
-    if (_systematic_toppt) _event_weight = _event_weight_Toppt;
-
-    if (_applytopptreweighting) {
-
-      float save_this_weight = _event_weight;
-
-      _event_weight       = _event_weight_Toppt;
-      _event_weight_Toppt = save_this_weight;
-    }
-  }
+  if (_sample.Contains("TTTo2L2Nu")) _event_weight_Toppt = sqrt(exp(0.123 - 0.0005 * (topLHEpt + antitopLHEpt)));
 }
 
 
