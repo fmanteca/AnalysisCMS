@@ -15,17 +15,11 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _verbosity = 0;  // Set it to 1 for debugging
 
-<<<<<<< HEAD
 
   _ismc                  = true;
   _saveminitree          = false;
   _eventdump             = false;
-  _applytopptreweighting = false;
-=======
-  _ismc         = true;
-  _saveminitree = false;
-  _eventdump    = false;
->>>>>>> 5343dae183d84ed3fdbf6ef63f348ad8c9c14962
+  //  _applytopptreweighting = false;
 
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
@@ -267,7 +261,8 @@ void AnalysisCMS::Summary(TString analysis,
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::Summary]\n");
 
-  int firstchannel = ee;
+  //  int firstchannel = ee;
+  int firstchannel = SF;
   int lastchannel  = ll;
 
   if (analysis.EqualTo("FR")) {firstchannel = e;   lastchannel = l;}
@@ -449,7 +444,7 @@ void AnalysisCMS::ApplyWeights()
 
   //nvtx reweighting to correct the MET agreement                                                                                                                                                  
 
-   _event_weight *= (1.20362+0.0117524*nvtx-0.00232374*nvtx*nvtx+4.31378e-05*nvtx*nvtx*nvtx)*1.074758092;         
+  //   _event_weight *= (1.20362+0.0117524*nvtx-0.00232374*nvtx*nvtx+4.31378e-05*nvtx*nvtx*nvtx)*1.074758092;         
 
 
 
