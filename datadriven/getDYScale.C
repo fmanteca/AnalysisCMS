@@ -1,5 +1,4 @@
 // Constants
-//------------------------------------------------------------------------------
 enum {
   ee,
   mm,
@@ -31,9 +30,9 @@ const float   metcut [nmetcut] = {20, 30, 40, 60, -1};  // [GeV]
 const float   metdraw[nmetcut] = {20, 30, 40, 60, 100};  // [GeV]
 
 const bool    includeVZ    = true;
-const bool    printResults = true;
+const bool    printResults = false;
 
-const TString outputdir = "figures";
+const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170907_TFM/DY/Rinout_plots";
 
 
 // Functions
@@ -115,17 +114,12 @@ TString      xtitle;
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-<<<<<<< HEAD
+
 void getDYScale(TString analysis = "DY",
-		TString level    = "12_DYControl",
-		TString variable = "metPfType1",
+       		TString level    = "12_DYControl",
+       		//TString level    = "02_BVetoLoose",
+       		TString variable = "metPfType1",
 		double  lumi_fb  = 35.867)
-=======
-void getDYScale(TString analysis = "Control",
-		TString level    = "02_Routin",
-		TString variable = "mt2ll",
-		double  lumi_fb  = 35.9)
->>>>>>> 655d66bf5537572a340cb5f2bbcac43aac6f2219
 {
   xtitle = "";
 
@@ -137,10 +131,10 @@ void getDYScale(TString analysis = "Control",
 
   gSystem->mkdir(outputdir, kTRUE);
 
-  TFile* file_data = new TFile("../rootfiles/nominal/" + analysis + "/01_Data.root",     "read");
-  TFile* file_dy   = new TFile("../rootfiles/nominal/" + analysis + "/07_ZJets.root",    "read");
-  TFile* file_wz   = new TFile("../rootfiles/nominal/" + analysis + "/02_WZTo3LNu.root", "read");
-  TFile* file_zz   = new TFile("../rootfiles/nominal/" + analysis + "/03_VZ.root",       "read");
+  TFile* file_data = new TFile("../rootfiles/nominal_eemm/" + analysis + "/01_Data.root",     "read");
+  TFile* file_dy   = new TFile("../rootfiles/nominal_eemm/" + analysis + "/07_ZJets.root",    "read");
+  TFile* file_wz   = new TFile("../rootfiles/nominal_eemm/" + analysis + "/02_WZTo3LNu.root", "read");
+  TFile* file_zz   = new TFile("../rootfiles/nominal_eemm/" + analysis + "/03_VZ.root",       "read");
 
 
   // Get MET (x-axis) vs m2l (y-axis) TH2D histograms
@@ -358,8 +352,8 @@ void getDYScale(TString analysis = "Control",
   mgraph[3]->GetXaxis()->SetTitle(xtitle);
   mgraph[3]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
-  mgraph[3]->SetMinimum(0.85);
-  mgraph[3]->SetMaximum(1.10);
+  mgraph[3]->SetMinimum(0.70);
+  mgraph[3]->SetMaximum(1.20);
 
   DrawLegend(0.74, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.74, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);

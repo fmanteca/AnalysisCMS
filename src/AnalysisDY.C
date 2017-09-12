@@ -7,7 +7,11 @@
 //------------------------------------------------------------------------------
 AnalysisDY::AnalysisDY(TTree* tree, TString systematic) : AnalysisCMS(tree, systematic)
 {
+<<<<<<< HEAD
   SetSaveMinitree(false);
+=======
+  SetWriteMinitree(true);
+>>>>>>> 031e2dcf9eec2213ce7349cbaad7f63fcd1d1e2e
 }
 
 
@@ -105,6 +109,10 @@ void AnalysisDY::Loop(TString analysis, TString filename, float luminosity)
     FillLevelHistograms(DY_01_Has2Leptons, pass_2l);
     //    if (_saveminitree && pass_2l) minitree->Fill();
 
+<<<<<<< HEAD
+=======
+    if (_writeminitree && pass_2l) minitree->Fill();
+>>>>>>> 031e2dcf9eec2213ce7349cbaad7f63fcd1d1e2e
     
     // B Veto                                                                                                                                
     //---------------------------------------------------------------------------    

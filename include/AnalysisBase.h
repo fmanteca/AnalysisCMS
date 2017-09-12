@@ -173,6 +173,8 @@ public :
    Float_t         metPuppi;
    Float_t         metTtrk;
    Float_t         metTtrkPhi;
+   Float_t         dymvaggh;
+   Float_t         dymvavbf;
    //   Float_t         mllg;
    //   Float_t         mllgid;
    Float_t         mpmet;
@@ -709,6 +711,8 @@ public :
    //   TBranch        *b_mllg;   //!
    //   TBranch        *b_mllgid;   //!
    TBranch        *b_mpmet;   //!
+   TBranch        *b_dymvavbf;
+   TBranch        *b_dymvaggh;
    //   TBranch        *b_nPhos;   //!
    //   TBranch        *b_nbjet;   //!
    //   TBranch        *b_nbjettche;   //!
@@ -1507,6 +1511,8 @@ void AnalysisBase::Init(TTree *tree)
    //   fChain->SetBranchAddress("mllg", &mllg, &b_mllg);
    //   fChain->SetBranchAddress("mllgid", &mllgid, &b_mllgid);
    fChain->SetBranchAddress("mpmet", &mpmet, &b_mpmet);
+   fChain->SetBranchAddress("dymvavbf", &dymvavbf, &b_dymvavbf);
+   fChain->SetBranchAddress("dymvaggh", &dymvaggh, &b_dymvaggh);
    //   fChain->SetBranchAddress("nPhos", &nPhos, &b_nPhos);
    //   fChain->SetBranchAddress("nbjet", &nbjet, &b_nbjet);
    //   fChain->SetBranchAddress("nbjettche", &nbjettche, &b_nbjettche);

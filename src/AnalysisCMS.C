@@ -15,12 +15,19 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _verbosity = 0;  // Set it to 1 for debugging
 
+<<<<<<< HEAD
 
   _ismc                  = true;
   _saveminitree          = false;
   _eventdump             = false;
   //  _applytopptreweighting = false;
 
+=======
+  _ismc            = true;
+  _writeminitree   = false;
+  _writehistograms = false;
+  _eventdump       = false;
+>>>>>>> 031e2dcf9eec2213ce7349cbaad7f63fcd1d1e2e
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
@@ -114,6 +121,9 @@ float AnalysisCMS::ElectronIsolation(int k)
 //------------------------------------------------------------------------------
 void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
 {
+  if (!_writehistograms) return;
+
+
   // TH1 histograms
   //----------------------------------------------------------------------------
   h_counterRaw    [ichannel][icut][ijet]->Fill(1);
@@ -364,25 +374,34 @@ void AnalysisCMS::Setup(TString analysis,
   if (_sample.Contains("T2tb")) _isfastsim = true;
 
   printf("\n");
-  printf("     analysis: %s\n",        _analysis.Data());
-  printf("     filename: %s\n",        _filename.Data());
-  printf("       sample: %s\n",        _sample.Data());
-  printf("   luminosity: %.3f fb-1\n", _luminosity);
-  printf("     nentries: %lld\n",      _nentries);
-  printf("         ismc: %s\n",        (_ismc)                           ? "yes" : "no");
-  printf("    isfastsim: %s\n",        (_isfastsim)                      ? "yes" : "no");
-  printf("   isminitree: %s\n",        (_isminitree)                     ? "yes" : "no");
-  printf(" isdatadriven: %s\n",        (_isdatadriven.Contains("fakeW")) ? "yes" : "no");
+  printf("        analysis: %s\n",        _analysis.Data());
+  printf("        filename: %s\n",        _filename.Data());
+  printf("          sample: %s\n",        _sample.Data());
+  printf("      luminosity: %.3f fb-1\n", _luminosity);
+  printf("        nentries: %lld\n",      _nentries);
+  printf("            ismc: %s\n",        (_ismc)                           ? "yes" : "no");
+  printf("       isfastsim: %s\n",        (_isfastsim)                      ? "yes" : "no");
+  printf("      isminitree: %s\n",        (_isminitree)                     ? "yes" : "no");
+  printf("    isdatadriven: %s\n",        (_isdatadriven.Contains("fakeW")) ? "yes" : "no");
+  printf(" writehistograms: %s\n",        (_writehistograms)                ? "yes" : "no");
+  printf("   writeminitree: %s\n",        (_writeminitree)                  ? "yes" : "no");
+  printf("\n");
 
+
+  // Prepare outputs
+  //----------------------------------------------------------------------------
   _longname = _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + _suffix;
   
-  TString prefix = (_isminitree) ? "minitrees/" : "";
+  if (_writehistograms)
+    {
+      TString prefix = (_isminitree) ? "minitrees/" : "";
 
-  gSystem->mkdir(prefix + "rootfiles/" + _systematic + "/" + _analysis, kTRUE);
+      gSystem->mkdir(prefix + "rootfiles/" + _systematic + "/" + _analysis, kTRUE);
 
-  gSystem->mkdir("txt/" + _systematic + "/" + _analysis, kTRUE);
+      root_output = new TFile(prefix + "rootfiles/" + _longname + ".root", "recreate");
 
-  root_output = new TFile(prefix + "rootfiles/" + _longname + ".root", "recreate");
+      gSystem->mkdir("txt/" + _systematic + "/" + _analysis, kTRUE);
+    }
 
   if (_eventdump) txt_eventdump.open("txt/" + _longname + "_eventdump.txt");
 
@@ -1225,9 +1244,9 @@ void AnalysisCMS::PrintProgress(Long64_t counter, Long64_t total)
 //------------------------------------------------------------------------------
 void AnalysisCMS::EndJob()
 {
-  if (_eventdump && !_analysis.EqualTo("Stop")) txt_eventdump.close();
+  if (_eventdump) txt_eventdump.close();
 
-  if (_saveminitree)
+  if (_writeminitree)
     {
       root_minitree->cd();
 
@@ -1238,7 +1257,7 @@ void AnalysisCMS::EndJob()
       root_minitree->Close();
     }
 
-  if (!_isminitree && !_analysis.EqualTo("Stop")) {
+  if (_writehistograms && !_isminitree) {
 
     txt_summary.open("txt/" + _systematic + "/" + _analysis + "/" + _isdatadriven + _sample + ".txt");
 
@@ -1255,15 +1274,18 @@ void AnalysisCMS::EndJob()
     txt_summary.close();   
   }
 
-  root_output->cd();
+  if (_writehistograms)
+    {
+      root_output->cd();
 
-  printf("\n\n Writing histograms. This can take a while...\n");
+      printf("\n\n Writing histograms. This can take a while...");
 
-  root_output->Write("", TObject::kOverwrite);
+      root_output->Write("", TObject::kOverwrite);
 
-  root_output->Close();
+      root_output->Close();
+    }
 
-  printf("\n Done with %s\n\n", _filename.Data());
+  printf("\n\n Done with %s\n\n", _filename.Data());
 }
 
 
@@ -1399,7 +1421,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
 //------------------------------------------------------------------------------
 void AnalysisCMS::OpenMinitree()
 {
-  if (!_saveminitree) return;
+  if (!_writeminitree) return;
 
   gSystem->mkdir(_minitreepath + "minitrees/" + _systematic + "/" + _analysis, kTRUE);
 
@@ -2426,7 +2448,7 @@ void AnalysisCMS::GetDark()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetMlb()
 {
-  TFile* fshape  = new TFile("top-reco/mlb.root");
+  TFile* fshape = new TFile("top-reco/mlb.root");
 
   _shapemlb = (TH1F*)fshape->Get("mlb");
 }
@@ -2529,7 +2551,7 @@ void AnalysisCMS::GetGenWeightsLHE()
 
   if (!dummy) return;
 
-  if (!_saveminitree) return;
+  if (!_writeminitree) return;
 
   root_minitree->cd();
 

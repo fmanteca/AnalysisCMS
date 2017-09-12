@@ -29,6 +29,8 @@ class AnalysisDY : public AnalysisCMS
   TH1D*                  h_htjets    [nchannel][ncut][njetbin+1];
   TH1D*                  h_htnojets  [nchannel][ncut][njetbin+1];
   TH1D*                  h_mllstar   [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dymvaggh  [nchannel][ncut][njetbin+1];
+  TH1D*                  h_dymvavbf  [nchannel][ncut][njetbin+1];
 };
 
 #endif
