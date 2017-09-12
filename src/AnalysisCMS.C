@@ -186,6 +186,8 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   h_metTtrk       [ichannel][icut][ijet]->Fill(metTtrk,         _event_weight);
   h_metTtrkPhi    [ichannel][icut][ijet]->Fill(metTtrkPhi,      _event_weight);
   h_mpmet         [ichannel][icut][ijet]->Fill(mpmet,           _event_weight);
+  h_dymvavbf      [ichannel][icut][ijet]->Fill(dymvavbf,        _event_weight);
+  h_dymvaggh      [ichannel][icut][ijet]->Fill(dymvaggh,        _event_weight);
   h_metPuppi      [ichannel][icut][ijet]->Fill(metPuppi,        _event_weight);
   h_mth           [ichannel][icut][ijet]->Fill(mth,             _event_weight);
   h_mtw1          [ichannel][icut][ijet]->Fill(mtw1,            _event_weight);
@@ -1346,6 +1348,8 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   h_metPfType1    [ichannel][icut][ijet] = new TH1D("h_metPfType1"     + suffix, "", 2000,    0, 2000);
   h_metTtrk       [ichannel][icut][ijet] = new TH1D("h_metTtrk"        + suffix, "", 2000,    0, 2000);
   h_mpmet         [ichannel][icut][ijet] = new TH1D("h_mpmet"          + suffix, "", 2000,    0, 2000);
+  h_dymvaggh      [ichannel][icut][ijet] = new TH1D("h_dymvaggh"       + suffix, "", 20,      0,    1);
+  h_dymvavbf      [ichannel][icut][ijet] = new TH1D("h_dymvavbf"       + suffix, "", 20,      0,    1);
   h_metPuppi      [ichannel][icut][ijet] = new TH1D("h_metPuppi"       + suffix, "", 2000,    0, 2000);
   h_mth           [ichannel][icut][ijet] = new TH1D("h_mth"            + suffix, "", 2000,    0, 2000);
   h_mtw1          [ichannel][icut][ijet] = new TH1D("h_mtw1"           + suffix, "", 2000,    0, 2000);
