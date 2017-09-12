@@ -15,19 +15,11 @@ AnalysisCMS::AnalysisCMS(TTree* tree, TString systematic) : AnalysisBase(tree)
 
   _verbosity = 0;  // Set it to 1 for debugging
 
-<<<<<<< HEAD
-
-  _ismc                  = true;
-  _saveminitree          = false;
-  _eventdump             = false;
-  //  _applytopptreweighting = false;
-
-=======
   _ismc            = true;
   _writeminitree   = false;
-  _writehistograms = false;
+  _writehistograms = true;
   _eventdump       = false;
->>>>>>> 031e2dcf9eec2213ce7349cbaad7f63fcd1d1e2e
+
 
   _systematic_btag_do    = (systematic.Contains("Btagdo"))    ? true : false;
   _systematic_btag_up    = (systematic.Contains("Btagup"))    ? true : false;
