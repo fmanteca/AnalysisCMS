@@ -24,15 +24,19 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 5;
+const int     nmetcut = 6;
 
-const float   metcut [nmetcut] = {20, 30, 40, 60, -1};  // [GeV]
-const float   metdraw[nmetcut] = {20, 30, 40, 60, 100};  // [GeV]
+//const float   metcut [nmetcut] = {20, 30, 40, 60, -1};  // [GeV]
+//const float   metdraw[nmetcut] = {20, 30, 40, 60, 100};  // [GeV]
+
+
+const float   metcut [nmetcut] = {0,5,10,15,20,-1};  // [GeV]
+const float   metdraw[nmetcut] = {0,5,10,15,20,100};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = false;
 
-const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170907_TFM/DY/Rinout_plots";
+const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170921_AnalysisCMS/DY/Rinout_plots/0jet";
 
 
 // Functions
@@ -116,9 +120,11 @@ TString      xtitle;
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 void getDYScale(TString analysis = "DY",
-       		TString level    = "12_DYControl",
-       		//TString level    = "02_BVetoLoose",
-       		TString variable = "metPfType1",
+       		TString level    = "02_BVetoLoose",
+		TString njet     = "0jet",
+		//TString level    = "10_DYControl",
+       		//TString level    = "01_Has2Leptons",
+       		TString variable = "mpmet",
 		double  lumi_fb  = 35.867)
 {
   xtitle = "";
@@ -131,20 +137,20 @@ void getDYScale(TString analysis = "DY",
 
   gSystem->mkdir(outputdir, kTRUE);
 
-  TFile* file_data = new TFile("../rootfiles/nominal_eemm/" + analysis + "/01_Data.root",     "read");
-  TFile* file_dy   = new TFile("../rootfiles/nominal_eemm/" + analysis + "/07_ZJets.root",    "read");
-  TFile* file_wz   = new TFile("../rootfiles/nominal_eemm/" + analysis + "/02_WZTo3LNu.root", "read");
-  TFile* file_zz   = new TFile("../rootfiles/nominal_eemm/" + analysis + "/03_VZ.root",       "read");
+  TFile* file_data = new TFile("../Rinout/" + analysis +  "/01_Data.root",     "read");
+  TFile* file_dy   = new TFile("../Rinout/" + analysis +  "/07_ZJets.root",    "read");
+  TFile* file_wz   = new TFile("../Rinout/" + analysis +  "/02_WZTo3LNu.root", "read");
+  TFile* file_zz   = new TFile("../Rinout/" + analysis +  "/03_VZ.root",       "read");
 
 
   // Get MET (x-axis) vs m2l (y-axis) TH2D histograms
   //----------------------------------------------------------------------------
   for (int i=ee; i<ll; i++)
     {
-      h2_data[i] = (TH2D*)file_data->Get(analysis + "/" + level + "/h_" + variable + "_m2l_" + schannel[i]);
-      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/" + level + "/h_" + variable + "_m2l_" + schannel[i]);
-      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/" + level + "/h_" + variable + "_m2l_" + schannel[i]);
-      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/" + level + "/h_" + variable + "_m2l_" + schannel[i]);
+      h2_data[i] = (TH2D*)file_data->Get(analysis + "/" + level + "/" + njet + "/h_" + variable + "_m2l_" + schannel[i]);
+      h2_dy  [i] = (TH2D*)file_dy  ->Get(analysis + "/" + level + "/" + njet + "/h_" + variable + "_m2l_" + schannel[i]);
+      h2_wz  [i] = (TH2D*)file_wz  ->Get(analysis + "/" + level + "/" + njet + "/h_" + variable + "_m2l_" + schannel[i]);
+      h2_zz  [i] = (TH2D*)file_zz  ->Get(analysis + "/" + level + "/" + njet + "/h_" + variable + "_m2l_" + schannel[i]);
 
       h2_dy[i]->Scale(lumi_fb);
       h2_wz[i]->Scale(lumi_fb);
@@ -352,8 +358,8 @@ void getDYScale(TString analysis = "DY",
   mgraph[3]->GetXaxis()->SetTitle(xtitle);
   mgraph[3]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
-  mgraph[3]->SetMinimum(0.70);
-  mgraph[3]->SetMaximum(1.20);
+  mgraph[3]->SetMinimum(0.60);
+  mgraph[3]->SetMaximum(1.4);
 
   DrawLegend(0.74, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.74, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
