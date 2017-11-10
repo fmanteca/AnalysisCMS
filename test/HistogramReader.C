@@ -21,6 +21,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _stackoption     ("nostack,hist"),
   _title           ("inclusive"),
   _luminosity_fb   (-1),
+  _changelabel     (false),
   _datanorm        (false),
   _drawratio       (false),
   _drawsignificance(false),
@@ -28,11 +29,14 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _minitreebased   (false),
   _publicstyle     (false),
   _savepdf         (false),
-  _savepng         (true)
+  _savepng         (true),
+  _saveratio       (true)
 {
-  _datafile  = NULL;
-  _datahist  = NULL;
-  _allmchist = NULL;
+  _datafile   = NULL;
+  _datahist   = NULL;
+  _allmchist  = NULL;
+  _prefitfile = NULL;
+  _prefithist = NULL;
 
   _mcfile.clear();
   _mccolor.clear();
@@ -69,6 +73,30 @@ void HistogramReader::AddData(const TString& filename,
   _datafile     = file;
   _datafilename = filename;
   _datalabel    = label;
+}
+
+
+//------------------------------------------------------------------------------
+// AddPrefit
+//------------------------------------------------------------------------------
+void HistogramReader::AddPrefit(const TString& filename,
+				const TString& label,
+				Color_t        color)
+{
+  TString fullname = _inputdir + "/" + filename + ".root";
+
+  if (gSystem->AccessPathName(fullname))
+    {
+      printf(" [HistogramReader::AddPrefit] Cannot access %s\n", fullname.Data());
+      return;
+    }
+
+  TFile* file = new TFile(fullname, "update");
+
+  _prefitcolor    = color;
+  _prefitfile     = file;
+  _prefitfilename = filename;
+  _prefitlabel    = label;
 }
 
 
@@ -209,17 +237,21 @@ void HistogramReader::Draw(TString hname,
 
   if ((_drawratio && _datafile) || _drawsignificance)
     {
-      canvas = new TCanvas(cname, cname, 550, 720);
+      Int_t ww = (_publicstyle) ? 800 : 550;
+      Int_t wh = (_publicstyle) ? 800 : 720;
+
+      canvas = new TCanvas(cname, cname, ww, wh);
 
       pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1.0);
       pad2 = new TPad("pad2", "pad2", 0, 0.0, 1, 0.3);
 
       pad1->SetTopMargin   (0.08);
-      pad1->SetBottomMargin(0.02);
-      pad1->Draw();
+      pad1->SetBottomMargin(0.01);  // 0.02
 
-      pad2->SetTopMargin   (0.08);
-      pad2->SetBottomMargin(0.35);
+      pad2->SetTopMargin   (0.05);  // 0.08
+      pad2->SetBottomMargin(0.45);  // 0.35
+
+      pad1->Draw();
       pad2->Draw();
     }
   else
@@ -282,9 +314,9 @@ void HistogramReader::Draw(TString hname,
 
     if (_signalscale[i] > 0) _signalhist[i]->Scale(_signalscale[i]);
 
-    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 3, ngroup, moveoverflow, xmin, xmax);
+    SetHistogram(_signalhist[i], _signalcolor[i], 0, kDot, kSolid, 4, ngroup, moveoverflow, xmin, xmax);
     
-    signalstack->Add(_signalhist[i]);
+    signalstack->Add(_signalhist[i], "][");
   }
 
 
@@ -299,6 +331,22 @@ void HistogramReader::Draw(TString hname,
       _datahist = (TH1D*)dummy->Clone();
       
       SetHistogram(_datahist, kBlack, 0, kFullCircle, kSolid, 1, ngroup, moveoverflow, xmin, xmax);
+    }
+
+
+  // Get the prefit
+  //----------------------------------------------------------------------------
+  if (_prefitfile)
+    {
+      _prefitfile->cd();
+
+      TH1D* dummy = (TH1D*)_prefitfile->Get(hname);
+
+      _prefithist = (TH1D*)dummy->Clone();
+      
+      if (_luminosity_fb) _prefithist->Scale(_luminosity_fb);
+      
+      SetHistogram(_prefithist, _prefitcolor, 0, kDot, 7, 4, ngroup, moveoverflow, xmin, xmax);
     }
 
 
@@ -367,12 +415,12 @@ void HistogramReader::Draw(TString hname,
 
   }
 
-  _allmclabel = "stat";
+  _allmclabel = "Bkg. unc.";
 
-  _allmchist->SetFillColor  (kGray+1);
+  _allmchist->SetFillColor  (kGray+2);  // kGray+1
   _allmchist->SetFillStyle  (   3345);
-  _allmchist->SetLineColor  (kGray+1);
-  _allmchist->SetMarkerColor(kGray+1);
+  _allmchist->SetLineColor  (kGray+2);  // kGray+1
+  _allmchist->SetMarkerColor(kGray+2);  // KGray+1
   _allmchist->SetMarkerSize (      0);
 
 
@@ -384,14 +432,18 @@ void HistogramReader::Draw(TString hname,
 
   if (!_stackoption.Contains("nostack")) _allmchist->Draw("e2,same");
 
-  if (_signalfile.size() > 0) signalstack->Draw("nostack,hist,same");
+  if (_prefitfile) _prefithist->Draw("hist,][,same");
+
+  if (_signalfile.size() > 0) signalstack->Draw("nostack,hist,][,same");
 
   if (_datahist) _datahist->Draw("ep,same");
 
 
   // Set xtitle and ytitle
   //----------------------------------------------------------------------------
-  TString ytitle = Form("events / %s.%df", "%", precision);
+  TString ytitle = "Events / bin";
+
+  if (precision > -1) ytitle = Form("Events / %s.%df", "%", precision);
 
   ytitle = Form(ytitle.Data(), hfirst->GetBinWidth(0));
 
@@ -441,8 +493,8 @@ void HistogramReader::Draw(TString hname,
 
   if (pad1->GetLogy())
     {
-      theMin = 1e-5;
-      theMax = TMath::Power(10, TMath::Log10(theMax) + 6);
+      theMin = 0.02;
+      theMax = TMath::Power(10, TMath::Log10(theMax) + 10);
     }
   else
     {
@@ -458,7 +510,8 @@ void HistogramReader::Draw(TString hname,
 
   // Legend
   //----------------------------------------------------------------------------
-  Float_t x0     = 0.220;                         // x position of the data on the top left
+  Float_t tsize  = 0.030;                         // text size
+  Float_t x0     = 0.218;                         // x position of the data on the top left
   Float_t y0     = 0.843;                         // y position of the data on the top left
   Float_t xdelta = (_drawyield) ? 0.228 : 0.170;  // x width between columns
   Float_t ydelta = 0.050;                         // y width between rows
@@ -467,21 +520,28 @@ void HistogramReader::Draw(TString hname,
 
   TString opt = (_stackoption.Contains("nostack")) ? "l" : "f";
 
+  if (_publicstyle)
+    {
+      x0     = 0.490;
+      tsize  = 0.040;
+      ydelta = 0.051;
+    }
+
 
   // Data legend
   //----------------------------------------------------------------------------
   if (_datahist)
     {
-      DrawLegend(x0, y0, _datahist, _datalabel.Data(), "lp");
+      DrawLegend(x0, y0, _datahist, _datalabel.Data(), "elp", true, tsize);
       ny++;
     }
 
 
   // All MC legend
   //----------------------------------------------------------------------------
-  if (!_stackoption.Contains("nostack"))
+  if (!_stackoption.Contains("nostack") && !_publicstyle)
     {
-      DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt);
+      DrawLegend(x0, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt, true, tsize);
       ny++;
     }
 
@@ -490,15 +550,37 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   Int_t nrow = (_mchist.size() > 10) ? 5 : 4;
 
+  if (_publicstyle) nrow = 15;
+
   for (int i=0; i<_mchist.size(); i++)
     {
+      int j = (_publicstyle) ? _mchist.size()-i-1 : i;
+
       if (ny == nrow)
 	{
 	  ny = 0;
 	  nx++;
 	}
 
-      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _mchist[i], _mclabel[i].Data(), opt);
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _mchist[j], _mclabel[j].Data(), opt, true, tsize);
+      ny++;
+    }
+
+
+  // All MC legend
+  //----------------------------------------------------------------------------
+  if (!_stackoption.Contains("nostack") && _publicstyle)
+    {
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _allmchist, _allmclabel.Data(), opt, true, tsize);
+      ny++;
+    }
+
+
+  // Prefit legend
+  //----------------------------------------------------------------------------
+  if (_prefithist)
+    {
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _prefithist, _prefitlabel.Data(), "l", true, tsize);
       ny++;
     }
 
@@ -507,31 +589,42 @@ void HistogramReader::Draw(TString hname,
   //----------------------------------------------------------------------------
   for (int i=0; i<_signalhist.size(); i++)
     {
-      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l");
+      DrawLegend(x0 + nx*xdelta, y0 - ny*ydelta, _signalhist[i], _signallabel[i].Data(), "l", true, tsize);
       ny++;
     }
 
 
-  // Titles
+  // CMS title
   //----------------------------------------------------------------------------
-  Float_t xprelim = ((_drawratio && _datafile) || _drawsignificance) ? 0.288 : 0.300;
-
-  if (_title.EqualTo("inclusive"))
+  if (_publicstyle)
     {
-      DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
-      DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
+      DrawLatex(61, 0.223, 0.843, 0.050, 11, "CMS");
+      DrawLatex(52, 0.223, 0.800, 0.035, 11, "Preliminary");
     }
   else
     {
-      DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+      Float_t xprelim = ((_drawratio && _datafile) || _drawsignificance) ? 0.288 : 0.300;
+
+      if (_title.EqualTo("inclusive"))
+	{
+	  DrawLatex(61, 0.190,   0.945, 0.050, 11, "CMS");
+	  DrawLatex(52, xprelim, 0.945, 0.030, 11, "Preliminary");
+	}
+      else
+	{
+	  DrawLatex(42, 0.190, 0.945, 0.050, 11, _title);
+	}
     }
 
+
+  // Luminosity title
+  //----------------------------------------------------------------------------
   if (_luminosity_fb > 0)
     DrawLatex(42, 0.940, 0.945, 0.050, 31, Form("%.1f fb^{-1} (13TeV)", _luminosity_fb));
   else
     DrawLatex(42, 0.940, 0.945, 0.050, 31, "(13TeV)");
 
-  SetAxis(hfirst, xtitle, ytitle, 1.5, 1.8);
+  SetAxis(hfirst, xtitle, ytitle);
 
 
   //----------------------------------------------------------------------------
@@ -547,8 +640,9 @@ void HistogramReader::Draw(TString hname,
       //      g->SetMarkerStyle(kFullCircle);
       //      g->Draw("ap");
 
-      TH1D* ratio       = (TH1D*)_datahist ->Clone("ratio");
+      TH1D* ratio       = (TH1D*)_datahist->Clone("ratio");
       TH1D* uncertainty = (TH1D*)_allmchist->Clone("uncertainty");
+      TH1D* prefitratio = (_prefithist) ? (TH1D*)_prefithist->Clone("prefitratio") : NULL;
 
       for (Int_t ibin=1; ibin<=ratio->GetNbinsX(); ibin++) {
 
@@ -558,41 +652,92 @@ void HistogramReader::Draw(TString hname,
 	Float_t mcValue = _allmchist->GetBinContent(ibin);
 	Float_t mcError = _allmchist->GetBinError(ibin);
 
-	Float_t ratioVal         = 999;
-	Float_t ratioErr         = 999;
-	Float_t uncertaintyError = 999;
+	Float_t ratioVal       = -999;
+	Float_t ratioErr       = -999;
+	Float_t uncertaintyErr = -999;
 
 	if (mcValue > 0)
 	  {
-	    ratioVal         = dtValue / mcValue;
-	    ratioErr         = dtError / mcValue;
-	    uncertaintyError = ratioVal * mcError / mcValue;
+	    ratioVal       = dtValue / mcValue;
+	    ratioErr       = dtError / mcValue;
+	    uncertaintyErr = ratioVal * mcError / mcValue;
 	  }
 
 	ratio->SetBinContent(ibin, ratioVal);
 	ratio->SetBinError  (ibin, ratioErr);
 	
 	uncertainty->SetBinContent(ibin, 1.);
-	uncertainty->SetBinError  (ibin, uncertaintyError);
+	uncertainty->SetBinError  (ibin, uncertaintyErr);
+
+
+	// Prefit part
+	//----------------------------------------------------------------------
+	if (_prefithist)
+	  {
+	    Float_t prefitValue = _prefithist->GetBinContent(ibin);
+
+	    Float_t prefitratioVal = (prefitValue > 0) ? dtValue / prefitValue : -999;
+
+	    prefitratio->SetBinContent(ibin, prefitratioVal);
+	  }
       }
+
+
+      //////////////////////////////////////////////////////////////////////////
+      //
+      // The ChangeLabel method requires ROOT 6.10/05 (available in CMSSW_9_3_3)
+      //
+      //////////////////////////////////////////////////////////////////////////
+      if (_changelabel)
+	{
+	  TAxis* xaxis = (TAxis*)ratio->GetXaxis();
+      
+	  xaxis->ChangeLabel( -1, -1, -1, -1, -1, -1, "1.0");
+	  xaxis->ChangeLabel( -2, -1, -1, -1, -1, -1, "0.99");
+	  xaxis->ChangeLabel( -3, -1, -1, -1, -1, -1, "0.98");
+	  xaxis->ChangeLabel( -4, -1, -1, -1, -1, -1, "0.97");
+	  xaxis->ChangeLabel( -5, -1, -1, -1, -1, -1, "0.96");
+	  xaxis->ChangeLabel( -6, -1, -1, -1, -1, -1, "0.95");
+	  xaxis->ChangeLabel( -7, -1, -1, -1, -1, -1, "0.8");
+	  xaxis->ChangeLabel( -8, -1, -1, -1, -1, -1, "0.7");
+	  xaxis->ChangeLabel( -9, -1, -1, -1, -1, -1, "0.5");
+	  xaxis->ChangeLabel(-10, -1, -1, -1, -1, -1, "0.3");
+	  xaxis->ChangeLabel(-11, -1, -1, -1, -1, -1, "0.0");
+	}
+
 
       ratio->SetTitle("");
 
       ratio->Draw("ep");
 
       ratio->GetXaxis()->SetRangeUser(xmin, xmax);
+
       ratio->GetYaxis()->SetRangeUser(0.5, 1.5);
 
       uncertainty->Draw("e2,same");
 
       ratio->Draw("ep,same");
 
-      SetAxis(ratio, xtitle, "data / MC", 1.4, 0.75);
+      if (_prefithist) prefitratio->Draw("hist,][,same");
+
+      SetAxis(ratio, xtitle, "Data / Bkg");
+
+
+      // Save the ratio histogram
+      //------------------------------------------------------------------------
+      if (_saveratio && hname.Contains("pt2l_mm"))
+	{
+	  TFile* ratiofile = new TFile(_outputdir + "/" + hname + ".root", "recreate");
+	  
+	  ratio->Write();
+	  
+	  ratiofile->Close();
+	}
     }
-  else if (_drawsignificance)
-    {
-      // Barbara's stuff
-    }
+  //  else if (_drawsignificance)
+  //    {
+  //      // Barbara's stuff
+  //    }
 
 
   //----------------------------------------------------------------------------
@@ -733,8 +878,8 @@ void HistogramReader::CrossSection(TString level,
 }
 
 
-//-----------------------------------------------------------------------------
-// DrawLatex 
+//------------------------------------------------------------------------------
+// DrawLatex
 //------------------------------------------------------------------------------
 void HistogramReader::DrawLatex(Font_t      tfont,
 				Float_t     x,
@@ -934,38 +1079,47 @@ void HistogramReader::SetAxis(TH1*    hist,
 			      Float_t xoffset,
 			      Float_t yoffset)
 {
+  TString hname = hist->GetName();
+
   gPad->cd();
   gPad->Update();
 
-  // See https://root.cern.ch/doc/master/classTAttText.html#T4
-  Float_t padw = gPad->XtoPixel(gPad->GetX2());
-  Float_t padh = gPad->YtoPixel(gPad->GetY1());
-
-  Float_t size = (padw < padh) ? padw : padh;
-
-  size = 20. / size;  // Like this label size is always 20 pixels
-  
   TAxis* xaxis = (TAxis*)hist->GetXaxis();
   TAxis* yaxis = (TAxis*)hist->GetYaxis();
+
+  xaxis->SetLabelFont(43);  // Text font code = 10*fontnumber + precision
+  yaxis->SetLabelFont(43);  // Text font code = 10*fontnumber + precision
+  xaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
+  yaxis->SetTitleFont(43);  // Text font code = 10*fontnumber + precision
+
+  xaxis->SetLabelSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetLabelSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  xaxis->SetTitleSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
+  yaxis->SetTitleSize(26);  // precision = 3 scalable and rotatable hardware fonts. Text size is given in pixels
 
   xaxis->SetTitleOffset(xoffset);
   yaxis->SetTitleOffset(yoffset);
 
-  xaxis->SetLabelSize(size);
-  yaxis->SetLabelSize(size);
-
-  if (_minitreebased) {
-    xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
-    yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());
-  }
-
-  xaxis->SetTitleSize(size);
-  yaxis->SetTitleSize(size);
-
   xaxis->SetTitle(xtitle);
   yaxis->SetTitle(ytitle);
 
-  yaxis->CenterTitle();
+  if (_minitreebased)
+    {
+      xaxis->SetLabelOffset(5.*xaxis->GetLabelOffset());
+      yaxis->SetLabelOffset(3.*yaxis->GetLabelOffset());
+    }
+
+  if (_publicstyle)
+    {
+      xaxis->SetNdivisions(510);
+      yaxis->SetNdivisions(709);
+    }
+
+  if (hname.Contains("ratio"))
+    {
+      yaxis->CenterTitle();
+      yaxis->SetNdivisions(104);
+    }
 
   gPad->GetFrame()->DrawClone();
   gPad->RedrawAxis();
@@ -1116,6 +1270,8 @@ void HistogramReader::LoopEventsByCut(TString analysis, TString hname)
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByCut(_mcfile[i], analysis, hname);
 
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByCut(_signalfile[i], analysis, hname);
+
+  if (_prefitfile) EventsByCut(_prefitfile, analysis, hname);
 }
 
 
@@ -1129,7 +1285,6 @@ void HistogramReader::EventsByChannel(TFile*  file,
   TH1D* test_hist = (TH1D*)file->Get(level + "/h_counterLum_evolution");
 
   if (test_hist) return;
-
 
   // Get the number of bins
   //  Int_t firstchannel = (level.Contains("WZ/")) ? eee : ee;
@@ -1175,6 +1330,8 @@ void HistogramReader::LoopEventsByChannel(TString level)
   for (UInt_t i=0; i<_mcfile.size(); i++) EventsByChannel(_mcfile[i], level);
 
   for (UInt_t i=0; i<_signalfile.size(); i++) EventsByChannel(_signalfile[i], level);
+
+  if (_prefitfile) EventsByChannel(_prefitfile, level);
 }
 
 
@@ -1322,7 +1479,7 @@ void HistogramReader::WriteYields(TH1*    hist,
     {
       _writelabels = false;
 
-      _yields_table << Form("\n %15s", " ");
+      _yields_table << Form("\n %40s", " ");
 
       for (int i=firstBin; i<=lastBin; i++) {
 
@@ -1330,26 +1487,26 @@ void HistogramReader::WriteYields(TH1*    hist,
 
 	if (!hname.Contains("evolution")) binlabel = Form("%d", i);
 	    
-	_yields_table << Form(" | %-24s", binlabel.Data());
+	_yields_table << Form(" | %-25s", binlabel.Data());
       }
 
       _yields_table << Form("\n");
     }
 
-  _yields_table << Form(" %15s", label.Data());
+  _yields_table << Form(" %40s", label.Data());
 
   for (int i=firstBin; i<=lastBin; i++) {
 
     float process_yield = hist->GetBinContent(i);
     float process_error = sqrt(hist->GetSumw2()->At(i));
 
-    if (label.EqualTo("data"))
+    if (label.EqualTo("data") || label.EqualTo("Data"))
       {
-	_yields_table << Form(" | %8.0f %15s", process_yield, " ");
+	_yields_table << Form(" | %8.0f %16s", process_yield, " ");
       }
     else
       {
-	_yields_table << Form(" | %11.2f +/- %8.2f", process_yield, process_error);
+	_yields_table << Form(" | %11.2f +/- %9.2f", process_yield, process_error);
       }
   }
 
@@ -1598,7 +1755,7 @@ void HistogramReader::Roc(TString hname,
   DrawLegend(0.22, 0.84, dummy_min, Form("%s > x", xtitle.Data()), "lp", false);
   DrawLegend(0.22, 0.77, dummy_max, Form("%s < x", xtitle.Data()), "lp", false);
 
-  SetAxis(sigGraph_min->GetHistogram(), myxtitle, fom, 1.5, 2.1);
+  SetAxis(sigGraph_min->GetHistogram(), myxtitle, fom);
 
   if (_savepdf) sigCanvas->SaveAs(_outputdir + hname + "_significance.pdf");
   if (_savepng) sigCanvas->SaveAs(_outputdir + hname + "_significance.png");

@@ -39,6 +39,10 @@ class HistogramReader
 			       const TString& label,
 			       Color_t        color);
 
+  void     AddPrefit          (const TString& filename,
+			       const TString& label,
+			       Color_t        color);
+
   void     AddProcess         (const TString& filename,
 			       const TString& label,
 			       Color_t        color,
@@ -56,7 +60,7 @@ class HistogramReader
   void     Draw               (TString        hname,
 			       TString        xtitle       = "",
 			       Int_t          ngroup       = -1,
-			       Int_t          precision    =  0,
+			       Int_t          precision    = -1,
 			       TString        units        = "NULL",
 			       Bool_t         setlogy      = false,
 			       Bool_t         moveoverflow = true,
@@ -110,8 +114,8 @@ class HistogramReader
   void     SetAxis            (TH1*           hist,
 			       TString        xtitle,
 			       TString        ytitle,
-			       Float_t        xoffset,
-			       Float_t        yoffset);
+			       Float_t        xoffset = 5.1,
+			       Float_t        yoffset = 2.2);
 
   void     SetHistogram       (TH1*           hist,
 			       Color_t        color,
@@ -123,6 +127,8 @@ class HistogramReader
 			       Bool_t         moveoverflow,
 			       Float_t&       xmin,
 			       Float_t&       xmax);
+
+  void     SetChangeLabel     (Bool_t         changelabel) {_changelabel = changelabel;}
 
   void     SetDataNorm        (Bool_t         datanorm) {_datanorm = datanorm;}
 
@@ -182,6 +188,7 @@ class HistogramReader
 
  private :
 
+  Bool_t                _changelabel;
   Bool_t                _datanorm;
   Bool_t                _drawratio;
   Bool_t                _drawsignificance;
@@ -189,6 +196,7 @@ class HistogramReader
   Bool_t                _publicstyle;
   Bool_t                _savepdf;
   Bool_t                _savepng;
+  Bool_t                _saveratio;
   Bool_t                _writelabels;
   Bool_t                _writeyields;
   Bool_t                _minitreebased;
@@ -204,9 +212,16 @@ class HistogramReader
   TString 		_datafilename;
   TFile*                _datafile;
   TH1*                  _datahist;
-  TH1*                  _allmchist;
   Color_t               _datacolor;
   TString               _datalabel;
+
+  TString 		_prefitfilename;
+  TFile*                _prefitfile;
+  TH1*                  _prefithist;
+  Color_t               _prefitcolor;
+  TString               _prefitlabel;
+
+  TH1*                  _allmchist;
   TString               _allmclabel;
 
   std::vector<TString>  _mcfilename;

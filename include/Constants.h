@@ -130,6 +130,7 @@ const bool systematicfromweight[nsystematic] = {
 
 // Process colors
 //------------------------------------------------------------------------------
+const Color_t color_Prefit    = kBlue+1;
 const Color_t color_Signal    = kRed;
 const Color_t color_Fakes     = kGray+1;
 const Color_t color_Data      = kBlack;
@@ -149,6 +150,32 @@ const Color_t color_WgStar    = kBlue+2;
 const Color_t color_Zg        = kTeal;
 const Color_t color_VVV       = kYellow-6;
 const Color_t color_HZ        = kOrange+1;
+
+
+// EXO-17-014 process colors
+//------------------------------------------------------------------------------
+/*
+const Color_t color_Prefit    = kBlue+1;
+const Color_t color_Signal    = kMagenta+1;  // iSIG
+const Color_t color_Fakes     = kMagenta+2;  // iFAKES
+const Color_t color_Data      = kBlack;      // iDATA
+const Color_t color_WZTo3LNu  = kRed-6;      // iVV
+const Color_t color_VZ        = kRed-6;      // iVV
+const Color_t color_TTTo2L2Nu = kGreen+1;    // iTTBAR
+const Color_t color_ST        = kAzure-8;    // iST
+const Color_t color_WW        = kRed-6;      // iVV
+const Color_t color_ZJets     = kOrange+7;   // iZLL
+const Color_t color_ZJetsToTT = kOrange+7;   // iZLL
+const Color_t color_WJets     = kMagenta+2;  // iFAKES
+const Color_t color_TTV       = kCyan+2;     // iTTV
+const Color_t color_TTZ       = kCyan+2;     // iTTV
+const Color_t color_HWW       = kRed-6;      // iVV
+const Color_t color_Wg        = kBlue;
+const Color_t color_WgStar    = kBlue+2;
+const Color_t color_Zg        = kTeal;
+const Color_t color_VVV       = kYellow-6;
+const Color_t color_HZ        = kOrange+1;
+*/
 
 
 // Branching ratios

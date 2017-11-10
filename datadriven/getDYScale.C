@@ -29,7 +29,6 @@ const int     nmetcut = 10;
 //const float   metcut [nmetcut] = {20, 30, 40, 60, -1};  // [GeV]
 //const float   metdraw[nmetcut] = {20, 30, 40, 60, 100};  // [GeV]
 
-
 const float   metcut [nmetcut] = {0,5,10,15,20,25,30,40,50,-1};  // [GeV]
 const float   metdraw[nmetcut] = {0,5,10,15,20,25,30,40,50,150};  // [GeV]
 
@@ -120,6 +119,7 @@ TString      xtitle;
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<<<<<<< HEAD
 
 void getDYScale(TString analysis = "DY",
        		TString level    = "02_BVetoLoose",
@@ -272,19 +272,22 @@ void getDYScale(TString analysis = "DY",
 
       canvas[k]->Update();
 
-      TLine* line = new TLine(canvas[k]->GetUxmin(), 0.0, canvas[k]->GetUxmax(), 0.0);
-  
-      line->SetLineWidth(2);
-      line->SetLineStyle(kDotted);
-      line->Draw("same");
+      if (ymin < 0.)
+	{
+	  TLine* line = new TLine(canvas[k]->GetUxmin(), 0.0, canvas[k]->GetUxmax(), 0.0);
+	
+	  line->SetLineWidth(2);
+	  line->SetLineStyle(kDotted);
+	  line->Draw("same");
+	}
 
       mgraph[k]->GetXaxis()->SetTitleOffset(1.5);
       mgraph[k]->GetYaxis()->SetTitleOffset(2.0);
       mgraph[k]->GetXaxis()->SetTitle(xtitle);
       mgraph[k]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-      mgraph[k]->SetMinimum(-0.01);
-      mgraph[k]->SetMaximum(+0.19);
+      mgraph[k]->SetMinimum(ymin);
+      mgraph[k]->SetMaximum(ymax);
 
       DrawLegend(0.22, 0.83, (TObject*)graph_R_data[k], " " + lchannel[k] + " estimated (data)");
       DrawLegend(0.22, 0.77, (TObject*)graph_R_dy  [k], " " + lchannel[k] + " DY");
@@ -314,19 +317,22 @@ void getDYScale(TString analysis = "DY",
 
   canvas[2]->Update();
 
-  TLine* line2 = new TLine(canvas[2]->GetUxmin(), 0.0, canvas[2]->GetUxmax(), 0.0);
+  if (ymin < 0.)
+    {
+      TLine* line2 = new TLine(canvas[2]->GetUxmin(), 0.0, canvas[2]->GetUxmax(), 0.0);
   
-  line2->SetLineWidth(2);
-  line2->SetLineStyle(kDotted);
-  line2->Draw("same");
+      line2->SetLineWidth(2);
+      line2->SetLineStyle(kDotted);
+      line2->Draw("same");
+    }
 
   mgraph[2]->GetXaxis()->SetTitleOffset(1.5);
   mgraph[2]->GetYaxis()->SetTitleOffset(2.0);
   mgraph[2]->GetXaxis()->SetTitle(xtitle);
   mgraph[2]->GetYaxis()->SetTitle("R^{out/in} = N^{out} / N^{in}");
 
-  mgraph[2]->SetMinimum(-0.01);
-  mgraph[2]->SetMaximum(+0.19);
+  mgraph[2]->SetMinimum(ymin);
+  mgraph[2]->SetMaximum(ymax);
 
   DrawLegend(0.22, 0.83, (TObject*)graph_R_dy_copy[ee], " " + lchannel[ee] + " DY");
   DrawLegend(0.22, 0.77, (TObject*)graph_R_dy_copy[mm], " " + lchannel[mm] + " DY");

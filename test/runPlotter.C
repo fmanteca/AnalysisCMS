@@ -10,7 +10,6 @@ const Bool_t xsection   = false;
 const Bool_t plots      = true;
 const Bool_t basictest  = false;
 
-
 const TString inputdir  = "../rootfiles/nvtx/";
 const TString outputdir = "figures/";
 
@@ -65,8 +64,9 @@ void runPlotter(TString level,
   HistogramReader plotter(inputdir + analysis, outputdir);
 
   plotter.SetStackOption(option);
-  plotter.SetPublicStyle(false);
-  plotter.SetSavePdf    (false);
+  plotter.SetPublicStyle( false);
+  plotter.SetSavePdf    (  true);
+  plotter.SetChangeLabel( false);
 
   if (option.Contains("nostack"))
     {
@@ -81,42 +81,33 @@ void runPlotter(TString level,
 
   // Get the data
   //----------------------------------------------------------------------------
-  plotter.AddData("01_Data", "data", color_Data);
+  plotter.AddData("01_Data", "Data", color_Data);
 
 
   // Add processes
   //----------------------------------------------------------------------------
 
-      plotter.AddProcess("14_HZ",        "HZ",       color_HZ);  // NOT YET AVAILABLE
-      plotter.AddProcess("10_HWW",       "HWW",      color_HWW);  // NOT YET AVAILABLE
-      plotter.AddProcess("06_WW",        "WW",       color_WW, roc_signal);
-      plotter.AddProcess("02_WZTo3LNu",  "WZ",       color_WZTo3LNu);
-      plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
-      plotter.AddProcess("11_Vg",        "V#gamma",  color_Wg);
-      plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
-      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, roc_background); //0.97
-      plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
-      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu, roc_none,  0.95); //0.92
-      //      plotter.AddProcess("05_ST",        "tW",       color_ST);
-
-      if (datadriven)
-	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_none, -999);  // Don't lumi scale
-	}
-      else
-	{
-	  plotter.AddProcess("08_WJets", "W+jets", color_WJets);
-	}
+  plotter.AddProcess("07_ZJets",     "DY",                             color_ZJets, roc_background, 1.0);
+  plotter.AddProcess("03_VZ",        "Diboson",                        color_VZ);
+  plotter.AddProcess("00_Fakes",     "W+jets / t#bar{t}(1l) / tW(1l)", color_Fakes, roc_background, -999);  // Don't lumi scale
+  plotter.AddProcess("09_TTV",       "t#bar{t}+V",                     color_TTV);
+  plotter.AddProcess("05_ST",        "Single t (2l)",                  color_ST);
+  plotter.AddProcess("04_TTTo2L2Nu", "t#bar{t}(2l)",                   color_TTTo2L2Nu, roc_background, 0.95);
+  plotter.AddProcess("14_HZ",        "HZ",                             color_HZ);
+  plotter.AddProcess("10_HWW",       "HWW",                            color_HWW);
+  plotter.AddProcess("06_WW",        "WW",                             color_WW, roc_signal);
+  plotter.AddProcess("02_WZTo3LNu",  "WZ",                             color_WZTo3LNu);
+  plotter.AddProcess("11_Wg",        "W#gamma",                        color_Wg);
+  plotter.AddProcess("15_WgStar",    "W#gamma*",                       color_WgStar);
 
 
-
-
-  // Add signals
+  // Add prefit and signal
   //----------------------------------------------------------------------------
-  if (analysis.EqualTo("TTDM"))
+  if (analysis.EqualTo("Control"))
     {
-      plotter.AddSignal("ttDM0001scalar00010", "m_{#chi}1 m_{S}10 x36",     color_Signal,   roc_background,    36.);
-      plotter.AddSignal("ttDM0001scalar00500", "m_{#chi}1 m_{S}500 x55203", color_Signal+2, roc_background, 55203.);
+      plotter.AddPrefit("99_Prefit", "pre-fit", color_Prefit);
+
+      plotter.AddSignal("ttDM0001pseudo00010", "PS M_{#Phi}=10 GeV, M_{#chi}=1 GeV x100", color_Signal, roc_background, 100);
     }
 
 
@@ -149,7 +140,7 @@ void runPlotter(TString level,
 
       plotter.SetTitle(title);
 
-      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, 0, "NULL", logY, false);
+      plotter.Draw(analysis + "/h_counterLum_" + schannel[i] + "_evolution", "", -1, -1, "NULL", logY, false);
     }
 
 
@@ -173,7 +164,7 @@ void runPlotter(TString level,
 
       plotter.LoopEventsByChannel(level + jetbin);
 
-      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, 0, "NULL", scale, false);
+      plotter.Draw(level + jetbin + "/h_counterLum_evolution", "", -1, -1, "NULL", scale, false);
     }
 
 
@@ -323,7 +314,6 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "sumjpt12"     + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumpt12"      + suffix, "p_{T}^{lep1} + p_{T}^{lep2}",       10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}", 10, 0, "NULL",  logY, true, 0,  2);
-
 
 
 	  // WW and MonoH histograms

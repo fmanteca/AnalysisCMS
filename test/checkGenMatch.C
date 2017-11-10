@@ -26,12 +26,29 @@ void PrintPercent(TString label,
 //
 //------------------------------------------------------------------------------
 //
-// How to run this macro,
+// How to run it,
 //
 //    root -l -b -q checkGenMatch.C+
 //
+//------------------------------------------------------------------------------
+//
+// The results below correspond to the em channel,
+// with pt1 > 25 GeV and pt2 > 10 GeV
+//
+//    Reading /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_DYJetsToLL_M-50__part7.root
+//   
+//    number of            input events: 200000
+//    number of promptgenmatched events: 719
+//    
+//     mother PID |    lep1 |    lep2
+//    ------------+---------+---------
+//     muon       |   0.14% |   0.28%
+//     tau        |  99.17% |  99.17%
+//     Z          |   0.70% |   0.56%
+//
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016/Feb2017_summer16/MCl2looseCut__hadd__bSFL2pTEffCut__l2tight/latino_DYJetsToLL_M-50__part7.root")
+//void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_DYJetsToLL_M-50__part7.root")
+void checkGenMatch(TString filename = "/eos/cms/store/user/scodella/Stop/LatinoSkims/Feb2017_Summer16_stop_ghent_DY/MCl2stop__SFWeights__hadd/latino_DYJetsToLL_M-50_HT-70to100__part0.root")
 {
   printf("\n Reading %s\n", filename.Data());
 
@@ -61,11 +78,11 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
   tree->SetBranchAddress("mll", &mll);
 
-  tree->SetBranchAddress("std_vector_lepton_eta",        &std_vector_lepton_eta);
-  tree->SetBranchAddress("std_vector_lepton_flavour",    &std_vector_lepton_flavour);
-  tree->SetBranchAddress("std_vector_lepton_genmatched", &std_vector_lepton_genmatched);
-  tree->SetBranchAddress("std_vector_lepton_phi",        &std_vector_lepton_phi);
-  tree->SetBranchAddress("std_vector_lepton_pt",         &std_vector_lepton_pt);
+  tree->SetBranchAddress("std_vector_lepton_eta",              &std_vector_lepton_eta);
+  tree->SetBranchAddress("std_vector_lepton_flavour",          &std_vector_lepton_flavour);
+  tree->SetBranchAddress("std_vector_lepton_genmatched",       &std_vector_lepton_genmatched);
+  tree->SetBranchAddress("std_vector_lepton_phi",              &std_vector_lepton_phi);
+  tree->SetBranchAddress("std_vector_lepton_pt",               &std_vector_lepton_pt);
 
   tree->SetBranchAddress("std_vector_leptonGen_eta",                           &std_vector_leptonGen_eta);
   tree->SetBranchAddress("std_vector_leptonGen_isDirectPromptTauDecayProduct", &std_vector_leptonGen_isDirectPromptTauDecayProduct);
@@ -123,18 +140,22 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
 
     tree->GetEntry(jentry);
 
-    //    if (mll > 75 && mll < 105) continue;  // Require to be outside of the Z-peak
+    if (mll < 20) continue;
 
-    if (std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1) != -11*13) continue;  // Require different flavour
+    if (mll > 75 && mll < 105) continue;
+
+    int channel = std_vector_lepton_flavour->at(0) * std_vector_lepton_flavour->at(1);
+
+    if (channel != -11*11 && channel != -13*13) continue;
 
     if (std_vector_lepton_pt->at(0) < 25) continue;
-    if (std_vector_lepton_pt->at(1) < 10) continue;
-
-    if (abs(std_vector_lepton_flavour->at(0)) != 11 && abs(std_vector_lepton_flavour->at(0)) != 13) continue;
-    if (abs(std_vector_lepton_flavour->at(1)) != 11 && abs(std_vector_lepton_flavour->at(1)) != 13) continue;
+    if (std_vector_lepton_pt->at(1) < 20) continue;
 
     if (std_vector_lepton_genmatched->at(0) < 1) continue;
     if (std_vector_lepton_genmatched->at(1) < 1) continue;
+
+    if (std_vector_leptonGen_isPrompt->at(0) != 1 && std_vector_leptonGen_isDirectPromptTauDecayProduct->at(0) != 1) continue;
+    if (std_vector_leptonGen_isPrompt->at(1) != 1 && std_vector_leptonGen_isDirectPromptTauDecayProduct->at(1) != 1) continue;
 
     counter_genmatched++;
 
@@ -256,7 +277,9 @@ void checkGenMatch(TString filename = "/eos/cms/store/group/phys_higgs/cmshww/am
   // Print the results
   //----------------------------------------------------------------------------
   printf("\n");
-  printf(" number of events genmatched: %d for %s\n\n", counter_genmatched, filename.Data());
+  printf(" number of            input events: %lld\n", nentries);
+  printf(" number of promptgenmatched events: %d\n", counter_genmatched);
+  printf("\n");
   printf(" mother PID |    lep1 |    lep2\n");
   printf("------------+---------+---------\n");
   PrintPercent("non-prompt", counter1_nonprompt,          counter2_nonprompt,          counter_genmatched);

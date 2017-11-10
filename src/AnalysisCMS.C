@@ -1207,7 +1207,8 @@ void AnalysisCMS::EventSetup(float jet_eta_max, float jet_pt_min)
 
   GetRazor();
 
-  _m2l  = mll;
+  _m2l = mll;
+
   _pt2l = ptll;
 }
 
@@ -2597,7 +2598,7 @@ void AnalysisCMS::GetScaleAndResolution()
 //
 //     2. Fit ptll in the mumu channel with the following function
 //
-//        TF1* f4 = new TF1 ("f4","[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))",0,100);
+//        TF1* f4 = new TF1("f4", "[2]*(0.95-[3]*TMath::Erf((x-[0])/[1]))", 0, 100);
 //
 //        f4->SetParameter(0,  10);
 //        f4->SetParameter(1,   1);
@@ -2608,8 +2609,9 @@ void AnalysisCMS::GetScaleAndResolution()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetSampleWeight()
 {
-  //float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
-  float ptllDYW_NLO = 1.0;
+
+//float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // Old
+  float ptllDYW_NLO = 1.04796 * (0.95 - 0.0740024*TMath::Erf((gen_ptll-12.9841)/6.01778));  // Using Full2016_Apr17 latino trees
 
   if (_sample.EqualTo ("WWTo2L2Nu"))             _event_weight *= nllW;
   if (_sample.EqualTo ("WgStarLNuEE"))           _event_weight *= 1.4;
@@ -2717,6 +2719,9 @@ void AnalysisCMS::GetSampleWeight()
 
 //------------------------------------------------------------------------------
 // GetMotherPID
+//
+// Should be equivalent to
+// https://github.com/latinos/LatinoAnalysis/blob/master/Gardener/python/variables/genMatchVar.py
 //------------------------------------------------------------------------------
 int AnalysisCMS::GetMotherPID(int index)
 {
