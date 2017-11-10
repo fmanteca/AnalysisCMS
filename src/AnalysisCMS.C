@@ -457,7 +457,7 @@ void AnalysisCMS::ApplyWeights()
 
   //nvtx reweighting to correct the MET agreement                                                                                                                                                  
 
-  //   _event_weight *= (1.20362+0.0117524*nvtx-0.00232374*nvtx*nvtx+4.31378e-05*nvtx*nvtx*nvtx)*1.074758092;         
+   _event_weight *= (1.2987+0.00639103*nvtx-0.00219023*nvtx*nvtx+4.20449e-05*nvtx*nvtx*nvtx)*50/47.3594;         
 
 
 
@@ -2608,7 +2608,8 @@ void AnalysisCMS::GetScaleAndResolution()
 //------------------------------------------------------------------------------
 void AnalysisCMS::GetSampleWeight()
 {
-  float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
+  //float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));
+  float ptllDYW_NLO = 1.0;
 
   if (_sample.EqualTo ("WWTo2L2Nu"))             _event_weight *= nllW;
   if (_sample.EqualTo ("WgStarLNuEE"))           _event_weight *= 1.4;
@@ -2617,6 +2618,73 @@ void AnalysisCMS::GetSampleWeight()
   if (_sample.Contains("Zg"))                    _event_weight *= !(Gen_ZGstar_mass > 0. && Gen_ZGstar_MomId == 22);
   if (_sample.Contains("DYJetsToLL_M"))          _event_weight *= ptllDYW_NLO;
   if (_sample.Contains("DYJetsToTT_MuEle_M-50")) _event_weight *= ptllDYW_NLO;
+
+  if (_sample.Contains("DYJetsToLL_M")){
+
+
+    if(mpmet>0 && mpmet<5 && njet==0){
+      _event_weight *= 1.031;
+
+    }else if(mpmet>5 && mpmet<10 && njet==0){
+      _event_weight *= 1.012;
+
+    }else if(mpmet>10 && mpmet<15 && njet==0){
+      _event_weight *= 0.988;
+
+    }else if(mpmet>15 && mpmet<20 && njet==0){
+      _event_weight *= 0.980;
+
+    }else if(mpmet>20 && mpmet<25 && njet==0){
+      _event_weight *= 0.980;
+
+    }else if(mpmet>25 && mpmet<30 && njet==0){
+      _event_weight *= 1.007;
+
+    }else if(mpmet>30 && mpmet<40 && njet==0){
+      _event_weight *= 1.068;
+
+    }else if(mpmet>40 && mpmet<50 && njet==0){
+      _event_weight *= 1.195;
+
+    }else if(mpmet>50 && mpmet<60 && njet==0){
+      _event_weight *= 1.446;
+
+    }else if(mpmet>60 && mpmet<999 && njet==0){
+      _event_weight *= 5.40;
+    }
+
+    else if(mpmet>0 && mpmet<5 && njet==1){
+      _event_weight *= 0.928;
+
+    }else if(mpmet>5 && mpmet<10 && njet==1){
+      _event_weight *= 0.936;
+
+    }else if(mpmet>10 && mpmet<15 && njet==1){
+      _event_weight *= 0.950;
+
+    }else if(mpmet>15 && mpmet<20 && njet==1){
+      _event_weight *= 0.954;
+
+    }else if(mpmet>20 && mpmet<25 && njet==1){
+      _event_weight *= 0.964;
+
+    }else if(mpmet>25 && mpmet<30 && njet==1){
+      _event_weight *= 0.985;
+
+    }else if(mpmet>30 && mpmet<40 && njet==1){
+      _event_weight *= 0.990;
+
+    }else if(mpmet>40 && mpmet<50 && njet==1){
+      _event_weight *= 1.022;
+
+    }else if(mpmet>50 && mpmet<60 && njet==1){
+      _event_weight *= 1.077;
+
+    }else if(mpmet>60 && mpmet<999 && njet==1){
+      _event_weight *= 1.227;
+    }
+
+  }
 
 
   bool useDYtt = false;

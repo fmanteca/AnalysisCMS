@@ -24,19 +24,21 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
-const int     nmetcut = 6;
+const int     nmetcut = 10;
 
 //const float   metcut [nmetcut] = {20, 30, 40, 60, -1};  // [GeV]
 //const float   metdraw[nmetcut] = {20, 30, 40, 60, 100};  // [GeV]
 
 
-const float   metcut [nmetcut] = {0,5,10,15,20,-1};  // [GeV]
-const float   metdraw[nmetcut] = {0,5,10,15,20,100};  // [GeV]
+const float   metcut [nmetcut] = {0,5,10,15,20,25,30,40,50,-1};  // [GeV]
+const float   metdraw[nmetcut] = {0,5,10,15,20,25,30,40,50,150};  // [GeV]
 
 const bool    includeVZ    = true;
-const bool    printResults = false;
+const bool    printResults = true;
 
 const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170921_AnalysisCMS/DY/Rinout_plots/0jet";
+//const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170921_AnalysisCMS/DY/Rinout_plots/1jet";
+//const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170921_AnalysisCMS/DY/Rinout_plots/Incl";
 
 
 // Functions
@@ -121,6 +123,8 @@ TString      xtitle;
 
 void getDYScale(TString analysis = "DY",
        		TString level    = "02_BVetoLoose",
+	       	//TString njet     = "0jet",
+	       	//TString njet     = "",
 		TString njet     = "0jet",
 		//TString level    = "10_DYControl",
        		//TString level    = "01_Has2Leptons",
@@ -132,15 +136,16 @@ void getDYScale(TString analysis = "DY",
   if (variable.EqualTo("metPfType1")) xtitle = "E_{T}^{miss} [GeV]";
   if (variable.EqualTo("mpmet"))      xtitle = "min projected E_{T}^{miss} [GeV]";
   if (variable.EqualTo("mt2ll"))      xtitle = "m_{T2}^{ll} [GeV]";
+  if (variable.EqualTo("ptll"))       xtitle = "p_{T2}^{ll} [GeV]";
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   gSystem->mkdir(outputdir, kTRUE);
 
-  TFile* file_data = new TFile("../Rinout/" + analysis +  "/01_Data.root",     "read");
-  TFile* file_dy   = new TFile("../Rinout/" + analysis +  "/07_ZJets.root",    "read");
-  TFile* file_wz   = new TFile("../Rinout/" + analysis +  "/02_WZTo3LNu.root", "read");
-  TFile* file_zz   = new TFile("../Rinout/" + analysis +  "/03_VZ.root",       "read");
+  TFile* file_data = new TFile("../Rinout_noptllcorr/" + analysis +  "/01_Data.root",     "read");
+  TFile* file_dy   = new TFile("../Rinout_noptllcorr/" + analysis +  "/07_ZJets.root",    "read");
+  TFile* file_wz   = new TFile("../Rinout_noptllcorr/" + analysis +  "/02_WZTo3LNu.root", "read");
+  TFile* file_zz   = new TFile("../Rinout_noptllcorr/" + analysis +  "/03_VZ.root",       "read");
 
 
   // Get MET (x-axis) vs m2l (y-axis) TH2D histograms
@@ -359,7 +364,7 @@ void getDYScale(TString analysis = "DY",
   mgraph[3]->GetYaxis()->SetTitle("scale factor = N^{in}_{est} / N^{in}_{DY}");
 
   mgraph[3]->SetMinimum(0.60);
-  mgraph[3]->SetMaximum(1.4);
+  mgraph[3]->SetMaximum(3.0);
 
   DrawLegend(0.74, 0.83, (TObject*)graph_scale[ee], " " + lchannel[ee]);
   DrawLegend(0.74, 0.77, (TObject*)graph_scale[mm], " " + lchannel[mm]);
@@ -493,6 +498,9 @@ void GetScale(int    ch,
 
   scale_value = n_in_est / n_in_dy;
   scale_error = errRatio(n_in_est, err_in_est, n_in_dy, err_in_dy);
+
+  // scale_value = n_out_est / n_out_dy;
+  // scale_error = errRatio(n_out_est, err_out_est, n_out_dy, err_out_dy);
 
 
   // Print the results

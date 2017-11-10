@@ -24,7 +24,7 @@ HistogramReader::HistogramReader(const TString& inputdir,
   _datanorm        (false),
   _drawratio       (false),
   _drawsignificance(false),
-  _drawyield       (false),
+  _drawyield       (true),
   _minitreebased   (false),
   _publicstyle     (false),
   _savepdf         (false),
@@ -642,6 +642,7 @@ void HistogramReader::CrossSection(TString level,
   float counterSignal = signal1_counterLum * _luminosity_fb;
 
   float efficiency = signal1_counterRaw / signal1_ngen;
+  float eff_err;
 
 
   // Get the second signal (example ggWW)
@@ -662,6 +663,7 @@ void HistogramReader::CrossSection(TString level,
       float signal2_efficiency = signal2_counterRaw / signal2_ngen;
 
       efficiency = signal1_fraction*signal1_efficiency + signal2_fraction*signal2_efficiency;
+      eff_err = (sqrt(signal1_counterRaw)/signal1_counterRaw + sqrt(signal1_ngen)/signal1_ngen + sqrt(signal2_counterRaw)/signal2_counterRaw + sqrt(signal2_ngen)/signal2_ngen)* efficiency;
     }
 
 
@@ -726,6 +728,7 @@ void HistogramReader::CrossSection(TString level,
   printf("         lumi = %.0f pb\n", 1e3 * _luminosity_fb);
   printf("           br = %f\n", branchingratio);
   printf("          eff = %.4f\n", efficiency);
+  printf("          eff = %.6f\n", eff_err);
   printf("           xs = (ndata - nbkg) / (lumi * eff * br) = %.2f +- %.2f (stat) +- %.2f (lumi) pb\n\n", xs, xsErrorStat, xs * lumi_error_percent / 1e2);
 }
 
@@ -766,6 +769,7 @@ TLegend* HistogramReader::DrawLegend(Float_t x1,
 				     Float_t yoffset)
 {
   drawyield &= (_drawyield && !_publicstyle);
+  drawyield = false;
 
   TLegend* legend = new TLegend(x1,
 				y1,
@@ -1121,14 +1125,15 @@ void HistogramReader::LoopEventsByCut(TString analysis, TString hname)
 void HistogramReader::EventsByChannel(TFile*  file,
 				      TString level)
 {
-  // Check if the evolution histogram already exists
+  //Check if the evolution histogram already exists
   TH1D* test_hist = (TH1D*)file->Get(level + "/h_counterLum_evolution");
 
   if (test_hist) return;
 
 
   // Get the number of bins
-  Int_t firstchannel = (level.Contains("WZ/")) ? eee : ee;
+  //  Int_t firstchannel = (level.Contains("WZ/")) ? eee : ee;
+  Int_t firstchannel = (level.Contains("WZ/")) ? eee : SF;
   Int_t lastchannel  = (level.Contains("WZ/")) ? lll : ll;
   
   Int_t nbins = 0;
@@ -1446,6 +1451,7 @@ void HistogramReader::Roc(TString hname,
     Float_t sigEff_min = (sigTotal != 0) ? sigYield_min / sigTotal : -999;
     Float_t bkgEff_min = (bkgTotal != 0) ? bkgYield_min / bkgTotal : -999;
 
+
     Float_t score_min = -999;
 
     if (sigYield_min > 0. && bkgYield_min > 0.)
@@ -1468,6 +1474,7 @@ void HistogramReader::Roc(TString hname,
         if (fom.EqualTo("Punzi Eq.7"))     score_max =   sigEff_max / (a/2 + sqrt(bkgYield_max));
       }
 
+
     if (score_min > score_value_min) {
       score_value_min    = score_min;
       score_x_min        = xmin + s*step;
@@ -1487,7 +1494,17 @@ void HistogramReader::Roc(TString hname,
 
     sigGraph_min->SetPoint(s, xmin + s*step, score_min);
     sigGraph_max->SetPoint(s, xmin + s*step, score_max);
+
+
+    // printf("\n");
+    // printf("bin by bin: x > %7.3f %s (S_eff = %6.2f\%, B_eff = %6.2f\%)\n",
+    // 	 xmin + s*step,
+    // 	 units.Data(),
+    // 	 1e2 * sigEff_min,
+    // 	 1e2 * bkgEff_min);
+
   }
+
 
 
   printf("\n");

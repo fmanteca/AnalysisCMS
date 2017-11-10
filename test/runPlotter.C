@@ -11,7 +11,7 @@ const Bool_t plots      = true;
 const Bool_t basictest  = false;
 
 
-const TString inputdir  = "../rootfiles/nominal/";
+const TString inputdir  = "../rootfiles/nvtx/";
 const TString outputdir = "figures/";
 
 const TString sl  = "#font[12]{l}";
@@ -58,7 +58,7 @@ void runPlotter(TString level,
 
   Bool_t scale = linY;
 
-  //int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
+  //    int firstchannel = (analysis.EqualTo("WZ")) ? eee : ee;
   int firstchannel = (analysis.EqualTo("WZ")) ? eee : SF;
   int lastchannel  = (analysis.EqualTo("WZ")) ? lll : ll;
 
@@ -94,14 +94,14 @@ void runPlotter(TString level,
       plotter.AddProcess("03_VZ",        "VZ",       color_VZ);
       plotter.AddProcess("11_Vg",        "V#gamma",  color_Wg);
       plotter.AddProcess("15_WgStar",    "W#gamma*", color_WgStar);
-      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, roc_background, 0.97); //0.975
+      plotter.AddProcess("07_ZJets",     "Z+jets",   color_ZJets, roc_background); //0.97
       plotter.AddProcess("09_TTV",       "ttV",      color_TTV);
-      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu, roc_background, 0.95); //0.92
+      plotter.AddProcess("04_Top", "top",       color_TTTo2L2Nu, roc_none,  0.95); //0.92
       //      plotter.AddProcess("05_ST",        "tW",       color_ST);
 
       if (datadriven)
 	{
-	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_background, -999);  // Don't lumi scale
+	  plotter.AddProcess("00_Fakes", "non-prompt", color_Fakes, roc_none, -999);  // Don't lumi scale
 	}
       else
 	{
@@ -160,10 +160,10 @@ void runPlotter(TString level,
   for (int j=0; j<=njetbin; j++)
     {
       if (!analysis.EqualTo("Stop") &&
-	  !analysis.EqualTo("Top")  &&
-	  !analysis.EqualTo("WW")   &&
-	  !analysis.EqualTo("DY")   &&
-	  j != njetbin) continue;
+  	  !analysis.EqualTo("Top")  &&
+  	  !analysis.EqualTo("WW")   &&
+  	  !analysis.EqualTo("DY")   &&
+  	  j != njetbin) continue;
 
       if (basictest && j != njetbin) continue;
       
@@ -207,7 +207,7 @@ void runPlotter(TString level,
 	  plotter.SetTitle(title);
 
 
-	  // Common histograms
+	  //Common histograms
 	  //--------------------------------------------------------------------
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", logY, true, 0, 300); if (basictest) continue;
 	  plotter.Draw(prefix + "m2l" + suffix, "m_{" + sll + "}", 5, 0, "GeV", linY, true, 0, 300);
@@ -217,7 +217,8 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "nbjet30csvv2m"  + suffix, "number of 30 GeV csvv2m b-jets",     -1, 0, "NULL", scale);
 	  plotter.Draw(prefix + "dphillmet"      + suffix, "#Delta#phi(" + sll + "," + sm + ")",  5, 2, "rad",  scale);
 	  plotter.Draw(prefix + "metPfType1Phi"  + suffix, sm + " #phi",                          5, 2, "rad",  scale);
-          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10, 0, "GeV",  scale, true, 0, 200);
+          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10, 0, "GeV",  logY, true, 0, 150);
+          plotter.Draw(prefix + "metPfType1"     + suffix, sm,                                   10, 0, "GeV",  scale, true, 0, 150);
 	  plotter.Draw(prefix + "nvtx"           + suffix, "number of vertices",                 -1, 0, "NULL", scale, true, 0,  30);
 	  plotter.Draw(prefix + "lep1pt"         + suffix, "leading lepton p_{T}",                5, 0, "GeV",  scale, true, 0, 150);
 	  plotter.Draw(prefix + "lep2pt"         + suffix, "trailing lepton p_{T}",               5, 0, "GeV",  scale, true, 0, 150);
@@ -233,13 +234,16 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "jet2pt"         + suffix, "trailing jet p_{T}",                  5, 0, "GeV",  scale, false, 0, 400);
 	  plotter.Draw(prefix + "dphill"         + suffix, "#Delta#phi(lep1,lep2)",               5, 2, "rad",  scale, false);
 	  plotter.Draw(prefix + "detall"         + suffix, "#Delta#eta(lep1,lep2)",               5, 2, "rad",  scale, true, 0, 5);
-	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",             10, 0, "GeV",  scale, true, 0,  300);
+	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",             10, 0, "GeV",  scale, true, 0,  200);
+	  plotter.Draw(prefix + "mpmet"        + suffix, "min projected E_{T}^{miss}",        10, 0, "GeV",  scale,  true, 0,  150);
+	  plotter.Draw(prefix + "metTtrk"      + suffix, "track E_{T}^{miss}",                10, 0, "GeV",  scale, true, 0,  400);
 
+	  plotter.Draw(prefix + "htnojets"     + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 20, 0, "GeV",  scale, true, 0, 400);
           plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                             20, 0, "GeV",  scale, true, 0, 600);
-          plotter.Draw(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}", 20, 0, "NULL",  scale, true, 0,  2);
-	  plotter.Draw(prefix + "metPuppi" + suffix, "PUPPI E_{T}^{miss}",           10, 0, "GeV", scale, true,  0, 400);
-	  plotter.Draw(prefix + "dymvavbf" + suffix, "dymvavbf",           -1, 0, "NULL", scale, true);
-	  plotter.Draw(prefix + "dymvaggh" + suffix, "dymvaggh",           -1, 0, "NULL", scale, true);
+          plotter.Draw(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}", 20, 0, "scale",  logY, true, 0,  2);
+	  plotter.Draw(prefix + "metPuppi" + suffix, "PUPPI E_{T}^{miss}",           10, 0, "GeV", logY, true,  0, 400);
+	  plotter.Draw(prefix + "dymvavbf" + suffix, "dymvavbf",           5, 0, "NULL", scale, true);
+	  plotter.Draw(prefix + "dymvaggh" + suffix, "dymvaggh",           5, 0, "NULL", scale, true);
 
 
 	  // ROC
@@ -264,12 +268,16 @@ void runPlotter(TString level,
 	  
  	  if(analysis.EqualTo("DY"))
             {
-              plotter.Roc(prefix + "dphillmet"  + suffix, "#Delta#phi(ll,E_{T}^{miss})",    1000, "rad", 0, 3, "S / #sqrt{S+B}");
-              plotter.Roc(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}",1000, "NULL", 0,2, "S / #sqrt{S+B}");
-              plotter.Roc(prefix + "ht" + suffix, "H_{T}",1000, "GeV", 100,700, "S / #sqrt{S+B}");
-              plotter.Roc(prefix + "htnojets" + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET",1000, "GeV", 100,500, "S / #sqrt{S+B}");
-              plotter.Roc(prefix + "meff" + suffix, "m_{eff}",1000, "GeV", 150,600, "S / #sqrt{S+B}");
-              plotter.Roc(prefix + "metPfType1" + suffix, sm,1000, "GeV", 0,200, "S / #sqrt{S+B}");
+              //plotter.Roc(prefix + "dphillmet"  + suffix, "#Delta#phi(ll,E_{T}^{miss})",    1000, "rad", 0, 3, "S / #sqrt{S+B}");
+              //plotter.Roc(prefix + "met_over_pt2l" + suffix, "E_{T}^{miss} / p_{T}^{#font[12]{ll}}",1000, "NULL", 0,2, "S / #sqrt{S+B}");
+              //plotter.Roc(prefix + "ht" + suffix, "H_{T}",1000, "GeV", 100,400, "S / #sqrt{S+B}");
+	      //plotter.Roc(prefix + "htnojets" + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET",1000, "GeV", 100,500, "S / #sqrt{S+B}");
+	      // plotter.Roc(prefix + "meff" + suffix, "m_{eff}",1000, "GeV", 150,600, "S / #sqrt{S+B}");
+              plotter.Roc(prefix + "metPfType1" + suffix, "metPfType1",1000, "GeV", 0,150, "S / #sqrt{S+B}");
+	      plotter.Roc(prefix + "mpmet" + suffix, "mpmet",1000, "GeV", 0,150, "S / #sqrt{S+B}");
+	      plotter.Roc(prefix + "metTtrk" + suffix, "metTtrk",1000, "GeV", 0,150, "S / #sqrt{S+B}");
+	      //              plotter.Roc(prefix + "dymvaggh"  + suffix, "DYmva_ggH",    1000, "NULL", 0, 1, "S / #sqrt{B}");
+	      // plotter.Roc(prefix + "dymvavbf"  + suffix, "DYmva_VBF",    1000, "NULL", 0, 1, "S / #sqrt{B}");
             }
 
 
@@ -309,7 +317,7 @@ void runPlotter(TString level,
 	  plotter.Draw(prefix + "mtw2"         + suffix, "m_{T}^{W,2}",                       10, 0, "GeV",  scale, true, 0,  400);
 	  plotter.Draw(prefix + "ht"           + suffix, "H_{T}",                             20, 0, "GeV",  scale, true, 0, 1500);
 	  plotter.Draw(prefix + "htjets"       + suffix, "#sum_{jet} p_{T}",                  20, 0, "GeV",  scale, true, 0, 1500);
-	  plotter.Draw(prefix + "htnojets"     + suffix, "p_{T}^{lep1} + p_{T}^{lep2} + MET", 20, 0, "GeV",  scale, true, 0, 1500);
+
 	  plotter.Draw(prefix + "pt2l"         + suffix, "p_{T}^{#font[12]{ll}}",             10, 0, "GeV",  scale, true, 0,  300);
 	  plotter.Draw(prefix + "ptww"         + suffix, "p_{T}^{WW}",                        10, 0, "GeV",  scale, true, 0,  600);
 	  plotter.Draw(prefix + "sumjpt12"     + suffix, "p_{T}^{jet1} + p_{T}^{jet2}",       10, 0, "GeV",  scale, true, 0,  600);
@@ -364,9 +372,13 @@ void runPlotter(TString level,
   //
   // 1. How to extract the total number of generated events from the latino trees:
   //
-  //   root -l eos/cms/store/group/phys_higgs/cmshww/amassiro/HWW12fb_v2/07Jun2016_spring16_mAODv2_12pXfbm1/MCl2loose__hadd__bSFL2pTEff__l2tight/latino_WWTo2L2Nu.root
+  //   root -l /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_WWTo2L2Nu.root
   //   mcWeightPos->GetEntries() - mcWeightNeg->GetEntries()
-  //   1.96718e+06
+  //   1.99900000000000000e+06
+  //
+  //   root -l /eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_summer16/lepSel__MCWeights__bSFLpTEffMulti__cleanTauMC__l2loose__hadd__l2tightOR__formulasMC/latino_GluGluWWTo2L2Nu_MCFM.root
+  //   mcWeightPos->GetEntries() - mcWeightNeg->GetEntries()
+  //   5.00000000000000000e+05
   //
   //
   // 2. The qqWW and ggWW exclusive leptonic cross sections at 13 TeV (in pb) have been taken from:
@@ -399,8 +411,8 @@ void runPlotter(TString level,
 				 schannel[i],
 				 "WW",
 				 WW2lnu,
-				 "WWTo2L2Nu",            12.1780, 101970,
-				 "GluGluWWTo2L2Nu_MCFM",  0.5905,  33317);
+				 "WWTo2L2Nu",            12.1780, 1999000,
+				 "GluGluWWTo2L2Nu_MCFM",  0.5905,  500000);
 	    }
 
 	}
