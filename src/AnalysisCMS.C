@@ -228,6 +228,7 @@ void AnalysisCMS::FillHistograms(int ichannel, int icut, int ijet)
   //----------------------------------------------------------------------------
   h_metPfType1_m2l[ichannel][icut][ijet]->Fill(MET.Et(), _m2l,    _event_weight);
   h_mpmet_m2l     [ichannel][icut][ijet]->Fill(mpmet,    _m2l,    _event_weight);
+  h_dymvaggh_m2l  [ichannel][icut][ijet]->Fill(dymvaggh,    _m2l,    _event_weight);
   h_mt2ll_m2l     [ichannel][icut][ijet]->Fill(_mt2ll,   _m2l,    _event_weight);
   h_2ht           [ichannel][icut][ijet]->Fill(_ht,      _htjets, _event_weight);
   h_dym           [ichannel][icut][ijet]->Fill(_mllbb,   _dyll,   _event_weight);
@@ -265,8 +266,8 @@ void AnalysisCMS::Summary(TString analysis,
 {
   if (_verbosity > 0) printf(" <<< Entering [AnalysisCMS::Summary]\n");
 
-  //  int firstchannel = ee;
-  int firstchannel = SF;
+  int firstchannel = ee;
+  //int firstchannel = SF;
   int lastchannel  = ll;
 
   if (analysis.EqualTo("FR")) {firstchannel = e;   lastchannel = l;}
@@ -457,7 +458,7 @@ void AnalysisCMS::ApplyWeights()
 
   //nvtx reweighting to correct the MET agreement                                                                                                                                                  
 
-   _event_weight *= (1.2987+0.00639103*nvtx-0.00219023*nvtx*nvtx+4.20449e-05*nvtx*nvtx*nvtx)*50/47.3594;         
+  //   _event_weight *= (1.2987+0.00639103*nvtx-0.00219023*nvtx*nvtx+4.20449e-05*nvtx*nvtx*nvtx)*50/47.3594;         
 
 
 
@@ -1403,6 +1404,7 @@ void AnalysisCMS::DefineHistograms(int     ichannel,
   //----------------------------------------------------------------------------
   h_metPfType1_m2l[ichannel][icut][ijet] = new TH2D("h_metPfType1_m2l" + suffix, "", 300, 0,  300, 100, 40, 140);
   h_mpmet_m2l     [ichannel][icut][ijet] = new TH2D("h_mpmet_m2l"      + suffix, "", 150, 0,  150, 100, 40, 140);
+  h_dymvaggh_m2l  [ichannel][icut][ijet] = new TH2D("h_dymvaggh_m2l"   + suffix, "", 200, 0,  1, 100, 40, 140);
   h_mt2ll_m2l     [ichannel][icut][ijet] = new TH2D("h_mt2ll_m2l"      + suffix, "", 150, 0,  150, 100, 40, 140);
   h_2ht           [ichannel][icut][ijet] = new TH2D("h_2ht"            + suffix, "", 200, 0,  800, 200,  0, 800);
   h_dym           [ichannel][icut][ijet] = new TH2D("h_dym"            + suffix, "", 200, 0, 1000, 100,  0,   5);
@@ -2611,7 +2613,7 @@ void AnalysisCMS::GetSampleWeight()
 {
 
 //float ptllDYW_NLO = 1.08683 * (0.95 - 0.0657370*TMath::Erf((gen_ptll-12.5151)/5.51582));  // Old
-  float ptllDYW_NLO = 1.04796 * (0.95 - 0.0740024*TMath::Erf((gen_ptll-12.9841)/6.01778));  // Using Full2016_Apr17 latino trees
+  float ptllDYW_NLO = (0.876979+gen_ptll*(4.11598e-03)-(2.35520e-05)*gen_ptll*gen_ptll)*(1.10211 * (0.958512 - 0.131835*TMath::Erf((gen_ptll-14.1972)/10.1525)))*(gen_ptll<140)+0.891188*(gen_ptll>=140);
 
   if (_sample.EqualTo ("WWTo2L2Nu"))             _event_weight *= nllW;
   if (_sample.EqualTo ("WgStarLNuEE"))           _event_weight *= 1.4;
@@ -2624,67 +2626,67 @@ void AnalysisCMS::GetSampleWeight()
   if (_sample.Contains("DYJetsToLL_M")){
 
 
-    if(mpmet>0 && mpmet<5 && njet==0){
-      _event_weight *= 1.031;
+    // if(mpmet>0 && mpmet<5 && njet==0){
+    //   _event_weight *= 1.031;
 
-    }else if(mpmet>5 && mpmet<10 && njet==0){
-      _event_weight *= 1.012;
+    // }else if(mpmet>5 && mpmet<10 && njet==0){
+    //   _event_weight *= 1.012;
 
-    }else if(mpmet>10 && mpmet<15 && njet==0){
-      _event_weight *= 0.988;
+    // }else if(mpmet>10 && mpmet<15 && njet==0){
+    //   _event_weight *= 0.988;
 
-    }else if(mpmet>15 && mpmet<20 && njet==0){
-      _event_weight *= 0.980;
+    // }else if(mpmet>15 && mpmet<20 && njet==0){
+    //   _event_weight *= 0.980;
 
-    }else if(mpmet>20 && mpmet<25 && njet==0){
-      _event_weight *= 0.980;
+    // }else if(mpmet>20 && mpmet<25 && njet==0){
+    //   _event_weight *= 0.980;
 
-    }else if(mpmet>25 && mpmet<30 && njet==0){
-      _event_weight *= 1.007;
+    // }else if(mpmet>25 && mpmet<30 && njet==0){
+    //   _event_weight *= 1.007;
 
-    }else if(mpmet>30 && mpmet<40 && njet==0){
-      _event_weight *= 1.068;
+    // }else if(mpmet>30 && mpmet<40 && njet==0){
+    //   _event_weight *= 1.068;
 
-    }else if(mpmet>40 && mpmet<50 && njet==0){
-      _event_weight *= 1.195;
+    // }else if(mpmet>40 && mpmet<50 && njet==0){
+    //   _event_weight *= 1.195;
 
-    }else if(mpmet>50 && mpmet<60 && njet==0){
-      _event_weight *= 1.446;
+    // }else if(mpmet>50 && mpmet<60 && njet==0){
+    //   _event_weight *= 1.446;
 
-    }else if(mpmet>60 && mpmet<999 && njet==0){
-      _event_weight *= 5.40;
-    }
+    // }else if(mpmet>60 && mpmet<999 && njet==0){
+    //   _event_weight *= 5.40;
+    // }
 
-    else if(mpmet>0 && mpmet<5 && njet==1){
-      _event_weight *= 0.928;
+    // else if(mpmet>0 && mpmet<5 && njet==1){
+    //   _event_weight *= 0.928;
 
-    }else if(mpmet>5 && mpmet<10 && njet==1){
-      _event_weight *= 0.936;
+    // }else if(mpmet>5 && mpmet<10 && njet==1){
+    //   _event_weight *= 0.936;
 
-    }else if(mpmet>10 && mpmet<15 && njet==1){
-      _event_weight *= 0.950;
+    // }else if(mpmet>10 && mpmet<15 && njet==1){
+    //   _event_weight *= 0.950;
 
-    }else if(mpmet>15 && mpmet<20 && njet==1){
-      _event_weight *= 0.954;
+    // }else if(mpmet>15 && mpmet<20 && njet==1){
+    //   _event_weight *= 0.954;
 
-    }else if(mpmet>20 && mpmet<25 && njet==1){
-      _event_weight *= 0.964;
+    // }else if(mpmet>20 && mpmet<25 && njet==1){
+    //   _event_weight *= 0.964;
 
-    }else if(mpmet>25 && mpmet<30 && njet==1){
-      _event_weight *= 0.985;
+    // }else if(mpmet>25 && mpmet<30 && njet==1){
+    //   _event_weight *= 0.985;
 
-    }else if(mpmet>30 && mpmet<40 && njet==1){
-      _event_weight *= 0.990;
+    // }else if(mpmet>30 && mpmet<40 && njet==1){
+    //   _event_weight *= 0.990;
 
-    }else if(mpmet>40 && mpmet<50 && njet==1){
-      _event_weight *= 1.022;
+    // }else if(mpmet>40 && mpmet<50 && njet==1){
+    //   _event_weight *= 1.022;
 
-    }else if(mpmet>50 && mpmet<60 && njet==1){
-      _event_weight *= 1.077;
+    // }else if(mpmet>50 && mpmet<60 && njet==1){
+    //   _event_weight *= 1.077;
 
-    }else if(mpmet>60 && mpmet<999 && njet==1){
-      _event_weight *= 1.227;
-    }
+    // }else if(mpmet>60 && mpmet<999 && njet==1){
+    //   _event_weight *= 1.227;
+    // }
 
   }
 

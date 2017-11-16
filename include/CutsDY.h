@@ -11,8 +11,10 @@ enum {
   //  DY_03_ZWindow,
   DY_03_ZVeto,
   DY_04_Ptll,
+    //DY_05_metopt2l,
   DY_05_mpMet,
   DY_06_PfMet,
+  
   /*  DY_25_20, */
   /*  DY_third_lepton_veto, */
   /*  DY_mll, */
@@ -26,9 +28,11 @@ enum {
   //  DY_08_dphillmet,
   //DY_09_metopt2l,
   //DY_10_ht,
-  DY_07_TopControl,
-  DY_08_DYControl,
-  DY_09_SSControl,
+   DY_07_DYmvaggH,
+  // DY_08_ht,
+  //  DY_09_TopControl,
+  //DY_10_DYControl,
+  //  DY_09_SSControl,
   /* DY_13_IFCA_Control, */
   /* DY_14_latino, */
 
@@ -88,8 +92,13 @@ const TString scut[ncut] = {
   //  "DY/03_ZWindow",
   "DY/03_ZVeto" ,
   "DY/04_Ptll"   ,
+  //"DY/05_metopt2l" ,
   "DY/05_mpMet",
   "DY/06_PfMet",
+  "DY/07_DYmvaggH",
+
+  //"DY/07_DYmvaggH",
+  //"DY/08_ht",
   /* "DY/25_20", */
   /* "DY/third_lepton_veto", */
   /* "DY/mll", */
@@ -103,9 +112,9 @@ const TString scut[ncut] = {
   //"DY/08_dphillmet" ,
   //"DY/09_metopt2l" ,
   //"DY/10_ht",
-  "DY/07_TopControl" ,
-  "DY/08_DYControl",
-  "DY/09_SSControl",
+  //"DY/09_TopControl" ,
+  //"DY/10_DYControl",
+  //  "DY/09_SSControl",
   /* "DY/13_IFCA_Control", */
   
   /* "DY/14_latino", */
