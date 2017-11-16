@@ -24,18 +24,24 @@ const TString lchannel[nchannel] = {
 const float   zmin =  76;  // [GeV]
 const float   zmax = 106;  // [GeV]
 
+const float   ymin = 0.05;
+const float   ymax = 0.70;
+
+
 const int     nmetcut = 10;
+
 
 //const float   metcut [nmetcut] = {20, 30, 40, 60, -1};  // [GeV]
 //const float   metdraw[nmetcut] = {20, 30, 40, 60, 100};  // [GeV]
 
-const float   metcut [nmetcut] = {0,5,10,15,20,25,30,40,50,-1};  // [GeV]
-const float   metdraw[nmetcut] = {0,5,10,15,20,25,30,40,50,150};  // [GeV]
+const float   metcut [nmetcut] = {0.6, 0.7, 0.8, 0.9, 0.95, 0.97, 0.991, 0.995,-1};  // [GeV]
+//const float   metdraw[nmetcut] = {0,5,10,15,20,25,30,40,50,150};  // [GeV]
+const float   metdraw[nmetcut] = {0.6, 0.7, 0.8, 0.9, 0.95, 0.97, 0.991, 0.995, 1};  // [GeV]
 
 const bool    includeVZ    = true;
 const bool    printResults = true;
 
-const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170921_AnalysisCMS/DY/Rinout_plots/0jet";
+const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170921_AnalysisCMS/DY/Rinout_plots_mva/0jet";
 //const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170921_AnalysisCMS/DY/Rinout_plots/1jet";
 //const TString outputdir = "/afs/cern.ch/user/f/fernanpe/www/170921_AnalysisCMS/DY/Rinout_plots/Incl";
 
@@ -119,7 +125,6 @@ TString      xtitle;
 //    (2) scale = (n_in_ee - n_in_wz - n_in_zz - k_ee * n_in_em) / n_in_dy;
 //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-<<<<<<< HEAD
 
 void getDYScale(TString analysis = "DY",
        		TString level    = "02_BVetoLoose",
@@ -128,7 +133,7 @@ void getDYScale(TString analysis = "DY",
 		TString njet     = "0jet",
 		//TString level    = "10_DYControl",
        		//TString level    = "01_Has2Leptons",
-       		TString variable = "mpmet",
+       		TString variable = "dymvaggh",
 		double  lumi_fb  = 35.867)
 {
   xtitle = "";
@@ -137,15 +142,16 @@ void getDYScale(TString analysis = "DY",
   if (variable.EqualTo("mpmet"))      xtitle = "min projected E_{T}^{miss} [GeV]";
   if (variable.EqualTo("mt2ll"))      xtitle = "m_{T2}^{ll} [GeV]";
   if (variable.EqualTo("ptll"))       xtitle = "p_{T2}^{ll} [GeV]";
+  if (variable.EqualTo("dymvaggh"))   xtitle = "dymvaggh";
 
   gInterpreter->ExecuteMacro("../test/PaperStyle.C");
 
   gSystem->mkdir(outputdir, kTRUE);
 
-  TFile* file_data = new TFile("../Rinout_noptllcorr/" + analysis +  "/01_Data.root",     "read");
-  TFile* file_dy   = new TFile("../Rinout_noptllcorr/" + analysis +  "/07_ZJets.root",    "read");
-  TFile* file_wz   = new TFile("../Rinout_noptllcorr/" + analysis +  "/02_WZTo3LNu.root", "read");
-  TFile* file_zz   = new TFile("../Rinout_noptllcorr/" + analysis +  "/03_VZ.root",       "read");
+  TFile* file_data = new TFile("../rootfiles/Rinout/" + analysis +  "/01_Data.root",     "read");
+  TFile* file_dy   = new TFile("../rootfiles/Rinout/" + analysis +  "/07_ZJets.root",    "read");
+  TFile* file_wz   = new TFile("../rootfiles/Rinout/" + analysis +  "/02_WZTo3LNu.root", "read");
+  TFile* file_zz   = new TFile("../rootfiles/Rinout/" + analysis +  "/03_VZ.root",       "read");
 
 
   // Get MET (x-axis) vs m2l (y-axis) TH2D histograms
