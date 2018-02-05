@@ -8,7 +8,11 @@ if [ $# -lt 3 ]; then
     echo "  samples_mc_l2tightOR.txt"
     echo "  "
     echo "  ./write-samples.sh \\"
+<<<<<<< HEAD
     echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016*_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__dorochester__formulasDATA/' \\"
+=======
+    echo "  '/eos/cms/store/group/phys_higgs/cmshww/amassiro/Full2016_Apr17/Apr2017_Run2016?_RemAOD/lepSel__EpTCorr__TrigMakerData__cleanTauData__l2loose__hadd__l2tightOR__dorochester__formulasDATA/' \\"
+>>>>>>> 30f79c6a173f2db1bb85e35d24296fdb8e19c9d3
     echo "  data-names.txt \\"
     echo "  samples_data_l2tightOR.txt"
     echo "  "
