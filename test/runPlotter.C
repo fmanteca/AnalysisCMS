@@ -3,12 +3,18 @@
 
 // Constants
 //------------------------------------------------------------------------------
+<<<<<<< HEAD
 const Bool_t allplots   = false;
 const Bool_t datadriven = true;
 const Bool_t drawroc    = false;
 const Bool_t xsection   = false;
 const Bool_t plots      = true;
 const Bool_t basictest  = false;
+=======
+const Bool_t allplots  = false;
+const Bool_t drawroc   = false;
+const Bool_t basictest = true;
+>>>>>>> 2c4c9370966ce631477a3345d7fb910cea41c1f3
 
 const TString inputdir  = "../rootfiles/nvtx/";
 const TString outputdir = "figures/";
@@ -65,7 +71,7 @@ void runPlotter(TString level,
 
   plotter.SetStackOption(option);
   plotter.SetPublicStyle( false);
-  plotter.SetSavePdf    (  true);
+  plotter.SetSavePdf    ( false);
   plotter.SetChangeLabel( false);
 
   if (option.Contains("nostack"))
@@ -86,6 +92,7 @@ void runPlotter(TString level,
 
   // Add processes
   //----------------------------------------------------------------------------
+<<<<<<< HEAD
 
   plotter.AddProcess("07_ZJets",     "DY",                             color_ZJets, roc_background, 1.0);
   plotter.AddProcess("03_VZ",        "Diboson",                        color_VZ);
@@ -99,6 +106,20 @@ void runPlotter(TString level,
   plotter.AddProcess("02_WZTo3LNu",  "WZ",                             color_WZTo3LNu);
   plotter.AddProcess("11_Wg",        "W#gamma",                        color_Wg);
   plotter.AddProcess("15_WgStar",    "W#gamma*",                       color_WgStar);
+=======
+  plotter.AddProcess("07_ZJets",     "DY",        color_ZJets, roc_background, 1.0);
+  plotter.AddProcess("03_VZ",        "Diboson",   color_VZ);
+  plotter.AddProcess("00_Fakes",     "Fakes",     color_Fakes, roc_background, -999);  // Don't lumi scale
+  plotter.AddProcess("09_TTV",       "t#bar{t}V", color_TTV);
+  plotter.AddProcess("05_ST",        "tW",        color_ST);
+  plotter.AddProcess("04_TTTo2L2Nu", "t#bar{t}",  color_TTTo2L2Nu, roc_background, 1.0);
+  plotter.AddProcess("14_HZ",        "HZ",        color_HZ);
+  plotter.AddProcess("10_HWW",       "HWW",       color_HWW);
+  plotter.AddProcess("06_WW",        "WW",        color_WW, roc_signal);
+  plotter.AddProcess("02_WZTo3LNu",  "WZ",        color_WZTo3LNu);
+  plotter.AddProcess("11_Wg",        "W#gamma",   color_Wg);
+  plotter.AddProcess("15_WgStar",    "W#gamma*",  color_WgStar);
+>>>>>>> 2c4c9370966ce631477a3345d7fb910cea41c1f3
 
 
   // Add prefit and signal
@@ -107,7 +128,8 @@ void runPlotter(TString level,
     {
       plotter.AddPrefit("99_Prefit", "pre-fit", color_Prefit);
 
-      plotter.AddSignal("ttDM0001pseudo00010", "PS M_{#Phi}=10 GeV, M_{#chi}=1 GeV x100", color_Signal, roc_background, 100);
+      plotter.AddSignal("ttDM0001pseudo00010", "PS M_{#Phi}=10 GeV, M_{#chi}=1 GeV (x100)",
+			color_Signal, roc_background, 100);
     }
 
 
@@ -357,6 +379,7 @@ void runPlotter(TString level,
     }
   }
 
+<<<<<<< HEAD
   // Cross section
   //----------------------------------------------------------------------------
   //
@@ -409,6 +432,8 @@ void runPlotter(TString level,
     }
 
 
+=======
+>>>>>>> 2c4c9370966ce631477a3345d7fb910cea41c1f3
   // Copy index.php in every directory
   //----------------------------------------------------------------------------
   gSystem->Exec("for dir in $(find ./ -type d); do cp -n ../index.php $dir/; done");

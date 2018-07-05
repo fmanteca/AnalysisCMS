@@ -1,4 +1,4 @@
-[0. Analysis documentation](#analysis-documentation)  
+[0. Latino documentation](#latino-documentation)  
 [1. Everything begins here](#everything-begins-here)  
 [2. Always do](#always-do)  
 [3. Compile and run](#compile-and-run)  
@@ -12,9 +12,10 @@
 [11. brilcalc](#brilcalc)  
 [12. CRAB output destination](#crab-output-destination)  
 [13. Polycom connection](#polycom-connection)  
+[14. Combine](#combine)  
 
 
-# <a name="analysis-documentation"/>0. Analysis documentation
+# <a name="latino-documentation"/>0. Latino documentation
 
 AnalysisCMS is a framework that produces Physics distributions based on **latino** trees. It should be fully synchronized with the common latinos framework.
 
@@ -39,9 +40,9 @@ Execute this line only in gridui.
 
 Set a CMSSW release.
 
-    export SCRAM_ARCH=slc6_amd64_gcc530
-    cmsrel CMSSW_8_0_5
-    cd CMSSW_8_0_5/src
+    export SCRAM_ARCH=slc6_amd64_gcc630
+    cmsrel CMSSW_10_1_0
+    cd CMSSW_10_1_0/src
     cmsenv
 
 Go to the master repository (https://github.com/piedraj/AnalysisCMS) and click **Fork** in the top-right corner of the page. Then get the code in your working area.
@@ -64,14 +65,14 @@ Then, do a git remote in order to check if the upstream appears.
 *Do this only if you want to create a tag.*
 
     pushd AnalysisCMS
-    git tag -a 20160919_tau -m 'Third AnalysisCMS tag'
-    git push origin 20160919_tau
+    git tag -a 20180622_charm -m 'Legacy tag for latino trees'
+    git push origin 20180622_charm
     popd
 
 *Do this only if you want to use a tag.*
 
     pushd AnalysisCMS
-    git checkout tags/20160919_tau
+    git checkout tags/20180219_down
     popd
 
 <!---
@@ -85,9 +86,9 @@ Read a MC latino tree that contains the `GEN_weight_SM` variable,
 
 # <a name="always-do"/>2. Always do
 
-    ssh -Y gridui.ifca.es -o ServerAliveInterval=240
-    source /cvmfs/cms.cern.ch/cmsset_default.sh
-    cd CMSSW_8_0_5/src
+    ssh -Y lxplus.cern.ch -o ServerAliveInterval=240
+    bash -l
+    cd CMSSW_10_1_0/src
     cmsenv
     cd AnalysisCMS
 
@@ -116,7 +117,7 @@ Show the status of the submitted jobs.
 Alternatively one can login to a node and run interactively. *Do this only if your jobs will take less than 2 hours.*
 
     qlogin -P l.gaes
-    cd CMSSW_8_0_5/src
+    cd CMSSW_10_1_0/src
     source /cvmfs/cms.cern.ch/cmsset_default.sh
     cmsenv
     cd AnalysisCMS
@@ -170,7 +171,6 @@ Copy the distributions to lxplus.
 
 And they should appear here,
 
-    https://amanjong.web.cern.ch/amanjong/
     https://bchazinq.web.cern.ch/bchazinq/
     https://cprieels.web.cern.ch/cprieels/
     https://fernanpe.web.cern.ch/fernanpe/
@@ -285,7 +285,7 @@ Log in to lxplus.
 
 Go to the **Prerequisite** section of the [BRIL Work Suite](http://cms-service-lumi.web.cern.ch/cms-service-lumi/brilwsdoc.html) and export the PATH that corresponds to the _centrally installed virtual environment on lxplus_.
 
-    export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.0.3/bin:$PATH
+    export PATH=$HOME/.local/bin:/afs/cern.ch/cms/lumi/brilconda-1.1.7/bin:$PATH
 
 Do this the first time. Do it also if you want to update the brilcalc version.
 
@@ -296,7 +296,28 @@ Do this the first time. Do it also if you want to update the brilcalc version.
 Check your brilcalc version.
 
     brilcalc --version
-    2.0.5
+    3.1.1
+
+Get the 2017 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2017Analysis) and on the [TwikiLUM](https://twiki.cern.ch/twiki/bin/viewauth/CMS/TWikiLUM) TWikis one should use the following.
+
+    brilcalc lumi -b "STABLE BEAMS" \
+                  --normtag /cvmfs/cms-bril.cern.ch/cms-lumi-pog/Normtags/normtag_PHYSICS.json \
+                  -u /fb \
+                  -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt
+                  
+    +-------+------+--------+--------+-------------------+------------------+
+    | nfill | nrun | nls    | ncms   | totdelivered(/fb) | totrecorded(/fb) |
+    +-------+------+--------+--------+-------------------+------------------+
+    | 175   | 474  | 206564 | 205445 | 44.172            | 41.530           |
+    +-------+------+--------+--------+-------------------+------------------+
+    
+It is also possible to calculate the luminosity run by run by using the correct JSOn file, such as /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions17/13TeV/Era/Prompt/Cert_297020-299329_13TeV_PromptReco_Collisions17_JSON_eraB.txt:
+
+    +-------+------+-------+-------+-------------------+------------------+
+    | nfill | nrun | nls   | ncms  | totdelivered(/fb) | totrecorded(/fb) |
+    +-------+------+-------+-------+-------------------+------------------+
+    | 26    | 81   | 24526 | 24323 | 5.124             | 4.823            |
+    +-------+------+-------+-------+-------------------+------------------+
 
 Get the 2016 luminosity. Based on the [PdmV](https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2016Analysis) TWiki one should use the following.
 
@@ -345,3 +366,22 @@ Find the latino files and change their ACL permissions.
 3. It will ask for the number below. Enter it you are all set.
 
     \* 10 444 191 #
+
+
+# <a name="combine"/>14. Combine
+
+Combine provides a command line interface to many different statistical techniques available inside RooFit/RooStats used widely inside CMS. It is extensively documented [here](https://cms-hcomb.gitbooks.io/combine/content/). These are the current (December 14th, 2017) setup instructions.
+
+    export SCRAM_ARCH=slc6_amd64_gcc530
+    cmsrel CMSSW_8_1_0
+    cd CMSSW_8_1_0/src 
+    cmsenv
+    git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+    cd HiggsAnalysis/CombinedLimit
+    git fetch origin
+    git checkout v7.0.4
+    scramv1 b clean
+    scramv1 b
+
+To be continued.
+
